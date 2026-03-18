@@ -1,0 +1,28 @@
+export default {
+	'thongkebaocao.card.title': 'Thống kê số lượng sinh viên',
+	'thongkebaocao.card.description':
+		'Thống kê số lượng sinh viên bị cảnh báo học tập, buộc thôi học; bảo lưu, thôi học theo từng ngành qua các kỳ học',
+	'thongkebaocao.card.wait': 'Đang tính toán dữ liệu',
+	'thongkebaocao.card.divider': 'Theo lớp hành chính',
+	'thongkebaocao.id.kyhoctk': 'Kỳ học cần thống kê',
+	'thongkebaocao.id.xacnhan': 'Xác nhận',
+	'thongkebaocao.ketquahk.title': 'Kết quả học tập xét học bổng',
+
+	'thongkebaocao.ketquahoctap.column.mahk': 'Mã HK',
+	'thongkebaocao.ketquahoctap.column.masv': 'Mã SV',
+	'thongkebaocao.ketquahoctap.column.hoten': 'Họ tên',
+	'thongkebaocao.ketquahoctap.column.sotinchi': 'Số tín chỉ',
+	'thongkebaocao.ketquahoctap.column.sotinchi.dat': 'Đạt',
+	'thongkebaocao.ketquahoctap.column.sotinchi.tichluy': 'TL',
+	'thongkebaocao.ketquahoctap.column.sotinchi.xethocbong': 'Xét HB',
+	'thongkebaocao.ketquahoctap.column.sotinchi.no': 'Nợ',
+	'thongkebaocao.ketquahoctap.column.trungbinhhocky': 'TB học kỳ',
+	'thongkebaocao.ketquahoctap.column.trungbinhhocky.he4': 'Hệ 4',
+	'thongkebaocao.ketquahoctap.column.trungbinhhocky.hocbong': 'HB',
+	'thongkebaocao.ketquahoctap.column.trinhdo': 'Trình độ',
+	'thongkebaocao.ketquahoctap.column.hocluchocky': 'Học lực HK',
+	'thongkebaocao.ketquahoctap.column.trangthai': 'Trạng thái',
+	'thongkebaocao.ketquahoctap.column.khoanganh': 'Khóa ngành',
+	'thongkebaocao.ketquahoctap.button.export.hb': 'KQ Xét học bổng',
+	'thongkebaocao.ketquahoctap.export.filename': 'DS sinh viên xét học bổng {tenHocKy}.xlsx',
+};

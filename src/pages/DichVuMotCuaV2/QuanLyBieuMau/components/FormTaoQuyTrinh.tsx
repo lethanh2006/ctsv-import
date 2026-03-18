@@ -1,0 +1,182 @@
+/* eslint-disable no-underscore-dangle */
+import { DichVuMotCuaV2 } from '@/services/DVMC/DichVuMotCuaV2/typing';
+import {
+	ArrowDownOutlined,
+	ArrowLeftOutlined,
+	ArrowUpOutlined,
+	CloseCircleOutlined,
+	EyeOutlined,
+	PlusOutlined,
+	SaveOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Form, Modal } from 'antd';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
+import FormQuyTrinh from '../../components/FormQuyTrinh';
+import styles from './block.css';
+import Block from './BlockQuyTrinh';
+
+const FormTaoQuyTrinh = () => {
+	const [form] = Form.useForm();
+	const { loading, record, setRecord, edit, putBieuMauAdminModel, postBieuMauAdminModel, setCurrent } =
+		useModel('dvmc.dichvumotcuav2');
+	const { getAllModel, danhSach } = useModel('tochucnhansu.donvi');
+	const [visibleQuyTrinh, setVisibleQuyTrinh] = useState<boolean>(false);
+	const [recordView, setRecordView] = useState<DichVuMotCuaV2.QuyTrinh>();
+	useEffect(() => {
+		getAllModel();
+	}, []);
+
+	const buildPostQuyTrinh = (values: { quyTrinh: DichVuMotCuaV2.QuyTrinh }) => {
+		const quyTrinh: DichVuMotCuaV2.QuyTrinh = {
+			danhSachBuoc: values?.quyTrinh?.danhSachBuoc?.map((buoc: DichVuMotCuaV2.BuocQuyTrinh) => {
+				return {
+					...buoc,
+					danhSachThaoTac: buoc?.danhSachThaoTac?.map((thaoTac: DichVuMotCuaV2.ThaoTacQuyTrinh) => ({
+						...thaoTac,
+						nguoiDieuPhoiMacDinh: thaoTac?.idNguoiDieuPhoiMacDinh ? true : false,
+						idDonVi: thaoTac?.idDonVi?.toString(),
+						tenDonVi: danhSach?.find((item) => item._id === thaoTac?.idDonVi)?.ten ?? '',
+					})),
+				};
+			}),
+		};
+		return quyTrinh;
+	};
+
+	return (
+		<Card title={edit ? 'Chỉnh sửa quy trình' : 'Thêm mới quy trình'}>
+			<Form
+				scrollToFirstError
+				labelCol={{ span: 24 }}
+				onFinish={async (values) => {
+					const quyTrinh = buildPostQuyTrinh(values);
+					if (edit) {
+						putBieuMauAdminModel({
+							data: { ...record, quyTrinh: { ...quyTrinh } } as DichVuMotCuaV2.BieuMau,
+							id: record?._id,
+						});
+					} else
+						postBieuMauAdminModel({
+							...record,
+							quyTrinh: { ...quyTrinh },
+						} as DichVuMotCuaV2.BieuMau);
+				}}
+				form={form}
+			>
+				<Form.List
+					name={['quyTrinh', 'danhSachBuoc']}
+					initialValue={record?.quyTrinh?.danhSachBuoc ?? []}
+					rules={[
+						{
+							validator: async (_, names) => {
+								if (!names || names.length < 1) {
+									return Promise.reject(new Error('Ít nhất 1 bước'));
+								}
+								return '';
+							},
+						},
+					]}
+				>
+					{(fields, { add, remove, move }, { errors }) => {
+						return (
+							<>
+								{fields.map((field, index) => (
+									<div key={field.key}>
+										<Card
+											size='small'
+											headStyle={{ padding: '0px 24px' }}
+											styles={{ padding: '8px 24px' }}
+											className={styles.block}
+											title={
+												<>
+													<div style={{ float: 'left' }}>Bước {index + 1}</div>
+													<CloseCircleOutlined
+														style={{ float: 'right', marginLeft: 8 }}
+														onClick={() => remove(field.name)}
+													/>
+													<ArrowUpOutlined
+														style={{ float: 'right', marginLeft: 8 }}
+														onClick={() => move(field.name, field.name - 1)}
+													/>
+													<ArrowDownOutlined
+														style={{ float: 'right' }}
+														onClick={() => move(field.name, field.name + 1)}
+													/>
+												</>
+											}
+										>
+											<Block step={index} field={{ ...field }} form={form} />
+										</Card>
+										<br />
+									</div>
+								))}
+								<Form.Item style={{ marginBottom: 8 }}>
+									<Button type='dashed' onClick={() => add()} style={{ width: '100%' }} icon={<PlusOutlined />}>
+										Thêm bước
+									</Button>
+									<Form.ErrorList errors={errors} />
+								</Form.Item>
+							</>
+						);
+					}}
+				</Form.List>
+
+				<Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
+					<div style={{ display: 'flex' }}>
+						<Button
+							icon={<ArrowLeftOutlined />}
+							loading={loading}
+							style={{ marginRight: 8 }}
+							type='primary'
+							onClick={() => {
+								const valueView = form.getFieldsValue(true);
+								setRecord({ ...record, ...valueView });
+								setCurrent(1);
+							}}
+						>
+							Quay lại
+						</Button>
+						<Button
+							icon={<EyeOutlined />}
+							style={{ marginRight: 8 }}
+							onClick={() => {
+								const valueView = form.getFieldsValue(true);
+								setRecordView(buildPostQuyTrinh(valueView));
+								setVisibleQuyTrinh(true);
+							}}
+						>
+							Xem trước
+						</Button>
+						<Button
+							icon={<SaveOutlined />}
+							loading={loading}
+							style={{ marginRight: 8 }}
+							htmlType='submit'
+							type='primary'
+						>
+							Lưu
+						</Button>
+						{/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
+            Đóng
+          </Button> */}
+					</div>
+				</Form.Item>
+			</Form>
+			<Modal
+				destroyOnClose
+				width='60%'
+				footer={null}
+				open={visibleQuyTrinh}
+				styles={{ padding: 0 }}
+				onCancel={() => {
+					setVisibleQuyTrinh(false);
+				}}
+			>
+				<FormQuyTrinh type='view' record={recordView} />
+			</Modal>
+		</Card>
+	);
+};
+
+export default FormTaoQuyTrinh;

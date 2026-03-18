@@ -1,0 +1,233 @@
+import type { GiaoDich } from '@/services/TaiChinh/GiaoDich/typing';
+import {
+	EMaTrangThaiThanhToan,
+	EMauTrangThaiThanhToanTable,
+	ETrangThaiThanhToan,
+	ETransactionPaymentType,
+	ETransactionSourceType,
+	ETransactionStatus,
+} from '@/services/TaiChinh/constant';
+import { inputFormat } from '@/utils/utils';
+import { Button, Card, Col, Descriptions, Modal, Row, Tabs, Tag } from 'antd';
+import { useEffect, useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import FormItemHoaDonChiTiet from '../ChiTiet/FormItem';
+import FormThanhToan from '../ThanhToan/FormThanhToan';
+import LichSuThanhToan from '../ThanhToan/LichSuThanhToan';
+import ModalThanhToanNganHang from './ModalThanhToanNganHang';
+
+const ThongTinThanhToan = (props: { setVisible: (val: boolean) => void; getData?: () => void }) => {
+	const intl = useIntl();
+	const { setVisible, getData } = props;
+	const { record: recHoaDon } = useModel('taichinh.hoadon');
+	const { visibleThanhToan, setVisibleThanhToan } = useModel('taichinh.hoadonchitiet');
+	const {
+		getAllModel,
+		record: recGiaoDich,
+		setRecord,
+		loading,
+		visibleHuongDan,
+		setVisibleHuongDan,
+		thanhToanMomoModel,
+		huyThanhToanModel,
+	} = useModel('taichinh.giaodich');
+	const [activeTab, setActiveTab] = useState('1');
+
+	const getGiaoDich = () =>
+		getAllModel(true, undefined, {
+			status: ETransactionStatus.PENDING,
+			billIdentityCode: recHoaDon?.identityCode,
+			fromAccount: ETransactionSourceType.EXTERNAL,
+		});
+
+	const onChangeTab = (tab: string) => {
+		setActiveTab(tab);
+		// Get giao dịch nộp tiền chưa hoàn tất
+		if (tab === '1' && recHoaDon?.identityCode) getGiaoDich();
+	};
+
+	useEffect(() => {
+		onChangeTab('1');
+	}, [recHoaDon?.identityCode]);
+
+	const onPay = (rec: GiaoDich.IRecord) => {
+		if (rec?.paymentType === ETransactionPaymentType.BANK) {
+			setRecord(rec);
+			setVisibleHuongDan(true);
+		} else if (rec?.paymentType === ETransactionPaymentType.MOMO_WALLET && rec.identityCode)
+			thanhToanMomoModel(rec.identityCode);
+	};
+
+	const onCancel = (rec: GiaoDich.IRecord) => {
+		if (rec._id)
+			huyThanhToanModel(rec._id)
+				.then(() => {
+					getGiaoDich();
+					if (getData) getData();
+				})
+				.catch((er) => console.log(er));
+	};
+
+	return (
+		<Card title={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.trangthai' })}>
+			<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
+				<Col span={24}>
+					<Descriptions column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 2 }} bordered>
+						<Descriptions.Item
+							label={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.trangthai' })}
+						>
+							{recHoaDon?.status ? (
+								<Tag color={EMauTrangThaiThanhToanTable?.[recHoaDon.status]}>
+									{ETrangThaiThanhToan?.[recHoaDon.status] ?? ''}
+								</Tag>
+							) : (
+								<i>
+									{intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.capnhat' })}
+								</i>
+							)}
+						</Descriptions.Item>
+						<Descriptions.Item
+							label={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.hoten' })}
+						>
+							{recHoaDon?.userFullname ?? (
+								<i>
+									{intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.capnhat' })}
+								</i>
+							)}
+						</Descriptions.Item>
+						<Descriptions.Item
+							label={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.tongtien' })}
+						>
+							{inputFormat(
+								recHoaDon?.billItems
+									?.filter((item) => item.status !== EMaTrangThaiThanhToan.DONG)
+									?.reduce((acc, item) => acc + (item.amountDue || 0), 0),
+							)}{' '}
+							VNĐ
+						</Descriptions.Item>
+						<Descriptions.Item
+							label={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.uudai' })}
+						>
+							{inputFormat(
+								recHoaDon?.billItems
+									?.filter((item) => item.status !== EMaTrangThaiThanhToan.DONG)
+									?.reduce((acc, item) => acc + (item.amountDiscount || 0), 0),
+							)}{' '}
+							VNĐ
+						</Descriptions.Item>
+						<Descriptions.Item
+							label={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.danop' })}
+						>
+							{inputFormat(
+								recHoaDon?.billItems
+									?.filter((item) => item.status !== EMaTrangThaiThanhToan.DONG)
+									?.reduce((acc, item) => acc + (item.amountPaid || 0), 0),
+							)}{' '}
+							VNĐ
+						</Descriptions.Item>
+						<Descriptions.Item
+							label={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.phainop' })}
+						>
+							{inputFormat(
+								recHoaDon?.billItems
+									?.filter((item) => item.status !== EMaTrangThaiThanhToan.DONG)
+									?.reduce((acc, item) => acc + (item.amountRemaining || 0), 0),
+							)}{' '}
+							VNĐ
+						</Descriptions.Item>
+					</Descriptions>
+				</Col>
+
+				<Col span={24}>
+					<Tabs activeKey={activeTab} onChange={(tab) => onChangeTab(tab)}>
+						<Tabs.TabPane
+							key={'1'}
+							tab={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.chitiet' })}
+						/>
+						<Tabs.TabPane
+							key={'2'}
+							tab={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.lichsu' })}
+						/>
+					</Tabs>
+
+					{activeTab === '1' ? (
+						<>
+							{/* {recGiaoDich?._id && recGiaoDich.paymentType !== ETransactionPaymentType.MANUAL ? (
+								<Alert
+									message='Có giao dịch nộp tiền đang chờ xử lý!'
+									showIcon
+									type='info'
+									action={
+										<Space wrap>
+											<Button
+												type='primary'
+												onClick={() => onPay(recGiaoDich)}
+												icon={<DollarOutlined />}
+												loading={loading}
+											>
+												Thanh toán ngay
+											</Button>
+											<Popconfirm
+												title='Xác nhận hủy giao dịch này?'
+												onConfirm={() => onCancel && onCancel(recGiaoDich)}
+											>
+												<Button danger type='link'>
+													Hủy giao dịch
+												</Button>
+											</Popconfirm>
+										</Space>
+									}
+								/>
+							) : (
+								<ButtonExtend
+									disabled={recHoaDon?.status === EMaTrangThaiThanhToan.DA_THANH_TOAN_DU}
+									onClick={() => setVisibleThanhToan(true)}
+									icon={<AppstoreAddOutlined />}
+									type='primary'
+									loading={loading}
+								>
+									Thanh toán
+								</ButtonExtend>
+							)} */}
+
+							<FormItemHoaDonChiTiet />
+						</>
+					) : (
+						<LichSuThanhToan onPay={onPay} onCancel={onCancel} />
+					)}
+				</Col>
+			</Row>
+
+			<div style={{ marginTop: 18 }} className='form-footer'>
+				<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+			</div>
+
+			<Modal
+				title={intl.formatMessage({ id: 'dichvuhanhchinh.tiepnhan.view.thongtintiepnhan.ttthanhtoan.capnhat' })}
+				open={visibleThanhToan}
+				onCancel={() => setVisibleThanhToan(false)}
+				footer={null}
+				width={1000}
+				maskClosable={false}
+			>
+				<FormThanhToan
+					getData={() => {
+						getGiaoDich();
+						if (getData) getData();
+					}}
+				/>
+			</Modal>
+
+			<ModalThanhToanNganHang
+				visible={visibleHuongDan}
+				onOk={() => {
+					getGiaoDich();
+					if (getData) getData();
+					setVisibleHuongDan(false);
+				}}
+			/>
+		</Card>
+	);
+};
+
+export default ThongTinThanhToan;

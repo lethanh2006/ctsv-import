@@ -1,0 +1,319 @@
+import { Activity } from '@/services/CCT/Activity/typing';
+import { EApprovalStatus } from '@/services/CCT/constant';
+import { FileOutlined } from '@ant-design/icons';
+import { Card, Col, Divider, Empty, Input, List, Row, Typography } from 'antd';
+import dayjs from 'dayjs';
+import { useIntl } from 'umi';
+import FormRoleEvidence from '../../ActivityStudent/components/FormRoleEvidence';
+import CardSuKienCCT from './CardSuKien';
+import './style.less';
+
+const CardChiTietSuKien = (props: {
+	record: Activity.IRecord;
+	evidenceDeadline: string;
+	infoEvidence?: boolean;
+	activeKey?: string;
+	isExpired?: boolean;
+	isRegister?: boolean;
+}) => {
+	const intl = useIntl();
+	const { record, evidenceDeadline, infoEvidence, activeKey, isExpired, isRegister } = props;
+
+	const registered = record?.numberOfRegisteredActivityOutcomes ?? 0;
+	const capacity = record?.capacity;
+	const isFull = capacity && registered >= capacity;
+
+	const approvalWorkflow =
+		record?.activityOutcome?.workflow === EApprovalStatus.APPROVED ||
+		record?.activityOutcome?.workflow === EApprovalStatus.REJECTED ||
+		record?.activityOutcome?.workflow === EApprovalStatus.CHANGES_REQUIRED;
+
+	return (
+		<Row gutter={[12, 12]}>
+			<Col span={24} md={9}>
+				<CardSuKienCCT
+					record={{ ...record, activityOutcome: record?.activityOutcome }}
+					banner={record?.banner}
+					name={record?.name}
+					startDate={record?.startDate ? dayjs(record?.startDate).format('HH:mm DD/MM/YYYY') : '--'}
+					endDate={record?.endDate ? dayjs(record?.endDate).format('HH:mm DD/MM/YYYY') : '--'}
+					equivalencyAttributeIds={record?.coCurricularActivityEquivalency?.map((x) => x.attributesId) ?? []}
+					isDetail
+					activeKey={activeKey}
+					isExpired={isExpired}
+					isRegister={isRegister}
+				/>
+			</Col>
+			<Col span={24} md={15}>
+				<Card variant='borderless' size='small'>
+					<Divider className='divider-big-title' orientation='left' style={{ marginTop: 0 }}>
+						{intl.formatMessage({ id: 'activity.chitiet.tab1.admininfor' })}
+					</Divider>
+
+					<div className='custom-info-grid grid-2'>
+						<div className='info-row'>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.organizer' })}</div>
+								<div className='info-value'>{record?.organizer ?? '--'}</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.approver' })}</div>
+								<div className='info-value'>
+									{record?.activityOutcome?.workflow === EApprovalStatus.APPROVED &&
+									!record?.activityOutcome?.studentDeclarationApproverName
+										? 'System'
+										: approvalWorkflow
+											? record?.activityOutcome?.studentDeclarationApproverName
+											: record?.studentDeclarationApproverList
+													?.map((item) => item?.name)
+													.filter(Boolean)
+													.join(', ')}
+								</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.group' })}</div>
+								<div className='info-value'>
+									{record?.activitiesType?.activitiesTypeDomainText ??
+										record?.activitiesType?.activitiesTypeDomain?.name ??
+										'--'}
+								</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.type' })}</div>
+								<div className='info-value'>{record?.activitiesType?.name ?? '--'}</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.track' })}</div>
+								<div className='info-value'>
+									{record?.activitiesType?.trackText ?? record?.activitiesType?.track?.name ?? '--'}
+								</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.capa' })}</div>
+								<div
+									className='info-value'
+									style={{
+										color: isFull ? '#C72127' : undefined,
+									}}
+								>
+									{capacity ? (
+										<>
+											{`${registered} / ${capacity}`}
+											{isFull && intl.formatMessage({ id: 'activity.chitiet.tab1.full' })}
+										</>
+									) : (
+										'--'
+									)}
+								</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.allow' })}</div>
+								<div className='info-value'>
+									{record?.allowPostEventResultsUpdate
+										? intl.formatMessage({ id: 'activity.chitiet.tab1.yes' })
+										: intl.formatMessage({ id: 'activity.chitiet.tab1.no' })}
+								</div>
+							</div>
+							<div className='info-item'>
+								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.evidence' })}</div>
+								<div className='info-value'>{evidenceDeadline}</div>
+							</div>
+							{(!record?.activityOutcome?.workflow ||
+								record?.activityOutcome?.workflow === EApprovalStatus.EVIDENCE_REQUIRED) && (
+								<div className='info-item'>
+									<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.required' })}</div>
+									<div className='info-value'>
+										{record?.activitiesType?.requiredEvidenceList
+											? record?.activitiesType?.requiredEvidenceList
+													?.map((item) => item)
+													.filter(Boolean)
+													.join(', ')
+											: '--'}
+									</div>
+								</div>
+							)}
+							{!!record?.activityOutcome?.workflow &&
+								record?.activityOutcome?.workflow !== EApprovalStatus.DRAFT &&
+								record?.activityOutcome?.workflow !== EApprovalStatus.EVIDENCE_REQUIRED && (
+									<div className='info-item'>
+										<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.subtime' })}</div>
+										<div className='info-value'>
+											{record?.activityOutcome?.submittedAt
+												? dayjs(record?.activityOutcome?.submittedAt).format('HH:mm DD/MM/YYYY')
+												: '--'}
+										</div>
+									</div>
+								)}
+							{(record?.activityOutcome?.workflow === EApprovalStatus.CHANGES_REQUIRED ||
+								record?.activityOutcome?.workflow === EApprovalStatus.REJECTED ||
+								record?.activityOutcome?.workflow === EApprovalStatus.APPROVED) && (
+								<div className='info-item'>
+									<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.reviewtime' })}</div>
+									<div className='info-value'>
+										{record?.activityOutcome?.approvalTime
+											? dayjs(record?.activityOutcome?.approvalTime).format('HH:mm DD/MM/YYYY')
+											: '--'}
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
+				</Card>
+			</Col>
+
+			{(record?.activityOutcome?.workflow === EApprovalStatus.CHANGES_REQUIRED ||
+				!!record?.activityOutcome?.revisionNote) && (
+				<Col span={24}>
+					<Card variant='borderless' size='small'>
+						<Divider className='divider-big-title' orientation='left' style={{ marginTop: 0 }}>
+							{intl.formatMessage({ id: 'activity.chitiet.tab1.revisionnote' })}
+						</Divider>
+						<span>{record?.activityOutcome?.revisionNote}</span>
+					</Card>
+				</Col>
+			)}
+
+			{(record?.activityOutcome?.workflow === EApprovalStatus.REJECTED ||
+				!!record?.activityOutcome?.activityRejectionNote) && (
+				<Col span={24}>
+					<Card variant='borderless' size='small'>
+						<Divider className='divider-big-title' orientation='left' style={{ marginTop: 0 }}>
+							{intl.formatMessage({ id: 'activity.chitiet.tab1.rejectionnote' })}
+						</Divider>
+						<span>{record?.activityOutcome?.activityRejectionNote}</span>
+					</Card>
+				</Col>
+			)}
+
+			<Col span={24}>
+				<Card variant='borderless' size='small'>
+					<Divider className='divider-big-title' orientation='left' style={{ marginTop: 0 }}>
+						{infoEvidence && activeKey !== '1'
+							? intl.formatMessage({ id: 'activity.chitiet.tab1.evidenceinfo' })
+							: intl.formatMessage({ id: 'activity.chitiet.tab1.role' })}
+					</Divider>
+					<FormRoleEvidence
+						equivalency={record?.coCurricularActivityEquivalency ?? []}
+						select={infoEvidence && activeKey !== '1'}
+						rolesId={record?.activityOutcome?.rolesId}
+					/>
+
+					{infoEvidence && activeKey !== '1' && (
+						<div className='custom-info-grid grid-2' style={{ marginTop: 16 }}>
+							<div className='info-row'>
+								<div className='info-item'>
+									<div style={{ marginBottom: 8, fontWeight: 600 }}>
+										{intl.formatMessage({ id: 'activity.chitiet.tab1.track' })}
+									</div>
+									<Input
+										disabled
+										value={
+											record?.activityOutcome?.trackText ??
+											record?.activityOutcome?.track?.name ??
+											intl.formatMessage({ id: 'activity.chitiet.tab1.noinfo' })
+										}
+									/>
+								</div>
+								<div className='info-item'>
+									<div style={{ marginBottom: 8, fontWeight: 600 }}>
+										{intl.formatMessage({ id: 'activity.chitiet.tab1.level' })}
+									</div>
+									<Input
+										disabled
+										value={
+											record?.activityOutcome?.levels?.name ??
+											intl.formatMessage({ id: 'activity.chitiet.tab1.noinfo' })
+										}
+									/>
+								</div>
+								<div className='info-item full-width'>
+									<div style={{ marginBottom: 8, fontWeight: 600 }}>
+										{intl.formatMessage({ id: 'activity.chitiet.tab1.listevidence' })}
+									</div>
+									<List
+										size='small'
+										dataSource={
+											record?.activityOutcome?.evidenceFile?.flatMap((item: any) =>
+												item.file.map((url: string) => ({
+													name: item.name,
+													url,
+												})),
+											) ?? []
+										}
+										locale={{
+											emptyText: (
+												<Empty
+													image={Empty.PRESENTED_IMAGE_SIMPLE}
+													description={intl.formatMessage({ id: 'activity.chitiet.tab1.noevidence' })}
+												/>
+											),
+										}}
+										renderItem={(item: any) => (
+											<List.Item>
+												<Typography.Link
+													href={item.url}
+													target='_blank'
+													rel='noopener noreferrer'
+													style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+												>
+													<FileOutlined />
+													<span>{item.name}</span>
+												</Typography.Link>
+											</List.Item>
+										)}
+									/>
+								</div>
+								<div className='info-item full-width'>
+									<div style={{ marginBottom: 8, fontWeight: 600 }}>
+										{intl.formatMessage({ id: 'activity.chitiet.tab1.reflection' })}
+									</div>
+									<Input.TextArea
+										rows={3}
+										disabled
+										value={
+											record?.activityOutcome?.reflection ?? intl.formatMessage({ id: 'activity.chitiet.tab1.noinfo' })
+										}
+									/>
+								</div>
+							</div>
+						</div>
+					)}
+				</Card>
+			</Col>
+
+			<Col span={24}>
+				<Card variant='borderless' size='small'>
+					<Divider className='divider-big-title' orientation='left' style={{ marginTop: 0 }}>
+						{intl.formatMessage({ id: 'activity.chitiet.tab1.competency' })}
+					</Divider>
+					<div className='competency-list'>
+						{infoEvidence
+							? record?.activityOutcome?.listAchievedCompetencies?.map((item) => (
+									<div className='competency-item'>
+										<span className='competency-title'>{item?.competencie?.name}</span>
+										<p className='competency-desc'>{item?.competencie?.description}</p>
+									</div>
+								))
+							: record?.competencyList?.map((item) => (
+									<div className='competency-item'>
+										<span className='competency-title'>{item?.competency?.name}</span>
+										<p className='competency-desc'>{item?.competency?.description}</p>
+									</div>
+								))}
+					</div>
+				</Card>
+			</Col>
+
+			<Col span={24}>
+				<Card variant='borderless' size='small'>
+					<Divider className='divider-big-title' orientation='left' style={{ marginTop: 0 }}>
+						{intl.formatMessage({ id: 'activity.chitiet.tab1.description' })}
+					</Divider>
+					<span>{record?.description}</span>
+				</Card>
+			</Col>
+		</Row>
+	);
+};
+
+export default CardChiTietSuKien;

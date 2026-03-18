@@ -1,0 +1,41 @@
+import ExpandText from '@/components/ExpandText';
+import './style.less';
+import { Tooltip } from 'antd';
+import type { LopHocPhan } from '@/services/DaoTaoV2/HocKy/LopHocPhan/typing';
+
+const RenderLichHoc = (props: { lopHocPhan: LopHocPhan.IRecord; showAll?: boolean }) => {
+	const { lopHocPhan } = props;
+	const maHoaLichHoc = !!lopHocPhan?.lopGhepTkb?.maHoaLichHoc?.length
+		? lopHocPhan.lopGhepTkb.maHoaLichHoc
+		: lopHocPhan?.maHoaLichHoc;
+
+	if (!maHoaLichHoc?.length) return <i style={{ color: '#999' }}>Không có thông tin lịch học</i>;
+
+	const maHoaLichs = maHoaLichHoc?.sort((a, b) => a.thu - b.thu);
+	const content = maHoaLichs?.map((item, index) => {
+		const dsTuan = item.danhSachTuan.map((j) => j.tuan).sort((a, b) => a - b);
+		const thu = item.thu < 7 ? `Thứ ${item.thu + 1}` : 'Chủ nhật';
+		const tiet = `tiết ${item.tietBatDau}-${item.tietBatDau + item.soTiet - 1}`;
+		const tenNhanSu = ''; //item.nhanSu?.hoDem ? [item.nhanSu.hoDem, item.nhanSu.ten].join(' ') : item.tenNhanSu ?? '';
+		// <i style={{ color: '#999' }}>Không có thông tin g/v</i>;
+		const phongHoc = item.phongHoc ? `phòng ${item.phongHoc}` : '';
+		return (
+			// eslint-disable-next-line react/no-array-index-key
+			<div key={index} className='lich-hoc'>
+				- {thu}, {tiet},{' '}
+				{props.showAll ? (
+					<>
+						{dsTuan.length} tuần ({dsTuan.join(',')})
+					</>
+				) : (
+					<Tooltip title={dsTuan.join(', ')}>{dsTuan.length} tuần</Tooltip>
+				)}
+				, {[tenNhanSu, phongHoc].filter((j) => !!j).join(', ')}
+			</div>
+		);
+	});
+
+	return props.showAll ? <>{content}</> : <ExpandText>{content}</ExpandText>;
+};
+
+export default RenderLichHoc;
