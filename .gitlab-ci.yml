@@ -22,11 +22,6 @@ build_develop:
     KUBERNETES_CPU_LIMIT: "4"
     KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "10Gi"
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "20Gi"
-  cache:
-    key: "$CI_PROJECT_NAME-yarn"
-    paths:
-      - node_modules/
-      - .yarn/cache/
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME =~ /^uat(-.+)?$/)
   script:
