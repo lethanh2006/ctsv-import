@@ -8,7 +8,6 @@ variables:
   ECR_REPO_NAME: "vwa-congtacsinhvien"
   GIT_DEPTH: 1
 
-# Build khi push lên nhánh develop / uat-*
 build_develop:
   stage: build
   image:
@@ -16,6 +15,11 @@ build_develop:
     entrypoint: [""]
   tags:
     - runner-vu-digital-dev
+  variables:
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
+    KUBERNETES_MEMORY_LIMIT: "5Gi"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_LIMIT: "3"
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME =~ /^uat(-.+)?$/)
   script:
@@ -33,78 +37,7 @@ build_develop:
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_SHORT_SHA}"
       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_REF_SLUG}"
-      --cache=true
+      --snapshot-mode=redo
+      --use-new-run
+      --compressed-caching=false
   interruptible: true
-
-# Build khi tạo tag tại nhánh main
-# build_tag:
-#   stage: build
-#   image:
-#     name: gcr.io/kaniko-project/executor:v1.23.0-debug
-#     entrypoint: [""]
-#   tags:
-#     - runner-vu-digital-dev
-#   only:
-#     - tags
-#   script:
-#     - mkdir -p /kaniko/.docker
-#     - |
-#       cat > /kaniko/.docker/config.json << DOCKEREOF
-#       {
-#         "credHelpers": {
-#           "${ECR_REGISTRY}": "ecr-login"
-#         }
-#       }
-#       DOCKEREOF
-#     - /kaniko/executor
-#       --context "${CI_PROJECT_DIR}"
-#       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-#       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_TAG}"
-#       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:latest"
-#       --cache=true
-#   interruptible: true
-
-# prepare_release:
-#   stage: release
-#   image: docker:24.0.2-git
-#   only:
-#     - tags
-#   script:
-#     - echo RELEASE_TAG=$CI_COMMIT_TAG >> variables.env
-#     - echo '## Changelog' >> CHANGELOG.md
-#     - git tag -l -n9 $CI_COMMIT_TAG >> CHANGELOG.md
-#     - echo '## Commits' >> CHANGELOG.md
-#     - git log --pretty="- %s (%h)" $(git tag --sort=-creatordate | head -2)...$(git tag --sort=-creatordate | head -1) >> CHANGELOG.md
-#     - echo '## Merges' >> CHANGELOG.md
-#     - git log --merges --pretty="- %s (%h)" $(git tag --sort=-creatordate | head -2)...$(git tag --sort=-creatordate | head -1) >> CHANGELOG.md
-#     - echo '## AUTHORS' >> CHANGELOG.md
-#     - git log --pretty="- %an%n- %cn" $(git tag --sort=-creatordate | head -2)...$(git tag --sort=-creatordate | head -1) | sort | uniq >> CHANGELOG.md
-#   artifacts:
-#     paths:
-#       - CHANGELOG.md
-#   tags:
-#     - runner-vu-digital-dev
-#   interruptible: true
-
-# # Release khi tạo tag tại nhánh main
-# release:
-#   stage: release
-#   image: registry.gitlab.com/gitlab-org/release-cli:latest
-#   only:
-#     - tags
-#   needs:
-#     - job: prepare_release
-#       artifacts: true
-#   artifacts:
-#     paths:
-#       - CHANGELOG.md
-#     expire_in: never
-#   script:
-#     - echo "Releasing" $CI_COMMIT_TAG "..."
-#   release:
-#     name: $CI_COMMIT_TAG
-#     description: CHANGELOG.md
-#     tag_name: $CI_COMMIT_TAG
-#   tags:
-#     - runner-vu-digital-dev
-#   interruptible: true
