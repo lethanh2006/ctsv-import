@@ -18,8 +18,15 @@ build_develop:
   variables:
     KUBERNETES_MEMORY_REQUEST: "2Gi"
     KUBERNETES_MEMORY_LIMIT: "5Gi"
-    KUBERNETES_CPU_REQUEST: "1"
-    KUBERNETES_CPU_LIMIT: "3"
+    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_CPU_LIMIT: "4"
+    KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "10Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "20Gi"
+  cache:
+    key: "$CI_PROJECT_NAME-yarn"
+    paths:
+      - node_modules/
+      - .yarn/cache/
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME =~ /^uat(-.+)?$/)
   script:
@@ -37,7 +44,10 @@ build_develop:
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_SHORT_SHA}"
       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_REF_SLUG}"
+      --cache=true
+      --cache-repo="${ECR_REGISTRY}/${ECR_REPO_NAME}/cache"
       --snapshot-mode=redo
       --use-new-run
       --compressed-caching=false
+      --cleanup
   interruptible: true
