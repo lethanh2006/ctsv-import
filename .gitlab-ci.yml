@@ -40,7 +40,7 @@ build_develop:
       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_SHORT_SHA}"
       --destination "${ECR_REGISTRY}/${ECR_REPO_NAME}:${CI_COMMIT_REF_SLUG}"
       --cache=true
-      --cache-repo="${ECR_REGISTRY}/${ECR_REPO_NAME}/cache"
+      --cache-repo="${ECR_REGISTRY}/digital-dev-build-cache"
       --snapshot-mode=redo
       --use-new-run
       --compressed-caching=false
