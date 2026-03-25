@@ -22,7 +22,7 @@ ENV APP_CONFIG_URL_CAN_BO=https://canbo.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_DAO_TAO=https://qldt.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_NHAN_SU=https://tcns.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_TAI_CHINH=https://taichinh.hvpnvn.edu.vn/
-ENV APP_CONFIG_URL_CTSV=https://ctsv.hvpnvn.edu.vn/
+ENV APP_CONFIG_URL_CTSV=https://uat-my.vinuni.edu.vn/ctsv/
 ENV APP_CONFIG_URL_QLKH=https://qlkh.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_VPS=https://vanphong.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_KHAO_THI=https://khaothi.hvpnvn.edu.vn/
@@ -41,6 +41,7 @@ ENV APP_CONFIG_MOODLE_ENDPOINT=''
 ENV APP_CONFIG_INIT_MA_NHOM_TIET_HOC=G
 ENV APP_CONFIG_SO_TIN_CHI_HOC_KY_MIN=14
 ENV APP_CONFIG_SO_TIN_CHI_HOC_KY_MAX=24
+ENV APP_CONFIG_BASE_PATH=/ctsv/
 
 # Set working directory
 WORKDIR /app
