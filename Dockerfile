@@ -3,11 +3,11 @@ FROM node:22-alpine AS development
 
 
 # Set environment variables
-ENV APP_CONFIG_IP_ROOT=https://api.hvpnvn.edu.vn/
+ENV APP_CONFIG_IP_ROOT=https://uat-apigw.vinuni.edu.vn/
 ENV APP_CONFIG_ONE_SIGNAL_ID=
 ENV APP_CONFIG_SENTRY_DSN=
-ENV APP_CONFIG_KEYCLOAK_AUTHORITY=https://uat-sso.vinuni.edu.vn/realms/vwa
-ENV APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID=vwa-
+ENV APP_CONFIG_KEYCLOAK_AUTHORITY=https://uat-sso.vinuni.edu.vn/realms/vinuni
+ENV APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID=vinuni-
 ENV APP_CONFIG_APP_VERSION=241218.1100
 
 ENV APP_CONFIG_TEN_TRUONG='Trường Đại học VinUni'
