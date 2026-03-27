@@ -6,7 +6,7 @@ variables:
   AWS_ACCOUNT_ID: "520492793952"
   AWS_REGION: "ap-southeast-1"
   ECR_REGISTRY: "520492793952.dkr.ecr.ap-southeast-1.amazonaws.com"
-  ECR_REPO_NAME: "dhs-ctsv-web"
+  ECR_REPO_NAME: "vwa-congtacsinhvien"
   APP_NAME: "dhs-ctsv-web"
   GIT_DEPTH: 1
 
@@ -44,8 +44,8 @@ build_develop:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${ECR_REGISTRY}/dhs-ctsv-web:${CI_COMMIT_SHORT_SHA}"
-      --destination "${ECR_REGISTRY}/dhs-ctsv-web:develop"
+      --destination "${ECR_REGISTRY}/vwa-congtacsinhvien:${CI_COMMIT_SHORT_SHA}"
+      --destination "${ECR_REGISTRY}/vwa-congtacsinhvien:develop"
       --cache=true
       --cache-repo="${ECR_REGISTRY}/digital-dev-build-cache"
       --snapshot-mode=redo
