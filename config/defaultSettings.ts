@@ -1,5 +1,7 @@
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
+const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
+
 const defaultSettings: LayoutSettings & {
 	logo?: string;
 	siderWidth: number;
@@ -10,7 +12,7 @@ const defaultSettings: LayoutSettings & {
 	fixedHeader: true,
 	fixSiderbar: true,
 	colorWeak: true,
-	logo: '/logo.png',
+	logo: `${appBasePath}logo.png`,
 	iconfontUrl: '',
 	siderWidth: 260,
 };

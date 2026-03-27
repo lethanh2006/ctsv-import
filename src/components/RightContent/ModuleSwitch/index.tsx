@@ -4,6 +4,8 @@ import { useIntl } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import ModuleView from './ModuleView';
 
+const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
+
 const ModuleSwitch = () => {
 	const intl = useIntl();
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
@@ -15,7 +17,7 @@ const ModuleSwitch = () => {
 				placement='bottom'
 			>
 				<div className='header-menu-item'>
-					<img src='/icons/modules.svg' alt='apps' />
+					<img src={`${appBasePath}icons/modules.svg`} alt='apps' />
 				</div>
 			</Tooltip>
 		</HeaderDropdown>

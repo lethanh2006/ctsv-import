@@ -1,5 +1,7 @@
 import { unitName } from '../base/constant';
 
+const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
+
 export enum MaDichVuVps {
 	MUON_OTO = 'MUON_OTO',
 	MUON_PHONG_HOC = 'MUON_PHONG_HOC',
@@ -32,7 +34,7 @@ export const Setting = {
 	colorWeak: false,
 	title: 'PTIT S-Link',
 	pwa: false,
-	logo: '/favicon.ico',
+	logo: `${appBasePath}favicon.ico`,
 	iconfontUrl: '',
 	version: 'v1.0',
 	tenTruong: unitName,
