@@ -11,6 +11,8 @@ import { OIDCBounder } from '@/components/OIDCBounder';
 import { history, useIntl, useModel } from 'umi';
 import styles from './index.less';
 
+const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
+
 const Login: React.FC = () => {
 	const [count, setCount] = useState<number>(Number(localStorage?.getItem('failed')) || 0);
 	const [submitting, setSubmitting] = useState(false);
@@ -88,7 +90,7 @@ const Login: React.FC = () => {
 					<div className={styles.top}>
 						<div className={styles.header}>
 							<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-								<img alt='logo' className={styles.logo} src='/logo-full.png' />
+								<img alt='logo' className={styles.logo} src={`${appBasePath}logo-full.png`} />
 							</div>
 						</div>
 					</div>
