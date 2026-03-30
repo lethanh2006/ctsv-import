@@ -10,8 +10,8 @@ import { ExportOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Space, Tooltip } from 'antd';
 import fileDownload from 'js-file-download';
 import _ from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useIntl, useModel } from 'umi';
 import ViewDiemLopHocPhan from '../../DiemLopHocPhan/components/ViewDiemLopHocPhan';
 import TitlePrintKQHT from './TitlePrintKQHT';
@@ -84,16 +84,7 @@ const TableDiemHocPhan = (props: {
 		});
 	}, [sinhVienSsoId, maHocKy, namHocId, maKhoaNganh]);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => (
-			<ButtonExtend icon={<PrinterOutlined />}>
-				{intl.formatMessage({ id: 'sinhvienhocvu.diemhocphan.button.inbangdiem' })}
-			</ButtonExtend>
-		),
-		[],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	const onExportKetQuaHocTap = (): void => {
 		seLoadingExport(true);
@@ -208,12 +199,9 @@ const TableDiemHocPhan = (props: {
 				<ButtonExtend loading={loadingExport} icon={<ExportOutlined />} onClick={() => onExportKetQuaHocTap()}>
 					{intl.formatMessage({ id: 'sinhvienhocvu.diemhocphan.button.xuatbangdiem' })}
 				</ButtonExtend>
-				<ReactToPrint
-					content={reactToPrintContent}
-					documentTitle={intl.formatMessage({ id: 'sinhvienhocvu.diemhocphan.title' })}
-					trigger={reactToPrintTrigger}
-					removeAfterPrint
-				/>
+				<ButtonExtend icon={<PrinterOutlined />} onClick={() => handlePrint()}>
+					{intl.formatMessage({ id: 'sinhvienhocvu.diemhocphan.button.inbangdiem' })}
+				</ButtonExtend>
 			</Space>
 
 			<TableStaticData

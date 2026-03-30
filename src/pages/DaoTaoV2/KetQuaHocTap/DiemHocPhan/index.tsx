@@ -11,8 +11,8 @@ import { ETrangThaiDiemHocPhanSv } from '@/services/SinhVien/constant';
 import { ExportOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space } from 'antd';
 import fileDownload from 'js-file-download';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useIntl, useModel } from 'umi';
 import TitlePrintKQHT from '../KetQuaHocKy/components/TitlePrintKQHT';
 
@@ -33,16 +33,7 @@ const DiemHocPhanSvTable = (props: { sinhVienSsoId: string; maKhoaNganh?: string
 		getData();
 	}, [sinhVienSsoId, maKhoaNganh]);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => (
-			<ButtonExtend icon={<PrinterOutlined />}>
-				{intl.formatMessage({ id: 'sinhvienhocvu.bangdiemhp.button.inbangdiem' })}
-			</ButtonExtend>
-		),
-		[],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	const onExportPhuLucVanBang = (): void => {
 		if (sinhVienSsoId) {
@@ -156,12 +147,10 @@ const DiemHocPhanSvTable = (props: { sinhVienSsoId: string; maKhoaNganh?: string
 						{intl.formatMessage({ id: 'sinhvienhocvu.bangdiemhp.button.xuatbangdiem' })}
 					</ButtonExtend>
 				</Dropdown>
-				<ReactToPrint
-					content={reactToPrintContent}
-					documentTitle={intl.formatMessage({ id: 'sinhvienhocvu.bangdiemhp.title' })}
-					trigger={reactToPrintTrigger}
-					removeAfterPrint
-				/>
+
+				<ButtonExtend icon={<PrinterOutlined />} onClick={() => handlePrint()}>
+					{intl.formatMessage({ id: 'sinhvienhocvu.bangdiemhp.button.inbangdiem' })}
+				</ButtonExtend>
 			</Space>
 
 			<TableStaticData
