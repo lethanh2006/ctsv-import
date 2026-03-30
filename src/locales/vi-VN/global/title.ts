@@ -17,4 +17,6 @@ export default {
 	'global.title.bochon': 'Bỏ chọn tất cả',
 	'global.title.thaotac': 'Thao tác',
 	'global.title.tt': 'TT',
+	'global.title.chinhsua': 'Chỉnh sửa',
+	'global.title.coloi': 'Có lỗi xảy ra',
 };
