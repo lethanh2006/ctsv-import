@@ -10,8 +10,8 @@ import { ELoaiDiemChu } from '@/services/DaoTaoV2/KetQuaHocTap/constant';
 import { ExportOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Button, Card, Empty, Space, message } from 'antd';
 import _ from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useModel } from 'umi';
 import TitlePrintKQHP from './TitlePrintKQHP';
 import ViewDiemLopHocPhan from './ViewDiemLopHocPhan';
@@ -35,16 +35,7 @@ const CardDiemLopHocPhan = (getData: () => void) => {
 		(item) => +(recHocPhan?.deCuong?.[`trongSo${item.field}` as keyof HocPhan.IDeCuongHocPhan] ?? 0),
 	);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => (
-			<ButtonExtend icon={<PrinterOutlined />} disabled={!danhSach.length}>
-				In bảng điểm
-			</ButtonExtend>
-		),
-		[danhSach.length],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	const getDataInternal = () => {
 		if (recHocPhan?.maHocPhan && recHocKy?.ma)
@@ -167,8 +158,7 @@ const CardDiemLopHocPhan = (getData: () => void) => {
 		<>
 			<Card
 				title={'Danh sách sinh viên'}
-				styles={{ padding: '8px 0 0' }}
-				headStyle={{ padding: '0' }}
+				styles={{ body: { padding: '8px 0 0' }, header: { padding: '0' } }}
 				bordered={false}
 			>
 				{recHocPhan?._id ? (
@@ -190,12 +180,9 @@ const CardDiemLopHocPhan = (getData: () => void) => {
 								>
 									Xuất bảng điểm
 								</Button>
-								<ReactToPrint
-									content={reactToPrintContent}
-									documentTitle='Kết quả học tập học phần'
-									trigger={reactToPrintTrigger}
-									removeAfterPrint
-								/>
+								<ButtonExtend icon={<PrinterOutlined />} disabled={!danhSach.length} onClick={() => handlePrint()}>
+									In bảng điểm
+								</ButtonExtend>
 							</Space>
 						</TableStaticData>
 

@@ -13,8 +13,8 @@ import {
 import { CalendarOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Button, Select, Space } from 'antd';
 import _ from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useIntl, useModel } from 'umi';
 import RenderLichHoc from '../../HocKy/LopHocPhan/components/RenderLichHoc';
 import ViewDiemLopHocPhan from '../../KetQuaHocTap/DiemLopHocPhan/components/ViewDiemLopHocPhan';
@@ -38,8 +38,6 @@ const LopTinChiSinhVien = () => {
 	const [dataPrint, setDataPrint] = useState<Partial<TData>[]>([]);
 	const componentRef = useRef(null);
 	const dataHienThi = dataLop.filter((i) => !recHocKy?.ma || i.maHocKy === recHocKy?.ma);
-
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
 
 	const getData = () =>
 		recSinhVien?.ssoId &&
@@ -104,14 +102,7 @@ const LopTinChiSinhVien = () => {
 		colSpan: rec._id === '-1' ? 0 : 1,
 	});
 
-	const reactToPrintTrigger = useCallback(
-		() => (
-			<Button icon={<PrinterOutlined />} size='small'>
-				{intl.formatMessage({ id: 'loptinchi.button.inthongtin' })}
-			</Button>
-		),
-		[],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	const columns: IColumn<TData>[] = [
 		{
@@ -297,12 +288,9 @@ const LopTinChiSinhVien = () => {
 					<Button icon={<CalendarOutlined />} onClick={() => setVisibleLichHoc(true)} size='small'>
 						{intl.formatMessage({ id: 'loptinchi.button.xemlichhoc' })}
 					</Button>
-					<ReactToPrint
-						content={reactToPrintContent}
-						documentTitle={intl.formatMessage({ id: 'loptinchi.danhsach.title' })}
-						trigger={reactToPrintTrigger}
-						removeAfterPrint
-					/>
+					<Button icon={<PrinterOutlined />} size='small' onClick={() => handlePrint()}>
+						{intl.formatMessage({ id: 'loptinchi.button.inthongtin' })}
+					</Button>
 				</Space>
 			</TableStaticData>
 
@@ -328,7 +316,7 @@ const LopTinChiSinhVien = () => {
 						columns={columnsPrint}
 						data={dataPrint}
 						size='small'
-						otherProps={{ pagination: false, scroll: false }}
+						otherProps={{ pagination: false, scroll: undefined }}
 					/>
 				</div>
 			</PrintTemplate>

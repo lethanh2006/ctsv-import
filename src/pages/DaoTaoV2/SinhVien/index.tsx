@@ -233,7 +233,7 @@ const ViewSinhVien = () => {
 			<Modal
 				open={visibleFormCapNhatAnh}
 				onCancel={() => setvisibleFormCapNhatAnh(false)}
-				styles={{ padding: 0 }}
+				styles={{ body: { padding: 0 } }}
 				footer={null}
 			>
 				<FormCapNhatAnhSV getData={getData} />
