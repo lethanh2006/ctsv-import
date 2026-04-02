@@ -73,7 +73,7 @@ const ChiTietMyCCT = (props: any) => {
 							<div className='cct-column left'>
 								<header>
 									<div style={{ marginBottom: 20 }}>
-										<img src='/logo-text.png' alt='logo' width={90} />
+										<img src='/cong-tac-sinh-vien/logo-text.png' alt='logo' width={90} />
 									</div>
 									<h1>CO-CURRICULAR & COMPETENCY TRANSCRIPT</h1>
 									<div style={{ marginTop: -5 }}>

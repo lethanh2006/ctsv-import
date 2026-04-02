@@ -50,7 +50,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 					: record?.activitiesType?.activitiesTypeDomainId,
 				listAchievedCompetencies: record?.listAchievedCompetencies?.map((item) => item?.competencyId),
 				onUni: record?.supervisorSsoId ? true : false,
-				banner: record?.banner ?? '/images/cct/background.png',
+				banner: record?.banner ?? '/cong-tac-sinh-vien/images/cct/background.png',
 			});
 		}
 
@@ -64,7 +64,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 				checkbox: false,
 				listAchievedCompetencies: null,
 				onUni: true,
-				banner: '/images/cct/background.png',
+				banner: '/cong-tac-sinh-vien/images/cct/background.png',
 			});
 		}
 	}, [record?._id, visibleForm]);
@@ -115,7 +115,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 							{isView ? (
 								<Col span={24} md={9}>
 									<Image
-										src={record?.banner ?? '/images/cct/background.png'}
+										src={record?.banner ?? '/cong-tac-sinh-vien/images/cct/background.png'}
 										alt={record?.activitiesOutcomeName}
 										className='activity-image'
 									/>
