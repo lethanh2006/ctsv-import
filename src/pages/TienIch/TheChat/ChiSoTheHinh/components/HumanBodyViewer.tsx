@@ -55,7 +55,7 @@ const HumanBodyViewer = (props: { ssoId: string }) => {
 						<div className='height-card' style={{ background: '#DCFFFF' }}>
 							<div className='left'>
 								<img
-									src='/cong-tac-sinh-vien/images/thechat/chieucao.png'
+									src='/images/thechat/chieucao.png'
 									alt='height icon'
 									className='icon-vertical'
 									style={{ color: '#18BBC2' }}
@@ -75,7 +75,7 @@ const HumanBodyViewer = (props: { ssoId: string }) => {
 						<div className='height-card' style={{ background: '#F8DDD3' }}>
 							<div className='left'>
 								<img
-									src='/cong-tac-sinh-vien/images/thechat/cannang.png'
+									src='/images/thechat/cannang.png'
 									alt='height icon'
 									className='icon-vertical'
 									style={{ color: '#E20404' }}
@@ -97,7 +97,7 @@ const HumanBodyViewer = (props: { ssoId: string }) => {
 						<div className='height-card' style={{ background: '#FFE7BF' }}>
 							<div className='left'>
 								<img
-									src='/cong-tac-sinh-vien/images/thechat/vongeo.png'
+									src='/images/thechat/vongeo.png'
 									alt='height icon'
 									className='icon-vertical'
 									style={{ color: '#FFAF0B' }}
@@ -116,7 +116,7 @@ const HumanBodyViewer = (props: { ssoId: string }) => {
 						<div className='height-card' style={{ background: '#ECD7F5' }}>
 							<div className='left'>
 								<img
-									src='/cong-tac-sinh-vien/images/thechat/vongmong.png'
+									src='/images/thechat/vongmong.png'
 									alt='height icon'
 									className='icon-vertical'
 									style={{ color: '#A61ADE' }}
@@ -138,7 +138,7 @@ const HumanBodyViewer = (props: { ssoId: string }) => {
 						<div className='height-card' style={{ background: '#CDE1F4' }}>
 							<div className='left'>
 								<img
-									src='/cong-tac-sinh-vien/images/thechat/BMI.png'
+									src='/images/thechat/BMI.png'
 									alt='height icon'
 									className='icon-vertical'
 									style={{ color: '#0047FF' }}
@@ -157,7 +157,7 @@ const HumanBodyViewer = (props: { ssoId: string }) => {
 						<div className='height-card' style={{ background: '#DAEFDA' }}>
 							<div className='left'>
 								<img
-									src='/cong-tac-sinh-vien/images/thechat/WHR.png'
+									src='/images/thechat/WHR.png'
 									alt='height icon'
 									className='icon-vertical'
 									style={{ color: '#399500' }}
