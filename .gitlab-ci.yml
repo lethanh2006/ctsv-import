@@ -2,6 +2,11 @@ stages:
   - build
   - update-gitops
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+    - when: never
+
 variables:
   AWS_ACCOUNT_ID: "520492793952"
   AWS_REGION: "ap-southeast-1"
@@ -30,7 +35,7 @@ build_develop:
     KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "10Gi"
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "20Gi"
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME =~ /^uat(-.+)?$/)
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
   script:
     - mkdir -p /kaniko/.docker
     - |
@@ -56,5 +61,7 @@ build_develop:
 
 update_gitops:
   extends: .update_image_tag
+  rules:
+    - when: never
   needs:
     - build_develop
