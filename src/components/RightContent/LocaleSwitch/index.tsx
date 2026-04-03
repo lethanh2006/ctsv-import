@@ -39,7 +39,7 @@ const LocaleSwitch = () => {
 		<HeaderDropdown content={<Menu items={items} />} trigger='hover'>
 			<span className={styles.action}>
 				<img
-					src={`/images/locales/${intl.formatMessage({ id: 'app.locale.image', defaultMessage: 'vi-VN.svg' })}`}
+					src={`/cong-tac-sinh-vien/images/locales/${intl.formatMessage({ id: 'app.locale.image', defaultMessage: 'vi-VN.svg' })}`}
 					alt='lang'
 					width={25}
 				/>

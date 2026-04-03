@@ -206,7 +206,7 @@ const ChiTietMyCCT = (props: any) => {
 									</section>
 
 									<ul>
-										{sortedAwards?.map((item) => (
+										{sortedAwards?.slice(0, 5).map((item) => (
 											<li>
 												<strong>
 													{item?.competition} - {item?.rank} ({dayjs(item?.dateOfAchievement).format('DD/MM/YYYY')})

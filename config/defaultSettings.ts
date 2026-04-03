@@ -10,7 +10,7 @@ const defaultSettings: LayoutSettings & {
 	fixedHeader: true,
 	fixSiderbar: true,
 	colorWeak: true,
-	logo: '/logo.png',
+	logo: '/cong-tac-sinh-vien/logo.png',
 	iconfontUrl: '',
 	siderWidth: 260,
 };

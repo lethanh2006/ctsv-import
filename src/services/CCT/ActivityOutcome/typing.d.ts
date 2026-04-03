@@ -98,4 +98,79 @@ declare module ActivityOutCome {
 		competency: Competency.IRecord;
 		activities: IRecord;
 	}
+
+	export interface IThongKeThoiGianDuyet {
+		totalProcessed: number;
+		averageTurnaroundHours: number;
+		minTurnaroundHours: number;
+		maxTurnaroundHours: number;
+	}
+
+	export interface IThongKeTiLeHoanThanh {
+		totalRegistered: number;
+		hasEvidence: number;
+		totalApproved: number;
+		evidenceRate: number;
+		approvalRate: number;
+	}
+
+	export interface IThongKePhanBoLevel {
+		_id: string;
+		code: string;
+		name: string;
+		order: number;
+		count: number;
+		percentage: number;
+	}
+
+	export interface IThongKePhanBoVali {
+		validation: string;
+		count: number;
+		percentage: number;
+	}
+
+	export interface IThongKeHeatmap {
+		_id: string;
+		code: string;
+		name: string;
+		icon: string;
+		color: string;
+		count: number;
+		percentage: number;
+	}
+
+	export interface IThongKePhanBoHoatDong {
+		_id: string;
+		code: string;
+		name: string;
+		count: number;
+		percentage: number;
+	}
+
+	export interface IThongKePhanBoVaiTro {
+		_id: string;
+		code: string;
+		name: string;
+		count: number;
+		percentage: number;
+	}
+
+	export interface IThongKeSinhVien {
+		totalRecords: number;
+		totalStudents: number;
+		averageRecordsPerStudent: number;
+	}
+
+	export interface IThongKeTopHoatDong {
+		activitiesId: string;
+		count: number;
+		activity: {
+			_id: string;
+			name: string;
+			startDate: Date;
+			endDate: Date;
+			organizer: string;
+			activitiesTypeId: string;
+		};
+	}
 }
