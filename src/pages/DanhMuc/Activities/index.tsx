@@ -6,7 +6,6 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, Space, Switch, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import SelectActivitiesTypeDomain from '../CCD/components/Select';
-import SelectTrack from '../Track/components/Select';
 import FormActivities from './components/Form';
 
 const ActivitiesPage = () => {
@@ -63,15 +62,15 @@ const ActivitiesPage = () => {
 				),
 			onCell,
 		},
-		{
-			title: intl.formatMessage({ id: 'activitiesmanagement.column.track' }),
-			dataIndex: 'track',
-			width: 120,
-			render: (val, rec) => rec?.track?.name,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectTrack multiple />,
-			onCell,
-		},
+		// {
+		// 	title: intl.formatMessage({ id: 'activitiesmanagement.column.track' }),
+		// 	dataIndex: 'track',
+		// 	width: 120,
+		// 	render: (val, rec) => rec?.track?.name,
+		// 	filterType: 'customselect',
+		// 	filterCustomSelect: <SelectTrack multiple />,
+		// 	onCell,
+		// },
 		{
 			title: intl.formatMessage({ id: 'activitiesmanagement.column.required' }),
 			dataIndex: 'requiredEvidenceList',

@@ -54,10 +54,10 @@ const ChiTietActivityOutCome = (props: { recOutcome: ActivityOutCome.IRecord }) 
 								<div className='info-label'>{intl.formatMessage({ id: 'activityresult.detail.activityType' })}</div>
 								<div className='info-value'>{recOutcome?.activitiesType?.name ?? '--'}</div>
 							</div>
-							<div className='info-item'>
+							{/* <div className='info-item'>
 								<div className='info-label'>{intl.formatMessage({ id: 'activityresult.detail.track' })}</div>
 								<div className='info-value'>{recOutcome?.trackText ?? recOutcome?.track?.name ?? '--'}</div>
-							</div>
+							</div> */}
 							<div className='info-item'>
 								<div className='info-label'>{intl.formatMessage({ id: 'activityresult.detail.mentorSupervisor' })}</div>
 								<div className='info-value'>{recOutcome?.supervisorName ?? '--'}</div>

@@ -5,7 +5,6 @@ import { Button, Card, Col, Form, Input, InputNumber, Row, Switch } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectActivitiesTypeDomain from '../../CCD/components/Select';
-import SelectTrack from '../../Track/components/Select';
 import FormItemAttributesCCA from '../Attributes/FormItem';
 import AttributesCCAModel from '../AttributesModel';
 
@@ -101,7 +100,7 @@ const FormActivities = () => {
 							</Form.Item>
 						)}
 					</Col>
-					<Col span={24} md={12}>
+					{/* <Col span={24} md={12}>
 						<Form.Item
 							name='trackId'
 							label={intl.formatMessage({ id: 'activitiesmanagement.form.track' })}
@@ -109,7 +108,7 @@ const FormActivities = () => {
 						>
 							<SelectTrack disabled={isView} />
 						</Form.Item>
-					</Col>
+					</Col> */}
 					<Col span={24} md={12}>
 						<Form.Item
 							name='activitiesTypeDomainId'

@@ -9,8 +9,6 @@ import { useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
-const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
-
 export type NoticeIconProps = {
 	count?: number;
 	total?: number;
@@ -87,7 +85,7 @@ const NoticeIcon: React.FC<NoticeIconProps> = ({
 				<div className='header-menu-item'>
 					<Badge count={count ? (count < 100 ? count : '99+') : undefined} className={styles.noti_badge}>
 						<img
-							src={`${appBasePath}icons/notification.svg`}
+							src='/cong-tac-sinh-vien/icons/notification.svg'
 							alt='notif'
 							className={count ? styles.ringing : undefined}
 						/>

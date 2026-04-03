@@ -202,7 +202,24 @@ const HistoryActivityPage = () => {
 			dataIndex: segmentSelected === EActivityCategory.REGISTERED ? ['activities', 'name'] : 'activitiesOutcomeName',
 			width: 180,
 			render: (val, rec) =>
-				rec?.activityCategory === EActivityCategory.REGISTERED ? rec?.activities?.name : rec?.activitiesOutcomeName,
+				rec?.isAwardRecognition ? (
+					<Space>
+						{rec?.competition}{' '}
+						<Tag
+							color={officialColors.official300}
+							style={{
+								color: officialColors.official500,
+								fontWeight: 600,
+							}}
+						>
+							Award
+						</Tag>
+					</Space>
+				) : rec?.activityCategory === EActivityCategory.REGISTERED ? (
+					rec?.activities?.name
+				) : (
+					rec?.activitiesOutcomeName
+				),
 			filterType: 'string',
 			onCell,
 		},
@@ -285,15 +302,15 @@ const HistoryActivityPage = () => {
 					: rec?.activitiesType?.name,
 			onCell,
 		},
-		{
-			title: intl.formatMessage({ id: 'activityresult.column.track' }),
-			width: 120,
-			render: (val, rec) =>
-				rec?.activityCategory === EActivityCategory.REGISTERED
-					? (rec?.activities?.activitiesType?.trackText ?? rec?.activities?.activitiesType?.track?.name)
-					: (rec?.activitiesType?.trackText ?? rec?.activitiesType?.track?.name),
-			onCell,
-		},
+		// {
+		// 	title: intl.formatMessage({ id: 'activityresult.column.track' }),
+		// 	width: 120,
+		// 	render: (val, rec) =>
+		// 		rec?.activityCategory === EActivityCategory.REGISTERED
+		// 			? (rec?.activities?.activitiesType?.trackText ?? rec?.activities?.activitiesType?.track?.name)
+		// 			: (rec?.activitiesType?.trackText ?? rec?.activitiesType?.track?.name),
+		// 	onCell,
+		// },
 		{
 			title: intl.formatMessage({ id: 'activityresult.column.mentorSupervisor' }),
 			dataIndex: 'supervisorName',

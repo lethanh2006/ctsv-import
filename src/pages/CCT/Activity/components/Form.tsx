@@ -14,6 +14,7 @@ import { Activity } from '@/services/CCT/Activity/typing';
 import { EparticipantRole, EParticipantScope, mapNameParticipantScope } from '@/services/CCT/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import dayjs from '@/utils/dayjs';
+import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { buildDisabledDateTime, resetFieldsForm } from '@/utils/utils';
 import { Button, Checkbox, Col, Divider, Form, Input, InputNumber, message, Radio, Row, Select } from 'antd';
@@ -122,8 +123,8 @@ const FormActivity = (props: { getData?: () => void }) => {
 
 	const onFinish = async (values: Activity.IRecord) => {
 		setFormSubmiting(true);
-		const banner = await buildUpLoadFile(values, 'banner');
-		const backgroundImage = await buildUpLoadFile(values, 'backgroundImage');
+		const banner = await buildUpLoadFile(values, 'banner', undefined, undefined, ipCCT);
+		const backgroundImage = await buildUpLoadFile(values, 'backgroundImage', undefined, undefined, ipCCT);
 		values.banner = banner;
 		values.backgroundImage = backgroundImage;
 		setFormSubmiting(false);
@@ -594,7 +595,7 @@ const FormActivity = (props: { getData?: () => void }) => {
 									</Form.Item>
 								</Col>
 
-								<Col span={24} md={8}>
+								{/* <Col span={24} md={8}>
 									<Form.Item label={intl.formatMessage({ id: 'activity.info.form.track' })}>
 										<Input
 											disabled
@@ -604,7 +605,7 @@ const FormActivity = (props: { getData?: () => void }) => {
 											}
 										/>
 									</Form.Item>
-								</Col>
+								</Col> */}
 
 								{activitiesTypeId && (
 									<Col span={24}>

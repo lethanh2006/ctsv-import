@@ -75,15 +75,15 @@ const ListEvidenceActivity = () => {
 			filterCustomSelect: <SelectLevelsManagement multiple />,
 			onCell,
 		},
-		{
-			title: intl.formatMessage({ id: 'activity.chitiet.tab3.track' }),
-			width: 120,
-			render: (val, rec) =>
-				rec?.activityCategory === EActivityCategory.REGISTERED
-					? (rec?.activities?.activitiesType?.trackText ?? rec?.activities?.activitiesType?.track?.name)
-					: (rec?.activitiesType?.trackText ?? rec?.activitiesType?.track?.name),
-			onCell,
-		},
+		// {
+		// 	title: intl.formatMessage({ id: 'activity.chitiet.tab3.track' }),
+		// 	width: 120,
+		// 	render: (val, rec) =>
+		// 		rec?.activityCategory === EActivityCategory.REGISTERED
+		// 			? (rec?.activities?.activitiesType?.trackText ?? rec?.activities?.activitiesType?.track?.name)
+		// 			: (rec?.activitiesType?.trackText ?? rec?.activitiesType?.track?.name),
+		// 	onCell,
+		// },
 		{
 			title: intl.formatMessage({ id: 'activity.chitiet.tab3.attribute' }),
 			width: 160,

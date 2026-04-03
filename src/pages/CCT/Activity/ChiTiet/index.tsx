@@ -82,12 +82,12 @@ const CardChiTietSuKien = (props: {
 								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.type' })}</div>
 								<div className='info-value'>{record?.activitiesType?.name ?? '--'}</div>
 							</div>
-							<div className='info-item'>
+							{/* <div className='info-item'>
 								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.track' })}</div>
 								<div className='info-value'>
 									{record?.activitiesType?.trackText ?? record?.activitiesType?.track?.name ?? '--'}
 								</div>
-							</div>
+							</div> */}
 							<div className='info-item'>
 								<div className='info-label'>{intl.formatMessage({ id: 'activity.chitiet.tab1.capa' })}</div>
 								<div
@@ -201,7 +201,7 @@ const CardChiTietSuKien = (props: {
 					{infoEvidence && activeKey !== '1' && (
 						<div className='custom-info-grid grid-2' style={{ marginTop: 16 }}>
 							<div className='info-row'>
-								<div className='info-item'>
+								{/* <div className='info-item'>
 									<div style={{ marginBottom: 8, fontWeight: 600 }}>
 										{intl.formatMessage({ id: 'activity.chitiet.tab1.track' })}
 									</div>
@@ -213,7 +213,7 @@ const CardChiTietSuKien = (props: {
 											intl.formatMessage({ id: 'activity.chitiet.tab1.noinfo' })
 										}
 									/>
-								</div>
+								</div> */}
 								<div className='info-item'>
 									<div style={{ marginBottom: 8, fontWeight: 600 }}>
 										{intl.formatMessage({ id: 'activity.chitiet.tab1.level' })}

@@ -36,85 +36,85 @@
 	},
 
 	// SINH VIEN
-	// {
-	// 	name: 'SinhVien',
-	// 	path: '/sinh-vien',
-	// 	icon: 'contacts',
-	// 	routes: [
-	// 		{
-	// 			name: 'DotCapNhatHoSo',
-	// 			path: 'dot-cap-nhat-ho-so',
-	// 			component: 'DaoTaoV2/SinhVien/DotCapNhatHoSo',
-	// 			// component: 'TrangChu',
-	// 		},
-	// 		{
-	// 			name: 'DanhSachSinhVien',
-	// 			path: 'danh-sach-sinh-vien',
-	// 			component: 'DaoTaoV2/SinhVien',
-	// 			// component: 'TrangChu',
-	// 		},
-	// 		{
-	// 			name: 'HoSoTheoDoiSucKhoe',
-	// 			path: 'ho-so-theo-do-suc-kheo',
-	// 			icon: 'HeartOutlined',
-	// 			routes: [
-	// 				{
-	// 					name: 'DotKhamSucKhoe',
-	// 					path: 'dot-kham-suc-khoe',
-	// 					component: 'HoSoTheoDoiSucKhoe/DotKhamSucKhoe',
-	// 				},
-	// 				{
-	// 					name: 'KetQuaKhamSucKhoe',
-	// 					path: 'ket-qua-kham-suc-khoe',
-	// 					component: 'HoSoTheoDoiSucKhoe/KetQuaKhamSucKhoe',
-	// 				},
-	// 			],
-	// 		},
-	// 		{
-	// 			name: 'LopHanhChinh',
-	// 			path: 'lop-hanh-chinh',
-	// 			component: 'DaoTaoV2/NamHoc/LopHanhChinh',
-	// 		},
-	// 		{
-	// 			name: 'BanCanSuLop',
-	// 			path: 'ban-can-su-lop',
-	// 			component: 'DaoTaoV2/NamHoc/SvLopHanhChinhNamHoc',
-	// 		},
-	// 		{
-	// 			name: 'CoVanHocTap',
-	// 			path: 'co-van-hoc-tap',
-	// 			component: 'DaoTaoV2/NamHoc/CoVanLopHanhChinhNamHoc',
-	// 		},
-	// 		{
-	// 			name: 'ThongKe',
-	// 			path: 'thong-ke-sinh-vien',
-	// 			component: 'DaoTaoV2/SinhVien/ThongKe',
-	// 			// component: 'TrangChu',
-	// 		},
-	// 		// {
-	// 		//   name: 'LopHanhChinh',
-	// 		//   path: 'lop-hanh-chinh',
-	// 		//   component: 'NamHoc/LopHanhChinh',
-	// 		// },
-	// 		// {
-	// 		//   name: 'DotNhapHoc',
-	// 		//   path: 'dot-nhap-hoc',
-	// 		//   component: 'NamHoc/DotNhapHoc',
-	// 		// },
-	// 		// {
-	// 		//   name: 'ChuyenTruong',
-	// 		//   path: 'chuyen-truong',
-	// 		// },
-	// 		// {
-	// 		//   name: 'KhenThuong',
-	// 		//   path: 'khen-thuong',
-	// 		// },
-	// 		// {
-	// 		//   name: 'KyLuat',
-	// 		//   path: 'ky-luat',
-	// 		// },
-	// 	],
-	// },
+	{
+		name: 'SinhVien',
+		path: '/sinh-vien',
+		icon: 'contacts',
+		routes: [
+			// {
+			// 	name: 'DotCapNhatHoSo',
+			// 	path: 'dot-cap-nhat-ho-so',
+			// 	component: 'DaoTaoV2/SinhVien/DotCapNhatHoSo',
+			// 	// component: 'TrangChu',
+			// },
+			{
+				name: 'DanhSachSinhVien',
+				path: 'danh-sach-sinh-vien',
+				component: 'DaoTaoV2/SinhVien',
+				// component: 'TrangChu',
+			},
+			// {
+			// 	name: 'HoSoTheoDoiSucKhoe',
+			// 	path: 'ho-so-theo-do-suc-kheo',
+			// 	icon: 'HeartOutlined',
+			// 	routes: [
+			// 		{
+			// 			name: 'DotKhamSucKhoe',
+			// 			path: 'dot-kham-suc-khoe',
+			// 			component: 'HoSoTheoDoiSucKhoe/DotKhamSucKhoe',
+			// 		},
+			// 		{
+			// 			name: 'KetQuaKhamSucKhoe',
+			// 			path: 'ket-qua-kham-suc-khoe',
+			// 			component: 'HoSoTheoDoiSucKhoe/KetQuaKhamSucKhoe',
+			// 		},
+			// 	],
+			// },
+			// {
+			// 	name: 'LopHanhChinh',
+			// 	path: 'lop-hanh-chinh',
+			// 	component: 'DaoTaoV2/NamHoc/LopHanhChinh',
+			// },
+			// {
+			// 	name: 'BanCanSuLop',
+			// 	path: 'ban-can-su-lop',
+			// 	component: 'DaoTaoV2/NamHoc/SvLopHanhChinhNamHoc',
+			// },
+			// {
+			// 	name: 'CoVanHocTap',
+			// 	path: 'co-van-hoc-tap',
+			// 	component: 'DaoTaoV2/NamHoc/CoVanLopHanhChinhNamHoc',
+			// },
+			// {
+			// 	name: 'ThongKe',
+			// 	path: 'thong-ke-sinh-vien',
+			// 	component: 'DaoTaoV2/SinhVien/ThongKe',
+			// 	// component: 'TrangChu',
+			// },
+			// // {
+			// //   name: 'LopHanhChinh',
+			// //   path: 'lop-hanh-chinh',
+			// //   component: 'NamHoc/LopHanhChinh',
+			// // },
+			// // {
+			// //   name: 'DotNhapHoc',
+			// //   path: 'dot-nhap-hoc',
+			// //   component: 'NamHoc/DotNhapHoc',
+			// // },
+			// // {
+			// //   name: 'ChuyenTruong',
+			// //   path: 'chuyen-truong',
+			// // },
+			// // {
+			// //   name: 'KhenThuong',
+			// //   path: 'khen-thuong',
+			// // },
+			// // {
+			// //   name: 'KyLuat',
+			// //   path: 'ky-luat',
+			// // },
+		],
+	},
 
 	//////////////////////
 	// LỚP HÀNH CHÍNH
@@ -172,6 +172,24 @@
 	// 	// access: 'accessFilter',
 	// 	// maChucNang: 'ctsv|su-kien-drl',
 	// },
+
+	{
+		name: 'SubmisstionRound',
+		icon: 'ScheduleOutlined',
+		path: '/activity-submission',
+		routes: [
+			{
+				name: 'Management',
+				path: 'dot',
+				component: 'CCT/SubmisstionRound',
+			},
+			{
+				name: 'DanhSach',
+				path: 'danh-sach',
+				component: 'CCT/SubmisstionRound/DanhSach',
+			},
+		],
+	},
 
 	{
 		name: 'Activity',
@@ -780,12 +798,12 @@
 				path: 'attribute',
 				// access: 'cctFilter',
 			},
-			{
-				name: 'Track',
-				component: 'DanhMuc/Track',
-				path: 'track',
-				// access: 'cctFilter',
-			},
+			// {
+			// 	name: 'Track',
+			// 	component: 'DanhMuc/Track',
+			// 	path: 'track',
+			// 	// access: 'cctFilter',
+			// },
 			{
 				name: 'CCD',
 				component: 'DanhMuc/CCD',

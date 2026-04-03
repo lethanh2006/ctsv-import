@@ -4,8 +4,6 @@ import { getLocale, setLocale, useIntl } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from '../index.less';
 
-const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
-
 const LocaleSwitch = () => {
 	const intl = useIntl();
 	// const allLocales = getAllLocales();
@@ -25,13 +23,13 @@ const LocaleSwitch = () => {
 			key: 'vi-VN',
 			label: 'Tiếng Việt (vi-VN)',
 			onClick: handleChange('vi-VN'),
-			icon: <img src={`${appBasePath}images/locales/vi-VN.svg`} width={25} alt='vi' />,
+			icon: <img src='/cong-tac-sinh-vien/images/locales/vi-VN.svg' width={25} alt='vi' />,
 		},
 		{
 			key: 'en-US',
 			label: 'English (en-US)',
 			onClick: handleChange('en-US'),
-			icon: <img src={`${appBasePath}images/locales/en-US.svg`} width={25} alt='en' />,
+			icon: <img src='/cong-tac-sinh-vien/images/locales/en-US.svg' width={25} alt='en' />,
 		},
 	];
 
@@ -41,7 +39,7 @@ const LocaleSwitch = () => {
 		<HeaderDropdown content={<Menu items={items} />} trigger='hover'>
 			<span className={styles.action}>
 				<img
-					src={`${appBasePath}images/locales/${intl.formatMessage({ id: 'app.locale.image', defaultMessage: 'vi-VN.svg' })}`}
+					src={`/cong-tac-sinh-vien/images/locales/${intl.formatMessage({ id: 'app.locale.image', defaultMessage: 'vi-VN.svg' })}`}
 					alt='lang'
 					width={25}
 				/>

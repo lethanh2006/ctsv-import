@@ -1,20 +1,14 @@
+import DanhSachMyCCT from '@/pages/CCT/SubmisstionRound/DanhSach';
 import QuyetDinh from '@/pages/CheDoChinhSach/QuyetDinh';
 import SinhVienHocVuPage from '@/pages/DaoTaoV2/SinhVien/XetHocVu';
-import PhieuDiemRenLuyenComponent from '@/pages/DiemRenLuyen/PhieuDiemVWA';
-import SinhVienDotKhamPage from '@/pages/HoSoTheoDoiSucKhoe/SinhVienDotKham';
 import { ELoaiCheDoSinhVien } from '@/services/CheDoSinhVien/constant';
 import { Button, Card, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useIntl, useModel } from 'umi';
-import ChungChiSinhVienPage from '../ChungChiSinhVien';
-import CongNoSinhVienPage from '../CongNoSinhVien';
-import NoiNgoaiTruSinhVienPage from '../NoiNgoaiTruSinhVien';
-import ViecLamSinhVienPage from '../ViecLamSinhVien';
 import FormSinhVien from './Form';
 import FormKhenThuongKyLuat from './FormKhenThuongKyLuat';
 import FormQuaTrinhHocTap from './FormQuaTrinhHocTap';
-import FormTotNghiepVanBang from './FormTotNghiepVanBang';
 
 const ModalSinhVien = (props: any) => {
 	const intl = useIntl();
@@ -63,15 +57,15 @@ const ModalSinhVien = (props: any) => {
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab5' })} key={'2'} disabled={!record?.ssoId}>
 					<FormKhenThuongKyLuat />
 				</Tabs.TabPane>
-				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab12' })} key={'12'} disabled={!record?.ssoId}>
+				{/* <Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab12' })} key={'12'} disabled={!record?.ssoId}>
 					<QuyetDinh
 						filterWidth={250}
 						loaiCheDoSinhVien={ELoaiCheDoSinhVien.CHE_DO_CHINH_SACH}
 						ssoId={record?.ssoId}
 						title={intl.formatMessage({ id: 'sinhvien.quyetdinh.title' })}
 					/>
-				</Tabs.TabPane>
-				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab14' })} key={'14'} disabled={!record?.ssoId}>
+				</Tabs.TabPane> */}
+				{/* <Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab14' })} key={'14'} disabled={!record?.ssoId}>
 					<QuyetDinh
 						filterWidth={250}
 						loaiCheDoSinhVien={ELoaiCheDoSinhVien.GDCT_TU_TUONG}
@@ -98,11 +92,11 @@ const ModalSinhVien = (props: any) => {
 				</Tabs.TabPane>
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab7' })} key={'4'} disabled={!record?.ssoId}>
 					<NoiNgoaiTruSinhVienPage />
-				</Tabs.TabPane>
+				</Tabs.TabPane> */}
 				{/* <Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab11' })} key={'9'} disabled={!record?.ssoId}>
 					<SinhVienHocVuPage />
 				</Tabs.TabPane> */}
-				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab8' })} key={'8'} disabled={!record?.ssoId}>
+				{/* <Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab8' })} key={'8'} disabled={!record?.ssoId}>
 					<ChungChiSinhVienPage fromSinhVien />
 				</Tabs.TabPane>
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab9' })} key={'5'} disabled={!record?.ssoId}>
@@ -110,6 +104,9 @@ const ModalSinhVien = (props: any) => {
 				</Tabs.TabPane>
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sinhvien.tab10' })} key={'6'} disabled={!record?.ssoId}>
 					<ViecLamSinhVienPage />
+				</Tabs.TabPane> */}
+				<Tabs.TabPane tab='CCT Submission' key={'17'} disabled={!record?.ssoId}>
+					<DanhSachMyCCT ssoId={record?.ssoId} />
 				</Tabs.TabPane>
 			</Tabs>
 
