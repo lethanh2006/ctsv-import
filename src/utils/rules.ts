@@ -200,7 +200,9 @@ const createRules = () => {
 		sauThoiDiem: (mo: any, label: string): Rule[] => [
 			{
 				validator: (__, value, callback) => {
-					if (mo && value && dayjs(value).isBefore(dayjs(mo))) callback('');
+					if (mo && value && dayjs(value).isBefore(dayjs(mo), 'minute')) {
+						callback('');
+					}
 					callback();
 				},
 				message: getMessage('global.validation.sauThoiDiem.before', { label }),

@@ -1,3 +1,5 @@
+import TableStaticData from '@/components/Table/TableStaticData';
+import { IColumn } from '@/components/Table/typing';
 import { highlightColor, primaryColor } from '@/services/base/constant';
 import {
 	ArrowDownOutlined,
@@ -12,7 +14,8 @@ import {
 	TrophyOutlined,
 	UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Card, Col, Progress, Row, Space, Spin, Table, Tag, Typography } from 'antd';
+import { Avatar, Card, Col, Progress, Row, Space, Spin, Tag, Typography } from 'antd';
+import _ from 'lodash';
 import { useEffect, useMemo } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useModel } from 'umi';
@@ -140,6 +143,8 @@ const ThongKeCCT = () => {
 			dataThongKeTiLeHoanThanh.totalRegistered || 0,
 			dataThongKeTiLeHoanThanh.hasEvidence || 0,
 			dataThongKeTiLeHoanThanh.totalApproved || 0,
+			dataThongKeTiLeHoanThanh.evidenceRate || 0,
+			dataThongKeTiLeHoanThanh.approvalRate || 0,
 		];
 	}, [dataThongKeTiLeHoanThanh]);
 
@@ -189,55 +194,29 @@ const ThongKeCCT = () => {
 		};
 	}, [dataThongKeTopHoatDong]);
 
-	// Data for PhanBoHoatDong chart
 	const activityDistributionData = useMemo(() => {
 		if (!dataThongKePhanBoHoatDong || dataThongKePhanBoHoatDong.length === 0) {
 			return { series: [], labels: [] };
 		}
 
 		const sorted = [...dataThongKePhanBoHoatDong].sort((a, b) => b.count - a.count);
-		const topData = sorted.slice(0, 8);
-		const otherData = sorted.slice(8);
 
-		let series = topData.map((item) => item.count);
-		let labels = topData.map((item) => (item.name?.length > 20 ? `${item.name.substring(0, 18)}...` : item.name));
-
-		if (otherData.length > 0) {
-			const otherCount = otherData.reduce((sum, item) => sum + item.count, 0);
-			series.push(otherCount);
-			labels.push(`Khác (${otherData.length} loại)`);
-		}
+		let series = sorted.map((item) => item.count);
+		let labels = sorted.map((item) => (item.name?.length > 20 ? `${item.name.substring(0, 18)}...` : item.name));
 
 		return { series, labels };
 	}, [dataThongKePhanBoHoatDong]);
 
-	const activityColumns = [
-		{
-			title: 'No.',
-			key: 'index',
-			width: 60,
-			render: (_: any, __: any, index: number) => <Text strong>{index + 1}</Text>,
-		},
-		{
-			title: 'Activity Code',
-			dataIndex: 'code',
-			key: 'code',
-			width: 120,
-			render: (code: string) => <Tag color='blue'>{code}</Tag>,
-		},
+	const activityColumns: IColumn<any>[] = [
 		{
 			title: 'Activity Name',
 			dataIndex: 'name',
-			key: 'name',
-			ellipsis: true,
+			width: 250,
 		},
 		{
 			title: 'Count',
 			dataIndex: 'count',
-			key: 'count',
 			width: 120,
-			sorter: (a: any, b: any) => a.count - b.count,
-			defaultSortOrder: 'descend' as const,
 			render: (count: number) => (
 				<Text strong style={{ color: COLORS.primary }}>
 					{count.toLocaleString()}
@@ -247,7 +226,6 @@ const ThongKeCCT = () => {
 		{
 			title: 'Percentage (%)',
 			dataIndex: 'percentage',
-			key: 'percentage',
 			width: 180,
 			render: (percentage: number) => (
 				<Progress
@@ -272,17 +250,10 @@ const ThongKeCCT = () => {
 		leader: COLORS.leader,
 	};
 
-	const roleColumns = [
-		{
-			title: 'No.',
-			key: 'index',
-			width: 60,
-			render: (_: any, __: any, index: number) => <Text strong>{index + 1}</Text>,
-		},
+	const roleColumns: IColumn<any>[] = [
 		{
 			title: 'Role',
 			dataIndex: 'code',
-			key: 'code',
 			width: 140,
 			render: (code: string, record: any) => {
 				const roleName = record.name || code;
@@ -301,10 +272,7 @@ const ThongKeCCT = () => {
 		{
 			title: 'Count',
 			dataIndex: 'count',
-			key: 'count',
 			width: 140,
-			sorter: (a: any, b: any) => a.count - b.count,
-			defaultSortOrder: 'descend' as const,
 			render: (count: number) => (
 				<Text strong style={{ fontSize: 16, color: COLORS.primary }}>
 					{count?.toLocaleString() || 0}
@@ -314,7 +282,7 @@ const ThongKeCCT = () => {
 		{
 			title: 'Percentage',
 			dataIndex: 'percentage',
-			key: 'percentage',
+			width: 180,
 			render: (percentage: number) => (
 				<Progress
 					percent={percentage || 0}
@@ -352,7 +320,10 @@ const ThongKeCCT = () => {
 		},
 		dataLabels: { enabled: true, formatter: (val: number) => `${val}`, offsetX: 20, style: { fontWeight: 600 } },
 		colors: [COLORS.primary, '#3b82f6', COLORS.success],
-		xaxis: { categories: ['Registered', 'Evidence Submitted', 'Approved'], labels: { style: { fontWeight: 500 } } },
+		xaxis: {
+			categories: ['Registered', 'Evidence Submitted', 'Approved', 'Evidence Rate', 'Approval Rate'],
+			labels: { style: { fontWeight: 500 } },
+		},
 		grid: { borderColor: '#f1f5f9', xaxis: { lines: { show: false } } },
 		legend: { show: false },
 	};
@@ -565,7 +536,7 @@ const ThongKeCCT = () => {
 			<Row gutter={[24, 24]} style={{ marginBottom: 28 }}>
 				<Col xs={24} sm={12} lg={6}>
 					<StatCard
-						title='Total Students'
+						title='Students Using System'
 						value={dataThongKeSinhVien?.totalStudents || 0}
 						icon={<UserOutlined />}
 						color={COLORS.primary}
@@ -593,7 +564,7 @@ const ThongKeCCT = () => {
 				</Col>
 				<Col xs={24} sm={12} lg={6}>
 					<StatCard
-						title='Engagement Rate'
+						title='Avg Records / Student'
 						value={dataThongKeSinhVien?.averageRecordsPerStudent?.toFixed(1) || 0}
 						suffix='rec/std'
 						icon={<ThunderboltOutlined />}
@@ -822,16 +793,12 @@ const ThongKeCCT = () => {
 									/>
 								</Col>
 								<Col xs={24} lg={14}>
-									<Table
-										dataSource={dataThongKePhanBoHoatDong}
+									<TableStaticData
+										addStt
 										columns={activityColumns}
-										rowKey='_id'
-										pagination={{
-											pageSize: 5,
-											showSizeChanger: true,
-											showTotal: (total) => `Total ${total} activity types`,
-										}}
+										data={_.orderBy(dataThongKePhanBoHoatDong, ['count'], ['desc'])}
 										size='middle'
+										otherProps={{ scroll: { y: 400 }, pagination: false }}
 									/>
 								</Col>
 							</Row>
@@ -860,46 +827,15 @@ const ThongKeCCT = () => {
 										type='donut'
 										height={400}
 									/>
-
-									<div style={{ marginTop: 24, padding: '16px 0', borderTop: `1px solid ${COLORS.border}` }}>
-										<Row gutter={16}>
-											{dataThongKePhanBoVaiTro.map((role: any) => (
-												<Col span={8} key={role._id}>
-													<div style={{ textAlign: 'center' }}>
-														<div
-															style={{
-																background: `${ROLE_COLORS[role.code?.toLowerCase()] || COLORS.primary}15`,
-																padding: 12,
-																borderRadius: 12,
-																marginBottom: 8,
-															}}
-														>
-															{ROLE_ICONS[role.code?.toLowerCase()] || <UserOutlined />}
-														</div>
-														<Text
-															strong
-															style={{ fontSize: 20, color: ROLE_COLORS[role.code?.toLowerCase()] || COLORS.primary }}
-														>
-															{role.count?.toLocaleString() || 0}
-														</Text>
-														<br />
-														<Text type='secondary' style={{ fontSize: 12 }}>
-															{(role.percentage || 0).toFixed(1)}%
-														</Text>
-													</div>
-												</Col>
-											))}
-										</Row>
-									</div>
 								</Col>
 
 								<Col xs={24} lg={14}>
-									<Table
-										dataSource={dataThongKePhanBoVaiTro}
+									<TableStaticData
+										addStt
 										columns={roleColumns}
-										rowKey='_id'
-										pagination={false}
+										data={_.orderBy(dataThongKePhanBoVaiTro, ['count'], ['desc'])}
 										size='middle'
+										otherProps={{ scroll: { y: 400 }, pagination: false }}
 									/>
 								</Col>
 							</Row>

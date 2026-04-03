@@ -6,6 +6,7 @@ import { buildDisabledDateTime, resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import { getActivityMeta } from '..';
 
 const FormSubmisstionRound = (props: any) => {
 	const { getData } = props;
@@ -80,7 +81,7 @@ const FormSubmisstionRound = (props: any) => {
 						<MyDatePicker
 							showTime={{ showHour: true, showMinute: true }}
 							format='HH:mm DD/MM/YYYY'
-							disabled={isView}
+							disabled={isView || (edit && record?._id && getActivityMeta(record).status === 'Ongoing')}
 							placeholder={intl.formatMessage({ id: 'activity.info.form.startDate.place' })}
 							allowClear
 							{...buildDisabledDateTime({
