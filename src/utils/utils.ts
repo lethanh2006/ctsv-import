@@ -733,19 +733,20 @@ export const buildDisabledDateTime = ({ min, max }: { min?: Dayjs; max?: Dayjs }
 
 			const result: any = {};
 
-			// ===== MIN LOGIC =====
-			if (min && current.isSame(min, 'day')) {
-				result.disabledHours = () => Array.from({ length: min.hour() }, (_, i) => i);
+			const minTime = min?.second(0);
+			const maxTime = max?.second(59);
+
+			if (minTime && current.isSame(minTime, 'day')) {
+				result.disabledHours = () => Array.from({ length: minTime.hour() }, (_, i) => i);
 
 				result.disabledMinutes = (selectedHour: number) => {
-					if (selectedHour !== min.hour()) return [];
-					return Array.from({ length: min.minute() }, (_, i) => i);
+					if (selectedHour !== minTime.hour()) return [];
+					return Array.from({ length: minTime.minute() }, (_, i) => i);
 				};
 			}
 
-			// ===== MAX LOGIC =====
-			if (max && current.isSame(max, 'day')) {
-				const disabledHoursAfter = Array.from({ length: 23 - max.hour() }, (_, i) => max.hour() + 1 + i);
+			if (maxTime && current.isSame(maxTime, 'day')) {
+				const disabledHoursAfter = Array.from({ length: 23 - maxTime.hour() }, (_, i) => maxTime.hour() + 1 + i);
 
 				const oldDisabledHours = result.disabledHours;
 
@@ -757,14 +758,12 @@ export const buildDisabledDateTime = ({ min, max }: { min?: Dayjs; max?: Dayjs }
 				result.disabledMinutes = (selectedHour: number) => {
 					let disabled: number[] = [];
 
-					// minutes from min
-					if (min && current.isSame(min, 'day') && selectedHour === min.hour()) {
-						disabled = Array.from({ length: min.minute() }, (_, i) => i);
+					if (minTime && current.isSame(minTime, 'day') && selectedHour === minTime.hour()) {
+						disabled = Array.from({ length: minTime.minute() }, (_, i) => i);
 					}
 
-					// minutes from max
-					if (selectedHour === max.hour()) {
-						const afterMinutes = Array.from({ length: 59 - max.minute() }, (_, i) => max.minute() + 1 + i);
+					if (selectedHour === maxTime.hour()) {
+						const afterMinutes = Array.from({ length: 59 - maxTime.minute() }, (_, i) => maxTime.minute() + 1 + i);
 						disabled = [...disabled, ...afterMinutes];
 					}
 

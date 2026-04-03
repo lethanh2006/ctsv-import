@@ -9,7 +9,8 @@ const ModalChinhSuaImpact = (props: { getData?: () => void }) => {
 	const intl = useIntl();
 	const { getData } = props;
 	const [form] = Form.useForm();
-	const { record, formSubmiting, putModel, visibleImpact, setVisibleImpact } = useModel('cct.activityoutcome');
+	const { record, formSubmiting, putModel, visibleImpact, setVisibleImpact, setVisibleForm } =
+		useModel('cct.activityoutcome');
 
 	useEffect(() => {
 		if (!visibleImpact) {
@@ -25,6 +26,7 @@ const ModalChinhSuaImpact = (props: { getData?: () => void }) => {
 	const onFinish = async (values: ActivityOutCome.IRecord) => {
 		putModel(record?._id ?? '', values, getData).then(() => {
 			setVisibleImpact(false);
+			setVisibleForm(false);
 		});
 	};
 
@@ -71,7 +73,7 @@ const ModalChinhSuaImpact = (props: { getData?: () => void }) => {
 													<strong>{intl.formatMessage({ id: 'activityresult.xuly.featured' })}</strong>
 												</div>
 												<div style={{ color: '#666' }}>
-													{intl.formatMessage({ id: 'activityresult.xuly.featured' })}{' '}
+													{intl.formatMessage({ id: 'activityresult.xuly.featured.place' })}
 												</div>
 											</div>
 										</Radio>

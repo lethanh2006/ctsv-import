@@ -13,7 +13,7 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 	const intl = useIntl();
 	const { title, trangThai, getData } = props;
 	const [form] = Form.useForm();
-	const { record, formSubmiting, putApproveActivityModel, visibleXuLy, setVisibleXuLy } =
+	const { record, formSubmiting, putApproveActivityModel, visibleXuLy, setVisibleXuLy, setVisibleForm } =
 		useModel('cct.activityoutcome');
 
 	useEffect(() => {
@@ -44,6 +44,7 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 			intl.formatMessage({ id: 'global.message.luuthanhcong' }),
 		).then(() => {
 			setVisibleXuLy(false);
+			setVisibleForm(false);
 		});
 	};
 
@@ -180,7 +181,7 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 													<strong>{intl.formatMessage({ id: 'activityresult.xuly.featured' })}</strong>
 												</div>
 												<div style={{ color: '#666' }}>
-													{intl.formatMessage({ id: 'activityresult.xuly.featured' })}{' '}
+													{intl.formatMessage({ id: 'activityresult.xuly.featured' })}
 												</div>
 											</div>
 										</Radio>

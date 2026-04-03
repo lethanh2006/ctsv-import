@@ -11,13 +11,17 @@ export const handleSingleFile = async (
 	file: any,
 	scope: EFileScope = EFileScope.PUBLIC,
 	returnResponse?: boolean,
+	ip?: string,
 ): Promise<string | null> => {
 	if (file?.originFileObj) {
 		try {
-			const response = await uploadFile({
-				file: file?.originFileObj,
-				scope,
-			});
+			const response = await uploadFile(
+				{
+					file: file?.originFileObj,
+					scope,
+				},
+				ip,
+			);
 			return returnResponse ? response : response?.data?.data?.url;
 		} catch (er) {
 			return Promise.reject(er);
@@ -25,11 +29,11 @@ export const handleSingleFile = async (
 	} else return file?.url || null;
 };
 
-export async function uploadFile(payload: { file: string | Blob; scope: EFileScope }) {
+export async function uploadFile(payload: { file: string | Blob; scope: EFileScope }, ip?: string) {
 	const form = new FormData();
 	form.append('file', payload?.file);
 	form.append('scope', payload?.scope);
-	return axios.post(`${ip3}/file`, form);
+	return axios.post(`${ip ?? ip3}/file`, form);
 }
 
 /**
@@ -44,11 +48,12 @@ export const buildUpLoadFile = async (
 	fieldName: string,
 	scope: EFileScope = EFileScope.PUBLIC,
 	returnResponse?: boolean,
+	ip?: string,
 ): Promise<string | null | any> => {
 	// File updload chưa onChange => value vẫn là string
 	if (typeof values?.[fieldName] === 'string') return values[fieldName];
 	else if (values?.[fieldName]?.fileList?.[0]) {
-		return handleSingleFile(values?.[fieldName]?.fileList?.[0], scope, returnResponse);
+		return handleSingleFile(values?.[fieldName]?.fileList?.[0], scope, returnResponse, ip);
 	}
 	return null;
 };

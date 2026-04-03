@@ -1,5 +1,6 @@
 import UploadFile from '@/components/Upload/UploadFile';
 import { buildUpLoadFile } from '@/services/uploadFile';
+import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, InputNumber, Row, Switch } from 'antd';
@@ -37,7 +38,7 @@ const FormAttributes = (props: any) => {
 		try {
 			setFormSubmiting(true);
 
-			const icon = await buildUpLoadFile(values, 'icon');
+			const icon = await buildUpLoadFile(values, 'icon', undefined, undefined, ipCCT);
 			values.icon = icon;
 			values.color = values.color || '#fafafa';
 

@@ -7,8 +7,6 @@ import {
 	sentryDSN,
 } from './ip';
 
-const appBasePath = process.env.APP_CONFIG_BASE_PATH || '/';
-
 export const Settings = {
 	version: '1.0',
 };
@@ -90,7 +88,7 @@ export const Setting = {
 	colorWeak: false,
 	title: 'PTIT S-Link',
 	pwa: false,
-	logo: `${appBasePath}favicon.ico`,
+	logo: '/favicon.ico',
 	iconfontUrl: '',
 	version: 'v1.0',
 	tenTruong: unitName,

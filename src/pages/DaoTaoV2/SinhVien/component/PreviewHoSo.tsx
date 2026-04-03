@@ -171,7 +171,7 @@ const PreviewHoSo = (props: any) => {
 
 							<Col span={24} sm={6} style={{ display: 'flex', justifyContent: 'center', padding: 12 }}>
 								<div style={{ width: 140, height: 180 }}>
-									<Image src={record?.anhDaiDienUrl ?? '/metadata.png'} />
+									<Image src={record?.anhDaiDienUrl ?? '/cong-tac-sinh-vien/metadata.png'} />
 								</div>
 							</Col>
 							<Col span={24} sm={18}>

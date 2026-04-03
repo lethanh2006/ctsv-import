@@ -18,3 +18,39 @@ export async function thongKeSoLuongActivityOutCome(filters?: any[]) {
 		params: { page: 1, limit: 10, filters: filters },
 	});
 }
+
+export async function thongKeThoiGianDuyet() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/approval-turnaround`);
+}
+
+export async function thongKeTiLeHoanThanh() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/activity-completion-rate`);
+}
+
+export async function thongKePhanBoLevel() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/by-level`);
+}
+
+export async function thongKeTiLePhanBoVali() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/by-validation`);
+}
+
+export async function thongKeHeatmap() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/by-attributes`);
+}
+
+export async function thongKePhanBoHoatDong() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/by-activity-type`);
+}
+
+export async function thongKePhanBoVaiTro() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/by-roles`);
+}
+
+export async function thongKeSinhVien() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/records-per-student`);
+}
+
+export async function thongKeTopHoatDong() {
+	return axios.get(`${ipCCT}/activity-outcome/statistics/top-activities`);
+}
