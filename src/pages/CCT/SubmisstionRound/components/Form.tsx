@@ -76,12 +76,17 @@ const FormSubmisstionRound = (props: any) => {
 					<Form.Item
 						name='startDate'
 						label={intl.formatMessage({ id: 'activity.info.form.startDate' })}
-						rules={[...rules.required, ...rules.sauThoiDiem(dayjs(), 'Past')]}
+						rules={[
+							...rules.required,
+							...(!(edit && record?._id && getActivityMeta(record).status !== 'Upcoming')
+								? rules.sauThoiDiem(dayjs(), 'Past')
+								: []),
+						]}
 					>
 						<MyDatePicker
 							showTime={{ showHour: true, showMinute: true }}
 							format='HH:mm DD/MM/YYYY'
-							disabled={isView || (edit && record?._id && getActivityMeta(record).status === 'Ongoing')}
+							disabled={isView || (edit && record?._id && getActivityMeta(record).status !== 'Upcoming')}
 							placeholder={intl.formatMessage({ id: 'activity.info.form.startDate.place' })}
 							allowClear
 							{...buildDisabledDateTime({
