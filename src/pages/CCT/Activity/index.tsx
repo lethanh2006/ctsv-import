@@ -78,6 +78,7 @@ const ActivityPage = () => {
 
 		return 'total';
 	};
+
 	const currentWorkflow = detectWorkflow();
 
 	const getData = () => {

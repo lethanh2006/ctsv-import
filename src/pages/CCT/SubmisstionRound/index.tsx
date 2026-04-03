@@ -10,40 +10,40 @@ import { useIntl, useModel } from 'umi';
 import FormSubmisstionRound from './components/Form';
 import ModalSubmisstionRound from './components/Modal';
 
+export const getActivityMeta = (rec: SubmisstionRound.IRecord) => {
+	const now = dayjs();
+	const start = dayjs(rec?.startDate);
+	const end = dayjs(rec?.endDate);
+
+	if (now.isBefore(start)) {
+		return {
+			status: 'Upcoming',
+			color: '#faad14',
+			isEditable: true,
+		};
+	}
+
+	if (now.isAfter(end)) {
+		return {
+			status: 'Completed',
+			color: '#8c8c8c',
+			isEditable: false,
+		};
+	}
+
+	return {
+		status: 'Ongoing',
+		color: '#52c41a',
+		isEditable: false,
+	};
+};
+
 const SubmisstionRoundPage = () => {
 	const intl = useIntl();
 	const { getModel, page, limit, deleteModel, handleEdit, handleView, isView, edit } = useModel('cct.submissionround');
 
 	const getData = () => {
 		getModel();
-	};
-
-	const getActivityMeta = (rec: SubmisstionRound.IRecord) => {
-		const now = dayjs();
-		const start = dayjs(rec?.startDate);
-		const end = dayjs(rec?.endDate);
-
-		if (now.isBefore(start)) {
-			return {
-				status: 'Upcoming',
-				color: '#faad14',
-				isEditable: true,
-			};
-		}
-
-		if (now.isAfter(end)) {
-			return {
-				status: 'Completed',
-				color: '#8c8c8c',
-				isEditable: false,
-			};
-		}
-
-		return {
-			status: 'Ongoing',
-			color: '#52c41a',
-			isEditable: false,
-		};
 	};
 
 	const onCell = (rec: SubmisstionRound.IRecord) => ({
@@ -84,7 +84,6 @@ const SubmisstionRoundPage = () => {
 			dataIndex: 'note',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-			onCell,
 		},
 		{
 			title: intl.formatMessage({ id: 'activity.column.status' }),
@@ -102,33 +101,40 @@ const SubmisstionRoundPage = () => {
 			align: 'center',
 			width: 120,
 			fixed: 'right',
-			render: (val, rec) => (
-				<>
-					<ButtonExtend
-						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
-						onClick={() => handleEdit(rec)}
-						type='link'
-						icon={<EditOutlined />}
-					/>
+			render: (val, rec) => {
+				const { isEditable } = getActivityMeta(rec);
 
-					<Popconfirm
-						onConfirm={() =>
-							deleteModel(rec._id, getData, {
-								messageText: intl.formatMessage({ id: 'global.message.xoathanhcong' }),
-							})
-						}
-						title={intl.formatMessage({ id: 'submisstion.confirm.delete' })}
-						placement='topLeft'
-					>
+				return (
+					<>
 						<ButtonExtend
-							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
-							danger
+							tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+							onClick={() => handleEdit(rec)}
 							type='link'
-							icon={<DeleteOutlined />}
+							icon={<EditOutlined />}
+							disabled={!isEditable}
 						/>
-					</Popconfirm>
-				</>
-			),
+
+						<Popconfirm
+							onConfirm={() =>
+								deleteModel(rec._id, getData, {
+									messageText: intl.formatMessage({ id: 'global.message.xoathanhcong' }),
+								})
+							}
+							title={intl.formatMessage({ id: 'submisstion.confirm.delete' })}
+							placement='topLeft'
+							disabled={!isEditable}
+						>
+							<ButtonExtend
+								tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+								danger
+								type='link'
+								icon={<DeleteOutlined />}
+								disabled={!isEditable}
+							/>
+						</Popconfirm>
+					</>
+				);
+			},
 		},
 	];
 

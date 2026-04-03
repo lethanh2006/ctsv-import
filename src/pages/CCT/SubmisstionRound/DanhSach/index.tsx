@@ -22,7 +22,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 	const { isDot, ssoId } = props;
 	const intl = useIntl();
 	const { danhSach: dsDot, record: recDot, setRecord: setRecDot } = useModel('cct.submissionround');
-	const { getModel, page, limit, handleView, setRecord, setVisibleXuLy, getAnalyticsMyCCTModel } =
+	const { getModel, page, limit, handleView, setRecord, setVisibleXuLy, getAnalyticsMyCCTModel, filters } =
 		useModel('cct.mycct');
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [dataThongKe, setDataThongKe] = useState<MyCCT.IAnalyticsMyCCT>();
@@ -40,6 +40,8 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 			.then((res) => setDataThongKe(res))
 			.finally(() => setLoadingThongKe(false));
 	};
+
+	const valueFiltered = filters?.find((item) => item.field == 'status')?.values?.[0];
 
 	const getData = () => {
 		getModel(
@@ -139,10 +141,12 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 			},
 			fixed: 'right',
 			filterType: 'select',
-			filterData: Object.values(EStatusMyCCT).map((item) => ({
-				value: item,
-				label: mapNameStatusMyCCT[item as EStatusMyCCT],
-			})),
+			filterData: Object.values(EStatusMyCCT)
+				?.filter((item) => item !== EStatusMyCCT.DRAFT)
+				.map((item) => ({
+					value: item,
+					label: mapNameStatusMyCCT[item as EStatusMyCCT],
+				})),
 			onCell,
 		},
 		{
