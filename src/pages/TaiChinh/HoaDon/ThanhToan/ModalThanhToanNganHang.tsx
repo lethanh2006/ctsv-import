@@ -42,7 +42,7 @@ const ModalThanhToanNganHang = (props: { visible: boolean; onOk: () => void }) =
 					{intl.formatMessage({ id: 'taichinh.hoadon.thanhtoannganhang.bankAppDescription' })}{' '}
 					<a
 						target='_blank'
-						href='https://xettuyen.hvpnvn.edu.vn/api/file/64d502982f7f8d0cac246178/hd_thanhtoan.pdf'
+						href='https://xettuyen.vinuni.edu.vn/api/file/64d502982f7f8d0cac246178/hd_thanhtoan.pdf'
 						rel='noreferrer'
 					>
 						{intl.formatMessage({ id: 'taichinh.hoadon.thanhtoannganhang.hdLinkText' })}
