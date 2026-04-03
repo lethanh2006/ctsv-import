@@ -20,6 +20,7 @@ export const getActivityMeta = (rec: SubmisstionRound.IRecord) => {
 			status: 'Upcoming',
 			color: '#faad14',
 			isEditable: true,
+			isDeleteable: true,
 		};
 	}
 
@@ -27,14 +28,16 @@ export const getActivityMeta = (rec: SubmisstionRound.IRecord) => {
 		return {
 			status: 'Completed',
 			color: '#8c8c8c',
-			isEditable: false,
+			isEditable: true,
+			isDeleteable: false,
 		};
 	}
 
 	return {
 		status: 'Ongoing',
 		color: '#52c41a',
-		isEditable: false,
+		isEditable: true,
+		isDeleteable: false,
 	};
 };
 
@@ -102,7 +105,7 @@ const SubmisstionRoundPage = () => {
 			width: 120,
 			fixed: 'right',
 			render: (val, rec) => {
-				const { isEditable } = getActivityMeta(rec);
+				const { isEditable, isDeleteable } = getActivityMeta(rec);
 
 				return (
 					<>
@@ -122,14 +125,14 @@ const SubmisstionRoundPage = () => {
 							}
 							title={intl.formatMessage({ id: 'submisstion.confirm.delete' })}
 							placement='topLeft'
-							disabled={!isEditable}
+							disabled={!isDeleteable}
 						>
 							<ButtonExtend
 								tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
 								danger
 								type='link'
 								icon={<DeleteOutlined />}
-								disabled={!isEditable}
+								disabled={!isDeleteable}
 							/>
 						</Popconfirm>
 					</>

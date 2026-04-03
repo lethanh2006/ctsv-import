@@ -254,7 +254,7 @@ const ThongKeCCT = () => {
 		{
 			title: 'Role',
 			dataIndex: 'code',
-			width: 140,
+			width: 200,
 			render: (code: string, record: any) => {
 				const roleName = record.name || code;
 				const color = ROLE_COLORS[code?.toLowerCase()] || COLORS.primary;
@@ -272,7 +272,8 @@ const ThongKeCCT = () => {
 		{
 			title: 'Count',
 			dataIndex: 'count',
-			width: 140,
+			align: 'center',
+			width: 90,
 			render: (count: number) => (
 				<Text strong style={{ fontSize: 16, color: COLORS.primary }}>
 					{count?.toLocaleString() || 0}
@@ -282,7 +283,7 @@ const ThongKeCCT = () => {
 		{
 			title: 'Percentage',
 			dataIndex: 'percentage',
-			width: 180,
+			width: 120,
 			render: (percentage: number) => (
 				<Progress
 					percent={percentage || 0}
