@@ -289,10 +289,7 @@ const ChiTietMyCCT = (props: any) => {
 										<i>This Transcript is officially issued and verified by VinUniversity</i>
 									</span>
 									<span>
-										<i>
-											Date of Issue:{' '}
-											{record?.myCCT?.dateOfIssue ? dayjs(record.myCCT.dateOfIssue).format('DD/MM/YYYY') : '--'}
-										</i>
+										<i>Date of Issue: {record?.myCCT?.dateOfIssue ?? '--'}</i>
 									</span>
 									<span>
 										<i>Serial Number: {record?.myCCT?.serialNumber || ' --'}</i>
@@ -308,7 +305,7 @@ const ChiTietMyCCT = (props: any) => {
 				{!ssoId && (
 					<>
 						<Button
-							disabled={recMyCCT?.status === EStatusMyCCT.APPROVED}
+							disabled={recMyCCT?.status !== EStatusMyCCT.PENDING_APPROVAL}
 							type='primary'
 							className='btn-success'
 							onClick={() => {
@@ -323,7 +320,7 @@ const ChiTietMyCCT = (props: any) => {
 						</Button>
 
 						<Button
-							disabled={recMyCCT?.status === EStatusMyCCT.CHANGES_REQUIRED}
+							disabled={recMyCCT?.status !== EStatusMyCCT.PENDING_APPROVAL}
 							type='primary'
 							onClick={() => {
 								setTrangThai({

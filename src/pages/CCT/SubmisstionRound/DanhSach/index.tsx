@@ -57,6 +57,12 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 					operator: EOperatorType.NOT_INCLUDE,
 				},
 			],
+
+			valueFiltered === EStatusMyCCT.PENDING_APPROVAL
+				? {
+						submittedAt: 1,
+					}
+				: { approvedAt: -1 },
 		);
 	};
 
@@ -106,7 +112,6 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 			dataIndex: 'approvedAt',
 			width: 180,
 			render: (val) => (val ? dayjs(val).format('HH:mm DD/MM/YYYY') : '--'),
-			sortable: true,
 			onCell,
 		},
 		{
@@ -114,7 +119,6 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 			dataIndex: 'submittedAt',
 			width: 180,
 			render: (val) => (val ? dayjs(val).format('HH:mm DD/MM/YYYY') : '--'),
-			sortable: true,
 			onCell,
 		},
 		{
@@ -157,7 +161,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 			render: (val, rec) => (
 				<>
 					<ButtonExtend
-						disabled={rec?.status === EStatusMyCCT.APPROVED}
+						disabled={rec?.status !== EStatusMyCCT.PENDING_APPROVAL}
 						tooltip={intl.formatMessage({ id: 'activityresult.button.duyet' })}
 						onClick={() => {
 							setRecord(rec);
@@ -173,7 +177,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 					/>
 
 					<ButtonExtend
-						disabled={rec?.status === EStatusMyCCT.CHANGES_REQUIRED}
+						disabled={rec?.status !== EStatusMyCCT.PENDING_APPROVAL}
 						tooltip={intl.formatMessage({ id: 'activityresult.button.yccs' })}
 						onClick={() => {
 							setRecord(rec);
@@ -202,7 +206,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 				dependencies={[page, limit, recDot?._id, ssoId]}
 				modelName='cct.mycct'
 				Form={ChiTietMyCCT}
-				title='List Student'
+				title='Submission List'
 				formProps={{
 					getData: () => {
 						getData();
