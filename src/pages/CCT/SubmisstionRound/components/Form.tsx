@@ -112,10 +112,15 @@ const FormSubmisstionRound = (props: any) => {
 							disabled={isView}
 							placeholder={intl.formatMessage({ id: 'activity.info.form.endDate.place' })}
 							allowClear
-							{...buildDisabledDateTime({
-								min: startDate ? dayjs(startDate) : dayjs(),
-							})}
-							onChange={(val) => form.setFieldValue('dueDate', dayjs(val).add(10, 'day'))}
+							{...buildDisabledDateTime(
+								edit && record?._id && getActivityMeta(record).status !== 'Upcoming'
+									? {
+											min: dayjs(),
+										}
+									: {
+											min: startDate ? dayjs(startDate) : dayjs(),
+										},
+							)}
 						/>
 					</Form.Item>
 				</Col>

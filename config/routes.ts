@@ -40,6 +40,7 @@
 		name: 'SinhVien',
 		path: '/sinh-vien',
 		icon: 'contacts',
+		access: 'danhMucAccess',
 		routes: [
 			// {
 			// 	name: 'DotCapNhatHoSo',
@@ -177,6 +178,7 @@
 		name: 'SubmisstionRound',
 		icon: 'ScheduleOutlined',
 		path: '/activity-submission',
+		access: 'danhMucAccess',
 		routes: [
 			{
 				name: 'Management',
