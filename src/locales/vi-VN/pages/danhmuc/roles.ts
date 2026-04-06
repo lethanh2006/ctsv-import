@@ -5,8 +5,8 @@ export default {
 	'rolesmanagement.column.id': 'Mã',
 	'rolesmanagement.column.name': 'Tên',
 	'rolesmanagement.column.des': 'Mô tả',
-	'rolesmanagement.column.level': 'Cấp độ',
 	'rolesmanagement.column.active': 'Kích hoạt',
+	'rolesmanagement.column.auto': 'Tự động duyệt',
 
 	'rolesmanagement.confirm.delete': 'Bạn có muốn xóa vai trò này không?',
 
@@ -22,6 +22,7 @@ export default {
 	'rolesmanagement.form.order': 'Thứ tự hiển thị',
 	'rolesmanagement.form.order.place': 'Nhập thứ tự hiển thị',
 	'rolesmanagement.form.active': 'Kích hoạt',
+	'rolesmanagement.form.auto': 'Tự động duyệt',
 	'rolesmanagement.form.des': 'Mô tả',
 	'rolesmanagement.form.des.place': 'Nhập mô tả',
 

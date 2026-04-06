@@ -6,13 +6,20 @@ export default {
 	'menu.About': `Giới thiệu ${APP_CONFIG_TIEN_TO_TRUONG.toLowerCase()}`,
 	'menu.News': 'Tin tức',
 
+	'menu.SubmisstionRound': 'Đợt nộp CCT',
+	'menu.SubmisstionRound.Management': 'Quản lý đợt nộp',
+	'menu.SubmisstionRound.DanhSach': 'Danh sách nộp',
 	'menu.Activity': 'Quản lý hoạt động',
 	'menu.ActivityResuls': 'Phê duyệt kết quả hoạt động',
 
-	'menu.DanhMuc.Attributes': 'Thuộc tính',
+	'menu.DanhMuc.Attributes': 'Thuộc tính tốt nghiệp',
 	'menu.DanhMuc.Levels': 'Cấp độ',
 	'menu.DanhMuc.Roles': 'Vai trò',
-	'menu.DanhMuc.Activities': 'Hoạt động ngoại khóa (CCA)',
+	'menu.DanhMuc.Track': 'Định hướng nghề nghiệp',
+	'menu.DanhMuc.CCD': 'Nhóm hoạt động',
+	'menu.DanhMuc.Activities': 'Loại hoạt động',
+	'menu.DanhMuc.StudentApprover': 'Người duyệt sinh viên',
+	'menu.DanhMuc.Competency': 'Năng lực',
 	'menu.DanhMuc.Questions': 'Câu hỏi tự đánh giá',
 
 	'menu.DanhMuc': 'Danh mục',

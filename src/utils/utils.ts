@@ -4,6 +4,7 @@ import { ip3 } from '@/utils/ip';
 import { message, type FormInstance } from 'antd';
 import { type AxiosResponse } from 'axios';
 import type dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import * as XLSX from 'xlsx';
 import dayjsLib from './dayjs';
 
@@ -714,4 +715,63 @@ export const numberToVietnameseWords = (num: number, capitalizeFirst?: boolean):
 		? finalResult.replace(/^\w/, (c) => c.toUpperCase())
 		: finalResult.charAt(0).toUpperCase() + finalResult.slice(1);
 	return finalResult;
+};
+
+export const buildDisabledDateTime = ({ min, max }: { min?: Dayjs; max?: Dayjs }) => {
+	return {
+		disabledDate: (current: Dayjs) => {
+			if (!current) return false;
+
+			if (min && current.isBefore(min.startOf('day'))) return true;
+			if (max && current.isAfter(max.endOf('day'))) return true;
+
+			return false;
+		},
+
+		disabledTime: (current: Dayjs | null) => {
+			if (!current) return {};
+
+			const result: any = {};
+
+			const minTime = min?.second(0);
+			const maxTime = max?.second(59);
+
+			if (minTime && current.isSame(minTime, 'day')) {
+				result.disabledHours = () => Array.from({ length: minTime.hour() }, (_, i) => i);
+
+				result.disabledMinutes = (selectedHour: number) => {
+					if (selectedHour !== minTime.hour()) return [];
+					return Array.from({ length: minTime.minute() }, (_, i) => i);
+				};
+			}
+
+			if (maxTime && current.isSame(maxTime, 'day')) {
+				const disabledHoursAfter = Array.from({ length: 23 - maxTime.hour() }, (_, i) => maxTime.hour() + 1 + i);
+
+				const oldDisabledHours = result.disabledHours;
+
+				result.disabledHours = () => {
+					const minHours = oldDisabledHours ? oldDisabledHours() : [];
+					return [...minHours, ...disabledHoursAfter];
+				};
+
+				result.disabledMinutes = (selectedHour: number) => {
+					let disabled: number[] = [];
+
+					if (minTime && current.isSame(minTime, 'day') && selectedHour === minTime.hour()) {
+						disabled = Array.from({ length: minTime.minute() }, (_, i) => i);
+					}
+
+					if (selectedHour === maxTime.hour()) {
+						const afterMinutes = Array.from({ length: 59 - maxTime.minute() }, (_, i) => maxTime.minute() + 1 + i);
+						disabled = [...disabled, ...afterMinutes];
+					}
+
+					return disabled;
+				};
+			}
+
+			return result;
+		},
+	} as any;
 };

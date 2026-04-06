@@ -1,33 +1,58 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
-import SelectActivitiesManagement from '@/pages/DanhMuc/Activities/components/Select';
-import SelectRolesManagement from '@/pages/DanhMuc/Roles/components/Select';
+import SelectActivitiesTypeDomain from '@/pages/DanhMuc/CCD/components/Select';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
-import { EparticipantRole, EParticipantScope } from '@/services/CCT/constant';
-import { buildUpLoadMultiFile } from '@/services/uploadFile';
+import {
+	EApprovalStatus,
+	EparticipantRole,
+	EParticipantScope,
+	EScopeAward,
+	mapNameScopeAward,
+} from '@/services/CCT/constant';
+import { buildUpLoadFile, handleSingleFile } from '@/services/uploadFile';
+import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
-import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
+import { buildDisabledDateTime, resetFieldsForm } from '@/utils/utils';
+import { Col, Form, Image, Input, Row, Select } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import CardNoteActivity from './CardNote';
+
+const uploadFilesOfCompetency = async (files: any[] = []) => {
+	if (!files.length) return [];
+	const urls = await Promise.all(files?.map((f) => handleSingleFile(f, undefined, undefined, ipCCT).catch(() => null)));
+	return urls.filter(Boolean) as string[];
+};
 
 const FormPerstionActivityOutCome = (props: any) => {
 	const { getData } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { record, setVisibleForm, edit, isView, postModel, putModel, formSubmiting, visibleForm, setFormSubmiting } =
-		useModel('cct.activityoutcome');
-	const { danhSach: dsActivitiType } = useModel('danhmuc.activities');
-	const { danhSach: dsRoles } = useModel('danhmuc.roles');
+
+	const { record, edit, isView, postModel, putModel, visibleForm, setFormSubmiting } = useModel('cct.activityoutcome');
 
 	const startDate: Date = Form.useWatch('startDate', form);
-	const activitiesTypeId: string = Form.useWatch('activitiesTypeId', form);
-	const rolesId: string = Form.useWatch('rolesId', form);
+	const endDate: Date = Form.useWatch('endDate', form);
+	const activitiesTypeDomainId: string = Form.useWatch('activitiesTypeDomainId', form);
+
+	const [isSubmit, setIsSubmit] = useState<boolean>(false);
+	const isAward = activitiesTypeDomainId === 'award-recognition';
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) form.setFieldsValue(record);
+
+		if (record?._id) {
+			form.setFieldsValue({
+				...record,
+				activitiesTypeDomainId: record?.isAwardRecognition
+					? 'award-recognition'
+					: record?.activitiesType?.activitiesTypeDomainId,
+				listAchievedCompetencies: record?.listAchievedCompetencies?.map((item) => item?.competencyId),
+				onUni: record?.supervisorSsoId ? true : false,
+				banner: record?.banner ?? '/images/cct/background.png',
+			});
+		}
 
 		if (!record?._id) {
 			form.setFieldsValue({
@@ -36,200 +61,205 @@ const FormPerstionActivityOutCome = (props: any) => {
 				cct: true,
 				allowPostEventResultsUpdate: false,
 				onCampus: true,
+				checkbox: false,
+				listAchievedCompetencies: null,
+				onUni: true,
+				banner: '/images/cct/background.png',
 			});
 		}
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: ActivityOutCome.IRecord) => {
+	const onFinish = async (values: ActivityOutCome.IRecord, submitted: boolean) => {
 		setFormSubmiting(true);
-		const file = await buildUpLoadMultiFile(values, 'file');
-		values.file = file;
+		const banner = await buildUpLoadFile(values, 'banner', undefined, undefined, ipCCT);
+		values.banner = banner;
 		setFormSubmiting(false);
 
+		const evidenceFile = await Promise.all(
+			(values.evidenceFile || []).map(async (item: any) => ({
+				name: item.name,
+				file: await uploadFilesOfCompetency(item?.file?.fileList),
+			})),
+		);
+
+		values.evidenceFile = evidenceFile;
+
+		values.listAchievedCompetencies = values.listAchievedCompetencies?.map((id) => ({
+			competencyId: id,
+		})) as any;
+
+		values.workflow = submitted ? EApprovalStatus.SUBMITTED : EApprovalStatus.DRAFT;
+		values.isAwardRecognition = isAward ? true : false;
+
 		if (edit) {
-			putModel(`me/${record?._id}`, values, getData)
-				.then()
-				.catch((er) => console.log(er));
-		} else
-			postModel(values, getData)
-				.then()
-				.catch((er) => console.log(er));
+			putModel(
+				`me/${record?._id}`,
+				values,
+				getData,
+				undefined,
+				undefined,
+				intl.formatMessage({ id: 'global.message.luuthanhcong' }),
+			);
+		} else {
+			postModel(values, getData, undefined, intl.formatMessage({ id: 'global.message.themmoithanhcong' }));
+		}
 	};
 
 	return (
-		<Card title={intl.formatMessage({ id: 'activityresult.perstion.title' })}>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
+		<>
+			<Form form={form} layout='vertical' onFinish={(values) => onFinish(values, isSubmit)}>
+				{!!record?.revisionNote && <CardNoteActivity />}
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item
-							name='activitiesOutcomeName'
-							label={intl.formatMessage({ id: 'activityresult.perstion.activitiesOutcomeName' })}
-							rules={[...rules.required]}
-						>
-							<Input
-								placeholder={intl.formatMessage({ id: 'activityresult.perstion.activitiesOutcomeName.place' })}
-								disabled={isView}
-							/>
-						</Form.Item>
+						<Row gutter={[12, 0]}>
+							{isView ? (
+								<Col span={24} md={9}>
+									<Image
+										src={record?.banner ?? '/images/cct/background.png'}
+										alt={record?.activitiesOutcomeName}
+										className='activity-image'
+									/>
+								</Col>
+							) : (
+								<Col span={24} md={9}>
+									<Form.Item name='banner' label='Banner'>
+										<UploadFile
+											isWidescreen
+											accept='.png,.jpg,.jpeg'
+											buttonDescription='Add Banner'
+											extra='Only .png, .jpeg, and .jpg files are allowed'
+										/>
+									</Form.Item>
+								</Col>
+							)}
+
+							<Col span={24} md={15}>
+								<Row gutter={[12, 0]}>
+									<Col span={24} md={12}>
+										<Form.Item name='activitiesTypeDomainId' label='Activity Group' rules={[...rules.required]}>
+											<SelectActivitiesTypeDomain
+												disabled={isView}
+												onChange={() => form.resetFields(['activitiesTypeId'])}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24} md={12}>
+										<Form.Item name='scope' label='Scope' rules={[...rules.required]}>
+											<Select
+												placeholder='Select Scope'
+												options={Object.values(EScopeAward).map((value) => ({
+													value,
+													label: mapNameScopeAward[value],
+												}))}
+												allowClear
+												disabled={isView}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24} md={24}>
+										<Form.Item name='competition' label='Competition' rules={[...rules.required]}>
+											<Input placeholder='Enter Competition' disabled={isView} />
+										</Form.Item>
+									</Col>
+									<Col span={24} md={12}>
+										<Form.Item
+											name='startDate'
+											label={intl.formatMessage({ id: 'activity.perstion.startDate' })}
+											rules={[...rules.required]}
+										>
+											<MyDatePicker
+												showTime={{ showHour: true, showMinute: true }}
+												format='HH:mm DD/MM/YYYY'
+												disabled={isView}
+												placeholder={intl.formatMessage({ id: 'activity.perstion.startDate.place' })}
+												onChange={() => form.resetFields(['endDate'])}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24} md={12}>
+										<Form.Item
+											name='endDate'
+											label={intl.formatMessage({ id: 'activity.perstion.endDate' })}
+											rules={[
+												...rules.required,
+												...rules.sauThoiDiem(
+													dayjs(startDate),
+													intl.formatMessage({ id: 'activity.perstion.startDate' }),
+												),
+											]}
+										>
+											<MyDatePicker
+												showTime={{ showHour: true, showMinute: true }}
+												format='HH:mm DD/MM/YYYY'
+												disabled={isView}
+												{...buildDisabledDateTime({
+													min: startDate ? dayjs(startDate) : undefined,
+												})}
+												placeholder={intl.formatMessage({ id: 'activity.perstion.endDate.place' })}
+											/>
+										</Form.Item>
+									</Col>
+								</Row>
+							</Col>
+						</Row>
 					</Col>
-					<Col span={24} md={12}>
+
+					<Col span={24} md={8}>
 						<Form.Item
-							name='activitiesTypeId'
-							label={intl.formatMessage({ id: 'activityresult.perstion.activitiesTypeId' })}
-							rules={[...rules.required]}
-						>
-							<SelectActivitiesManagement disabled={isView} />
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item label={intl.formatMessage({ id: 'activityresult.perstion.activitiesTypeId.mapping' })}>
-							<Input
-								disabled
-								value={
-									dsActivitiType?.find((item) => item?._id === activitiesTypeId)?.attributes?.name ??
-									intl.formatMessage({ id: 'activityresult.perstion.activitiesTypeId.select' })
-								}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item
-							name='startDate'
-							label={intl.formatMessage({ id: 'activityresult.perstion.startDate' })}
-							rules={[...rules.required]}
+							name='dateOfAchievement'
+							label='Date Of Achievement'
+							rules={[
+								...rules.required,
+								...rules.sauThoiDiem(dayjs(startDate), intl.formatMessage({ id: 'activity.perstion.startDate' })),
+								...rules.truocThoiDiem(dayjs(endDate), intl.formatMessage({ id: 'activity.perstion.endDate' })),
+							]}
 						>
 							<MyDatePicker
 								showTime={{ showHour: true, showMinute: true }}
 								format='HH:mm DD/MM/YYYY'
 								disabled={isView}
-								placeholder={intl.formatMessage({ id: 'activityresult.perstion.startDate.place' })}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item
-							name='endDate'
-							label={intl.formatMessage({ id: 'activityresult.perstion.endDate' })}
-							rules={[...rules.required, ...rules.sauNgay(dayjs(startDate))]}
-						>
-							<MyDatePicker
-								showTime={{ showHour: true, showMinute: true }}
-								format='HH:mm DD/MM/YYYY'
-								disabled={isView}
-								disabledDate={(cur) => (startDate ? dayjs(cur).isBefore(startDate) : false)}
-								placeholder={intl.formatMessage({ id: 'activityresult.perstion.endDate.place' })}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item
-							name='organizer'
-							label={intl.formatMessage({ id: 'activityresult.perstion.organizer' })}
-							rules={[...rules.required]}
-						>
-							<Input
-								placeholder={intl.formatMessage({ id: 'activityresult.perstion.organizer.place' })}
-								disabled={isView}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item
-							name='location'
-							label={intl.formatMessage({ id: 'activityresult.perstion.location' })}
-							rules={[...rules.required]}
-						>
-							<Input placeholder='Enter location' disabled={isView} />
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item name='description' label={intl.formatMessage({ id: 'activityresult.perstion.description' })}>
-							<Input.TextArea
-								rows={3}
-								placeholder={intl.formatMessage({ id: 'activityresult.perstion.description.place' })}
-								disabled={isView}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item
-							name='rolesId'
-							label={intl.formatMessage({ id: 'activityresult.perstion.rolesId' })}
-							rules={[...rules.required]}
-						>
-							<SelectRolesManagement disabled={isView} />
-						</Form.Item>
-					</Col>
-					<Col span={24} md={12}>
-						<Form.Item label='Level'>
-							<Input
-								disabled
-								value={
-									dsRoles?.find((item) => item?._id === rolesId)?.level?.name ??
-									intl.formatMessage({ id: 'activityresult.perstion.rolesId.select' })
-								}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item
-							name='learningOutcomes'
-							label={intl.formatMessage({ id: 'activityresult.perstion.learningOutcomes' })}
-						>
-							<Input.TextArea
-								rows={3}
-								placeholder={intl.formatMessage({ id: 'activityresult.perstion.learningOutcomes.place' })}
-								disabled={isView}
-							/>
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item name='file' label={intl.formatMessage({ id: 'activityresult.perstion.file' })}>
-							<UploadFile maxCount={5} disabled={isView} />
-						</Form.Item>
-					</Col>
-					<Col span={24}>
-						<Form.Item
-							name='studentDeclarationApproverSsoId'
-							label={intl.formatMessage({ id: 'activityresult.perstion.studentDeclarationApproverSsoId' })}
-							rules={[...rules.required]}
-						>
-							<Select
-								placeholder={intl.formatMessage({
-									id: 'activityresult.perstion.studentDeclarationApproverSsoId.select',
+								placeholder='Choice Date Of Achievement'
+								{...buildDisabledDateTime({
+									min: startDate ? dayjs(startDate) : undefined,
+									max: endDate ? dayjs(endDate) : undefined,
 								})}
-								options={dsActivitiType
-									?.find((item) => item?._id === activitiesTypeId)
-									?.studentDeclarationApproverList?.map((item) => ({
-										value: item._id,
-										label: item.name,
-										rawData: item,
-									}))}
-								onChange={(val, option: any) => {
-									const nhanSu = option?.rawData;
-									form.setFieldsValue({
-										studentDeclarationApproverName: nhanSu?.name,
-									});
-								}}
-								disabled={isView}
+								allowClear
 							/>
 						</Form.Item>
-						<Form.Item name='studentDeclarationApproverName' hidden />
+					</Col>
+					<Col span={24} md={8}>
+						<Form.Item name='rank' label='Rank' rules={[...rules.required]}>
+							<Input disabled={isView} placeholder='Enter rank' />
+						</Form.Item>
+					</Col>
+					<Col span={24} md={8}>
+						<Form.Item name='link' label='Link' rules={[...rules.required, ...rules.httpLink]}>
+							<Input disabled={isView} placeholder='Enter link' />
+						</Form.Item>
+					</Col>
+					<Col span={24}>
+						<Row gutter={[12, 0]}>
+							<Col span={24} md={12}>
+								<Form.Item label='File Name' name={['evidenceFile', 0, 'name']} rules={[...rules.required]}>
+									<Input placeholder='Enter Name' disabled={isView} />
+								</Form.Item>
+							</Col>
+
+							<Col span={22} md={12}>
+								<Form.Item label='File' name={['evidenceFile', 0, 'file']} rules={[...rules.required]}>
+									<UploadFile maxCount={1} disabled={isView} />
+								</Form.Item>
+							</Col>
+						</Row>
+					</Col>
+					<Col span={24}>
+						<Form.Item name='description' label='Description'>
+							<Input.TextArea rows={3} disabled={isView} placeholder='Enter Description' />
+						</Form.Item>
 					</Col>
 				</Row>
-
-				<div className='form-footer'>
-					{!isView && (
-						<Button loading={formSubmiting} htmlType='submit' type='primary'>
-							{!edit
-								? intl.formatMessage({ id: 'global.button.themmoi' })
-								: intl.formatMessage({ id: 'global.button.chinhsua' })}
-						</Button>
-					)}
-					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
-				</div>
 			</Form>
-		</Card>
+		</>
 	);
 };
 

@@ -1,18 +1,18 @@
 import CCT from './CCT';
-import activity from './CCT/activity';
-import activityresult from './CCT/activityresult';
 import danhmuc from './danhmuc';
 import login from './login';
+import sinhvien from './sinhvien';
+import thongtinnguoihoc from './thongtinnguoihoc';
 
 export default {
 	...login,
 	...danhmuc,
-	...activity,
-	...activityresult,
 	...CCT,
+	...thongtinnguoihoc,
+	...sinhvien,
 
-	'pages.trangchu.title': 'STUDENT AFFAIRS MANAGEMENT SUBSYSTEM',
-	'pages.trangchu.subtitle': 'COMMAND AND CONTROL SOFTWARE SYSTEM',
+	'pages.trangchu.title': 'STUDENT AFFAIRS MANAGEMENT',
+	'pages.trangchu.subtitle': 'DIGITAL UNIVERSITY SYSTEM',
 	'pages.gioithieu.title': 'ABOUT',
-	'pages.gioithieu.subtitle': 'COMMAND AND CONTROL SOFTWARE SYSTEM',
+	'pages.gioithieu.subtitle': 'DIGITAL UNIVERSITY SYSTEM',
 };

@@ -1,6 +1,8 @@
 export default {
 	'activityresult.title': 'Phê duyệt kết quả hoạt động',
 
+	'activityresult.column.sv.name': 'Họ tên',
+	'activityresult.column.sv.email': 'Email',
 	'activityresult.column.name': 'Tên CCA',
 	'activityresult.column.cca': 'Hoạt động ngoại khóa (CCA)',
 	'activityresult.column.activity': 'Tên hoạt động',

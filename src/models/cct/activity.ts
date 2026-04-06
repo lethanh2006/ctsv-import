@@ -9,10 +9,10 @@ export default () => {
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [dataThongKe, setDataThongKe] = useState<Activity.IAnalyticsActivity>();
 
-	const getAnalyticsActivityModel = async (): Promise<Activity.IAnalyticsActivity> => {
+	const getAnalyticsActivityModel = async (condition?: any): Promise<Activity.IAnalyticsActivity> => {
 		setLoadingThongKe(true);
 		try {
-			const res = await getAnalyticsActivity();
+			const res = await getAnalyticsActivity(condition);
 			setDataThongKe(res.data?.data);
 			return res.data?.data;
 		} catch (err) {

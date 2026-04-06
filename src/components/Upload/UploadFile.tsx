@@ -28,6 +28,7 @@ const UploadFile: React.FC<TUploadProps> = ({
 	extra,
 	isLandscapeAvatar,
 	hasPreviewFile = true,
+	isWidescreen,
 	...props
 }) => {
 	const intl = useIntl();
@@ -36,7 +37,7 @@ const UploadFile: React.FC<TUploadProps> = ({
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const [previewImage, setPreviewImage] = useState('');
 	const resizeProps: TResizeProps | undefined = typeof resize === 'boolean' ? {} : resize;
-	const showImage = isAvatar || isAvatarSmall || isLandscapeAvatar;
+	const showImage = isAvatar || isAvatarSmall || isLandscapeAvatar || isWidescreen;
 
 	useEffect(() => {
 		let files: any[] = [];
@@ -185,7 +186,13 @@ const UploadFile: React.FC<TUploadProps> = ({
 					customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
 					listType='picture-card'
 					className={`avatar-uploader ${
-						isAvatarSmall ? 'avatar-small' : isLandscapeAvatar ? 'avatar-landscape' : undefined
+						isAvatarSmall
+							? 'avatar-small'
+							: isLandscapeAvatar
+								? 'avatar-landscape'
+								: isWidescreen
+									? 'avatar-widescreen'
+									: undefined
 					}`}
 					fileList={fileList}
 					onChange={handleChange}

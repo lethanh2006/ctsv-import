@@ -3,7 +3,7 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import { type IColumn } from '@/components/Table/typing';
 import { Activity } from '@/services/CCT/Activity/typing';
 import { EparticipantRole } from '@/services/CCT/constant';
-import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import FormUserRoles from './Form';
@@ -83,7 +83,6 @@ const FormItemUserRoles = (props: {
 			<TableStaticData data={value} columns={columns} size='small' hasTotal addStt>
 				<Button
 					disabled={disabled}
-					icon={<PlusCircleOutlined />}
 					onClick={() => {
 						setRecord({} as Activity.IParticipantsList);
 						setEdit(false);

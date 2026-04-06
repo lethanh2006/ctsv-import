@@ -1,54 +1,83 @@
-import { Card, Steps } from 'antd';
+import { Activity } from '@/services/CCT/Activity/typing';
+import { EApprovalStatus } from '@/services/CCT/constant';
+import dayjs from '@/utils/dayjs';
+import { Button, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import EquivalencyPage from '../Equivalency';
-import FormActivity from './Form';
+import FormActivityStudent from '../../ActivityStudent/components/Form';
+import CardChiTietSuKien from '../ChiTiet';
+import ListEvidenceActivity from '../ListStudent/ListEvidence';
+import RegisteredActivity from '../ListStudent/Registered';
 
-const ModalActivity = (props: any) => {
+const ModalActivity = () => {
 	const intl = useIntl();
-	const { getData } = props;
-	const { record, edit, isView, visibleForm } = useModel('cct.activity');
-	const [currentStep, setCurrentStep] = useState<number>(0);
+	const { visibleForm, record, setVisibleForm } = useModel('cct.activity');
+	const [activeKey, setActiveKey] = useState<string>('0');
 
 	useEffect(() => {
 		if (!visibleForm) {
-			setCurrentStep(0);
+			setActiveKey('0');
 		}
 	}, [visibleForm]);
 
-	const onChangeStep = (step: number) => {
-		setCurrentStep(step);
-	};
-
 	return (
-		<Card
-			title={
-				edit
-					? intl.formatMessage({ id: 'activity.form.chinhsua' })
-					: isView
-						? intl.formatMessage({ id: 'activity.form.chitet' })
-						: intl.formatMessage({ id: 'activity.form.themmoi' })
-			}
-		>
-			<Steps
-				current={currentStep}
-				type='navigation'
-				style={{ marginBottom: 18, paddingTop: 0 }}
-				onChange={record?._id ? onChangeStep : undefined}
-			>
-				<Steps.Step title={intl.formatMessage({ id: 'activity.step.info' })} />
-				<Steps.Step
-					title={intl.formatMessage({ id: 'activity.step.cca' })}
-					disabled={!record?._id || !record?.activitiesTypeId}
-				/>
-			</Steps>
+		<>
+			<Tabs
+				activeKey={activeKey}
+				onChange={setActiveKey}
+				items={[
+					{
+						key: '0',
+						label: intl.formatMessage({ id: 'activity.chitiet.tab1' }),
+						children: (
+							<>
+								<CardChiTietSuKien
+									record={
+										{
+											...record,
+											activityOutcome: record?.activityOutcome,
+										} as Activity.IRecord
+									}
+									evidenceDeadline={
+										record?.activityOutcome?.workflow === EApprovalStatus.CHANGES_REQUIRED
+											? record?.activityOutcome?.dueDate
+												? dayjs(record?.activityOutcome?.dueDate).format('HH:mm DD/MM/YYYY')
+												: '--'
+											: record?.allowPostEventResultsUpdate
+												? record?.dueDate
+													? dayjs(record?.dueDate).format('HH:mm DD/MM/YYYY')
+													: '--'
+												: record?.endDate
+													? dayjs(record?.endDate).format('HH:mm DD/MM/YYYY')
+													: '--'
+									}
+									infoEvidence={!!record?.activityOutcome?.workflow || !!record?.activityOutcome?._id}
+									activeKey={activeKey}
+								/>
 
-			{currentStep === 0 ? (
-				<FormActivity afterAddNew={() => setCurrentStep(1)} getData={getData} />
-			) : (
-				<EquivalencyPage />
-			)}
-		</Card>
+								<div className='form-footer'>
+									<Button onClick={() => setVisibleForm(false)}>
+										{intl.formatMessage({ id: 'global.button.dong' })}
+									</Button>
+								</div>
+							</>
+						),
+					},
+					{
+						key: '1',
+						label: intl.formatMessage({ id: 'activity.chitiet.tab2' }),
+						children: <RegisteredActivity />,
+					},
+					{
+						key: '2',
+						label: intl.formatMessage({ id: 'activity.chitiet.tab3' }),
+						children: <ListEvidenceActivity />,
+					},
+				]}
+			/>
+
+			<FormActivityStudent isActivity />
+		</>
 	);
 };
 
