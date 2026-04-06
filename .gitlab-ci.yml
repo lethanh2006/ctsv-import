@@ -5,6 +5,7 @@ stages:
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
     - when: never
 
 
@@ -37,6 +38,7 @@ build_develop:
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "20Gi"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
   script:
     - mkdir -p /kaniko/.docker
     - |
@@ -63,6 +65,7 @@ build_develop:
 update_gitops:
   extends: .update_image_tag
   rules:
-    - when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"
   needs:
     - build_develop
