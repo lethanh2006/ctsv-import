@@ -9,6 +9,6 @@ export async function postManyEquivalency(
 	return axios.post(`${ipCCT}/co-curricular-activity-equivalency/insert/${activityId}`, { ...payload });
 }
 
-export async function getAnalyticsActivity() {
-	return axios.get(`${ipCCT}/activities/analytics`);
+export async function getAnalyticsActivity(condition?: any) {
+	return axios.get(`${ipCCT}/activities/analytics`, { params: { condition: condition } });
 }

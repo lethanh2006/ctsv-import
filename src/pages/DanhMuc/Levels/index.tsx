@@ -9,10 +9,27 @@ import FormLevels from './components/Form';
 
 const LevelsPage = () => {
 	const intl = useIntl();
-	const { page, limit, deleteModel, handleEdit, putModel, formSubmiting, handleView } = useModel('danhmuc.levels');
+	const { getModel, page, limit, deleteModel, handleEdit, putModel, formSubmiting, handleView } =
+		useModel('danhmuc.levels');
+
+	const getData = () => {
+		getModel(undefined, undefined, {
+			order: 1,
+		});
+	};
 
 	const onChecked = (rec: LevelsManagement.IRecord, isActive: boolean) => {
-		if (rec._id) putModel(rec._id, { isActive }).catch((er) => console.log(er));
+		if (rec._id)
+			putModel(
+				rec._id,
+				{ isActive },
+				getData,
+				undefined,
+				undefined,
+				isActive
+					? intl.formatMessage({ id: 'message.activateSuccess' })
+					: intl.formatMessage({ id: 'message.deactivateSuccess' }),
+			).catch((er) => console.log(er));
 	};
 
 	const onCell = (rec: LevelsManagement.IRecord) => ({
@@ -22,18 +39,10 @@ const LevelsPage = () => {
 
 	const columns: IColumn<LevelsManagement.IRecord>[] = [
 		{
-			title: intl.formatMessage({ id: 'levelsmanagement.column.order' }),
-			dataIndex: 'order',
-			align: 'center',
-			width: 100,
-			sortable: true,
-			onCell,
-		},
-		{
 			title: intl.formatMessage({ id: 'levelsmanagement.column.id' }),
 			dataIndex: 'code',
 			align: 'center',
-			width: 100,
+			width: 120,
 			filterType: 'string',
 			sortable: true,
 			onCell,
@@ -41,23 +50,21 @@ const LevelsPage = () => {
 		{
 			title: intl.formatMessage({ id: 'levelsmanagement.column.name' }),
 			dataIndex: 'name',
-			width: 170,
+			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
 			title: intl.formatMessage({ id: 'levelsmanagement.column.des' }),
 			dataIndex: 'description',
-			width: 220,
+			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-			filterType: 'string',
-			onCell,
 		},
 		{
 			title: intl.formatMessage({ id: 'levelsmanagement.column.auto' }),
 			dataIndex: 'autoApproval',
 			align: 'center',
-			width: 90,
+			width: 120,
 			render: (val, rec) => <Checkbox checked={val} />,
 		},
 		{
@@ -66,13 +73,23 @@ const LevelsPage = () => {
 			align: 'center',
 			width: 90,
 			render: (val, rec) => (
-				<Switch checked={val} onChange={(checked) => onChecked(rec, checked)} size='small' loading={formSubmiting} />
+				<Popconfirm
+					title={
+						val
+							? intl.formatMessage({ id: 'message.confirm.deactivate' })
+							: intl.formatMessage({ id: 'message.confirm.activate' })
+					}
+					onConfirm={() => onChecked(rec, !val)}
+					placement='top'
+				>
+					<Switch checked={val} size='small' loading={formSubmiting} />
+				</Popconfirm>
 			),
 		},
 		{
 			title: intl.formatMessage({ id: 'global.column.action' }),
 			align: 'center',
-			width: 90,
+			width: 120,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
@@ -85,7 +102,7 @@ const LevelsPage = () => {
 
 					<Popconfirm
 						onConfirm={() =>
-							deleteModel(rec._id, undefined, {
+							deleteModel(rec._id, getData, {
 								messageText: intl.formatMessage({ id: 'global.message.xoathanhcong' }),
 							})
 						}
@@ -106,11 +123,13 @@ const LevelsPage = () => {
 
 	return (
 		<TableBase
+			getData={getData}
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='danhmuc.levels'
 			title={intl.formatMessage({ id: 'levelsmanagement.title' })}
 			Form={FormLevels}
+			formProps={{ getData }}
 			buttons={{ import: true, export: true }}
 			widthDrawer={800}
 		/>

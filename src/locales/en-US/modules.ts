@@ -6,7 +6,7 @@ export default {
 	'modules.quan-ly-dao-tao': 'Training Management',
 	'modules.to-chuc-nhan-su': 'Human Resources',
 	'modules.tai-chinh': 'Finance',
-	'modules.cong-tac-sinh-vien': 'Student Affairs',
+	'modules.cong-tac-sinh-vien': 'Student Affairs Management',
 	'modules.quan-ly-khoa-hoc': 'Research Management',
 	'modules.van-phong-so': 'Digital Office',
 	'modules.khao-thi': 'Examination',
@@ -19,8 +19,7 @@ export default {
 	'modules.tap-chi-khoa-hoc': 'Scientific Journal',
 
 	// University information
-	'config.co-quan-chu-quan': 'Vietnam Women\'s Union',
-	'config.ten-truong': 'Vietnam Women\'s Academy',
-	'config.tien-to-truong': 'Academy'
+	'config.co-quan-chu-quan': "Vietnam Women's Union",
+	'config.ten-truong': "Vietnam Women's Academy",
+	'config.tien-to-truong': 'Academy',
 };
-

@@ -6,27 +6,27 @@ export default {
 	'questionsmanagement.column.mota': 'Description',
 	'questionsmanagement.column.kichhoat': 'Active',
 
-	'questionsmanagement.comfirm.xoa': 'Are you sure you want to delete this question?',
+	'questionsmanagement.comfirm.xoa': 'Are You Sure You Want To Delete This Question?',
 
 	'questionsmanagement.button.xemtruoc': 'Preview',
 	'questionsmanagement.button.tieptheo': 'Next',
 
-	'questionsmanagement.form.themmoi': 'Add new question',
-	'questionsmanagement.form.chinhsua': 'Edit question',
-	'questionsmanagement.form.chitiet': 'Detail question',
+	'questionsmanagement.form.themmoi': 'Add New Question',
+	'questionsmanagement.form.chinhsua': 'Edit Question',
+	'questionsmanagement.form.chitiet': 'Question Detail',
 
 	'questionsmanagement.step.thongtinchung': 'General Information',
 	'questionsmanagement.step.cauhinh': 'Form Configuration',
 
 	'questionsmanagement.thongtinchung.tieude': 'Title',
-	'questionsmanagement.thongtinchung.tieude.place': 'Enter title',
+	'questionsmanagement.thongtinchung.tieude.place': 'Enter Title',
 	'questionsmanagement.thongtinchung.lever': 'Level',
 	'questionsmanagement.thongtinchung.mota': 'Description',
-	'questionsmanagement.thongtinchung.mota.place': 'Enter description',
+	'questionsmanagement.thongtinchung.mota.place': 'Enter Description',
 	'questionsmanagement.thongtinchung.defaultQuestion': 'Default Question Set for Level',
-	'questionsmanagement.thongtinchung.camket': 'Has commitment',
-	'questionsmanagement.thongtinchung.noidungcamket': 'Commitment content',
-	'questionsmanagement.thongtinchung.noidungcamket.place': 'Enter commitment content',
+	'questionsmanagement.thongtinchung.camket': 'Has Commitment',
+	'questionsmanagement.thongtinchung.noidungcamket': 'Commitment Content',
+	'questionsmanagement.thongtinchung.noidungcamket.place': 'Enter Commitment Content',
 
 	'questionsmanagement.cauhinh.vali': 'At least 1 block',
 	'questionsmanagement.cauhinh.khoi': 'Block',

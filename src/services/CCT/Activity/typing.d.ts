@@ -1,3 +1,4 @@
+import { ActivityOutCome } from '../ActivityOutcome/typing';
 import { EparticipantRole, EParticipantScope } from '../constant';
 
 declare module Activity {
@@ -8,7 +9,9 @@ declare module Activity {
 		endDate: Date;
 		banner: string;
 		backgroundImage: string;
-		organizer: string;
+		organizer?: string;
+		codeOrganizer?: string;
+		activityCreatorSsoId?: string;
 
 		onCampus: boolean;
 		facilityCode: string;
@@ -27,15 +30,32 @@ declare module Activity {
 		unitCode: string;
 
 		allowPostEventResultsUpdate?: boolean;
+		dueDate: Date;
 
 		activitiesTypeId: string | null;
 		activitiesType: ActivitiesManagement.IRecord;
 		featuredActivities: boolean;
 
 		studentDeclarationApproverList: ActivitiesManagement.IStudentDeclaration[];
-		coCurricularActivityEquivalency: IEquivalency[];
 
-		//fake
+		coCurricularActivityEquivalency: IEquivalency[];
+		coCurricularAttributesEquivalency: ICompetencyMapping[];
+		competencyList: IComapetencyActivity[];
+
+		numberOfRegisteredActivityOutcomes?: number;
+		numberOfApprovedActivityOutcomes?: number;
+		numberOfAddEvidenceActivityOutcomes?: number;
+
+		allowActivityRegistration: boolean;
+		capacity: number | null;
+		dueDateRegistration: Date | null;
+
+		activityOutcome: ActivityOutCome.IRecord;
+
+		workflow: EApprovalStatus;
+		createdAt?: Date;
+
+		// fake
 		cct?: boolean;
 	}
 
@@ -69,4 +89,19 @@ declare module Activity {
 		total: number;
 		upcoming: number;
 	};
+
+	export interface ICompetencyMapping {
+		activityOutcomeId?: string;
+		activityOutcome?: IRecord;
+		competencyId: string;
+		competencie?: Competency.IRecord;
+	}
+
+	export interface ICompetencyActivity {
+		_id: string;
+		competencyId: string;
+		activitiesId: string;
+		competency: Competency.IRecord;
+		activities: IRecord;
+	}
 }
