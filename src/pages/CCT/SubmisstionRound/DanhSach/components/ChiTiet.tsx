@@ -74,7 +74,7 @@ const ChiTietMyCCT = (props: any) => {
 							<div className='cct-column left'>
 								<header>
 									<div style={{ marginBottom: 12 }}>
-										<img src='/logo-text.png' alt='logo' width={90} />
+										<img src='/cong-tac-sinh-vien/logo-text.png' alt='logo' width={90} />
 									</div>
 									<span
 										style={{
