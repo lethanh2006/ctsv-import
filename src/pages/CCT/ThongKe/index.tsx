@@ -581,11 +581,110 @@ const ThongKeCCT = () => {
 						<Col span={24} md={16}>
 							<CustomCard title='Student Funnel Analysis' icon={<BarChartOutlined />} loading={loadingTiLeHoanThanh}>
 								<ReactApexChart
-									options={funnelOptions as any}
-									series={[{ data: funnelData }]}
+									options={{
+										...commonOptions,
+										chart: {
+											...commonOptions.chart,
+											type: 'bar',
+											toolbar: { show: false },
+										},
+
+										plotOptions: {
+											bar: {
+												borderRadius: 8,
+												horizontal: true,
+												distributed: true,
+												barHeight: '55%',
+												dataLabels: { position: 'top' },
+											},
+										},
+
+										colors: [COLORS.primary, '#F7981D', COLORS.success],
+
+										dataLabels: {
+											enabled: true,
+											formatter: (val: number) => `${val}`,
+											offsetX: 20,
+											style: {
+												fontWeight: 600,
+												colors: ['#1e293b'],
+											},
+										},
+
+										xaxis: {
+											categories: ['Registered', 'Evidence Submitted', 'Approved'],
+											labels: { style: { fontWeight: 500 } },
+										},
+
+										grid: {
+											borderColor: '#f1f5f9',
+											xaxis: { lines: { show: false } },
+										},
+
+										legend: { show: false },
+									}}
+									series={[
+										{
+											data: [
+												dataThongKeTiLeHoanThanh?.totalRegistered || 0,
+												dataThongKeTiLeHoanThanh?.hasEvidence || 0,
+												dataThongKeTiLeHoanThanh?.totalApproved || 0,
+											],
+										},
+									]}
 									type='bar'
 									height={280}
 								/>
+
+								<div
+									style={{
+										marginTop: 16,
+										display: 'flex',
+										gap: 12,
+									}}
+								>
+									<div
+										style={{
+											flex: 1,
+											background: '#f8fafc',
+											padding: '10px 12px',
+											borderRadius: 8,
+											textAlign: 'center',
+										}}
+									>
+										<div style={{ fontSize: 12, color: '#64748b' }}>Evidence Rate</div>
+										<div
+											style={{
+												fontSize: 18,
+												fontWeight: 700,
+												color: '#F7981D',
+											}}
+										>
+											{dataThongKeTiLeHoanThanh?.evidenceRate || 0}%
+										</div>
+									</div>
+
+									<div
+										style={{
+											flex: 1,
+											background: '#f8fafc',
+											padding: '10px 12px',
+											borderRadius: 8,
+											textAlign: 'center',
+										}}
+									>
+										<div style={{ fontSize: 12, color: '#64748b' }}>Approval Rate</div>
+										<div
+											style={{
+												fontSize: 18,
+												fontWeight: 700,
+												color: COLORS.success,
+											}}
+										>
+											{dataThongKeTiLeHoanThanh?.approvalRate || 0}%
+										</div>
+									</div>
+								</div>
 							</CustomCard>
 						</Col>
 						<Col xs={24} md={8}>
