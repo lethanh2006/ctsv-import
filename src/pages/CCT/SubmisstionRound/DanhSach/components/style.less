@@ -33,7 +33,6 @@
 
 .cct-container {
 	display: flex;
-	padding: @container-padding;
 	gap: 30px;
 	background: white;
 	color: @text-gray;
@@ -107,12 +106,11 @@ header {
 		}
 	}
 }
+
 .info-footer {
 	margin-top: -12px;
-	display: flex;
 	font-size: 12px;
 	color: @primary-red;
-	gap: 40px;
 }
 
 .skills-section {
@@ -307,15 +305,15 @@ header {
 		margin-top: 12px;
 		display: flex;
 		align-items: center;
-		justify-content: flex-start;
 		gap: 40px;
 
 		.gauge-container {
-			position: relative;
+			flex: 0 0 auto;
 		}
 
 		.role-desc {
 			flex: 1;
+			min-width: 0;
 			line-height: 1.4;
 
 			strong {

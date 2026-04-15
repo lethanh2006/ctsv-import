@@ -155,14 +155,16 @@ const ListEvidenceActivity = () => {
 			render: (val, rec) =>
 				rec?.workflow === EApprovalStatus.APPROVED && (
 					<Tag color={mapEvalidation[val as Evalidation]}>
-						{intl.formatMessage({ id: `activity.chitiet.tab3.validation.${val?.toLowerCase()}` })}
+						{val}
+						{/* {intl.formatMessage({ id: `activity.chitiet.tab3.validation.${val?.toLowerCase()}` })} */}
 					</Tag>
 				),
 			fixed: 'right',
 			filterType: 'select',
 			filterData: Object.values(Evalidation).map((item) => ({
 				value: item,
-				label: intl.formatMessage({ id: `activity.chitiet.tab3.validation.${item.toLowerCase()}` }),
+				label: item,
+				// intl.formatMessage({ id: `activity.chitiet.tab3.validation.${item.toLowerCase()}` }),
 			})),
 			onCell,
 		},
