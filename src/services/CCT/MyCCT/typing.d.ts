@@ -23,6 +23,7 @@ declare module MyCCT {
 		concentration: string;
 		listCompetency: string[];
 		listAwardRecognition: string[];
+		selectedActivities: string[];
 		college: string;
 		awardsAndRecognition: {
 			name: string;
@@ -74,5 +75,20 @@ declare module MyCCT {
 		changeRequired: number;
 		pending: number;
 		total: number;
+	}
+
+	export interface IActivityMyCCT {
+		id: string;
+		activity: string;
+		attributes: AttributesManagement.IRecord;
+		impact: string;
+		level: string;
+		organizationUnit: string;
+		role: string;
+		endDate: Date;
+		startDate: Date;
+		year: number;
+		_levelId: string;
+		_levelOrderForSorting: number;
 	}
 }
