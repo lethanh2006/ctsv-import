@@ -59,7 +59,7 @@ const SelectActivitiesTypeDomain = (props: {
 			options={options}
 			showSearch
 			optionFilterProp='label'
-			placeholder={intl.formatMessage({ id: 'ccd.select' })}
+			placeholder={intl.formatMessage({ id: 'activitiestypedomain.select.place' })}
 			style={{ width: '100%', ...style }}
 		/>
 	);

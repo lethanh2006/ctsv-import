@@ -39,7 +39,14 @@ const ModalXuLyMyCCT = (props: { title: string; trangThai: EStatusMyCCT; getData
 	};
 
 	return (
-		<Modal open={visibleXuLy} onCancel={() => setVisibleXuLy(false)} title={title} footer={null} width={600}>
+		<Modal
+			open={visibleXuLy}
+			onCancel={() => setVisibleXuLy(false)}
+			title={title}
+			footer={null}
+			width={600}
+			zIndex={1000}
+		>
 			<div
 				style={{
 					display: 'flex',

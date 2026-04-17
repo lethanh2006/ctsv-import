@@ -7,12 +7,13 @@ const GroupTagVaiTro = (props: {
 	onChange?: (val?: EparticipantRole) => void;
 	listVaiTro?: EparticipantRole[];
 	disabled?: boolean;
+	disabledOptions?: EparticipantRole[]; // 👈 thêm
 }) => {
-	const { value, onChange, disabled } = props;
+	const { value, onChange, disabled, disabledOptions = [] } = props;
 	const listVaiTro = props.listVaiTro ?? Object.values(EparticipantRole);
 
 	const handleChange = (val: EparticipantRole, checked: boolean) => {
-		if (disabled) return;
+		if (disabled || disabledOptions.includes(val)) return;
 
 		if (checked) {
 			onChange?.(val);
@@ -23,18 +24,25 @@ const GroupTagVaiTro = (props: {
 
 	return (
 		<Space wrap size={8}>
-			{listVaiTro.map((item) => (
-				<CheckableTag
-					key={item}
-					checked={value === item}
-					onChange={(checked) => handleChange(item, checked)}
-					style={{ pointerEvents: disabled ? 'none' : undefined }}
-				>
-					{mapNameParticipantRole[item]}
-				</CheckableTag>
-			))}
+			{listVaiTro.map((item) => {
+				const isDisabled = disabled || disabledOptions.includes(item);
+
+				return (
+					<CheckableTag
+						key={item}
+						checked={value === item}
+						onChange={(checked) => handleChange(item, checked)}
+						style={{
+							pointerEvents: isDisabled ? 'none' : undefined,
+							opacity: isDisabled ? 0.5 : 1, // 👈 nhìn rõ disabled
+							cursor: isDisabled ? 'not-allowed' : 'pointer',
+						}}
+					>
+						{mapNameParticipantRole[item]}
+					</CheckableTag>
+				);
+			})}
 		</Space>
 	);
 };
-
 export default GroupTagVaiTro;
