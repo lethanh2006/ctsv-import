@@ -83,9 +83,11 @@ const FormStudentApprover = (props: any) => {
 				</Row>
 
 				<div className='form-footer'>
-					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						{intl.formatMessage({ id: 'global.button.luulai' })}
-					</Button>
+					{!isView && (
+						<Button loading={formSubmiting} htmlType='submit' type='primary'>
+							{intl.formatMessage({ id: 'global.button.luulai' })}
+						</Button>
+					)}
 					<Button onClick={() => setVisibleForm(false)}>
 						{intl.formatMessage({ id: isView ? 'global.button.dong' : 'global.button.huy' })}
 					</Button>

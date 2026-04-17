@@ -143,6 +143,11 @@ const FormActivity = (props: { getData?: () => void }) => {
 
 		const list = values.coCurricularActivityEquivalency || [];
 
+		if (!list || list.length === 0) {
+			message.error('Equivalency Framework Required');
+			return;
+		}
+
 		const roleIds = list.map((i) => i.rolesId).filter(Boolean);
 		if (roleIds.some((id, idx) => roleIds.indexOf(id) !== idx)) {
 			message.error(intl.formatMessage({ id: 'activity.equivalency.vali' }));
@@ -399,6 +404,7 @@ const FormActivity = (props: { getData?: () => void }) => {
 					>
 						<GroupTagVaiTro
 							disabled={isView}
+							disabledOptions={cct ? [EparticipantRole.STAFF, EparticipantRole.ALL] : undefined}
 							listVaiTro={
 								participantScope === EParticipantScope.UNIT
 									? [EparticipantRole.STAFF]
@@ -521,7 +527,13 @@ const FormActivity = (props: { getData?: () => void }) => {
 					<Row gutter={[12, 0]}>
 						<Col span={24} md={8}>
 							<Form.Item name='cct' valuePropName='checked' label=''>
-								<Checkbox disabled={isView} onChange={() => form.setFieldValue('allowPostEventResultsUpdate', true)}>
+								<Checkbox
+									disabled={isView}
+									onChange={() => {
+										form.setFieldValue('allowPostEventResultsUpdate', true);
+										form.setFieldValue('participantRole', EparticipantRole.STUDENT);
+									}}
+								>
 									{intl.formatMessage({ id: 'activity.info.form.cct' })}
 								</Checkbox>
 							</Form.Item>
