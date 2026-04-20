@@ -21,6 +21,9 @@ include:
   - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-dev'
     ref: master
     file: '.gitlab/cd-update-image.yml'
+  - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-prod'
+    ref: master
+    file: '.gitlab/cd-update-image.yml'
 
 build_develop:
   stage: build
