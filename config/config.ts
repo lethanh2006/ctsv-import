@@ -63,4 +63,7 @@ export default defineConfig({
 		}
 		return result;
 	}, {}),
+
+	base: process.env.APP_CONFIG_BASE_PATH,
+	publicPath: process.env.APP_CONFIG_BASE_PATH,
 });

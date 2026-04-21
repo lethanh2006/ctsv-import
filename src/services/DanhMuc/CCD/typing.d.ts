@@ -6,5 +6,6 @@ declare module ActivitiesTypeDomain {
 		order: number;
 		description: string;
 		isActive: boolean;
+		isAwardRecognition: boolean;
 	}
 }

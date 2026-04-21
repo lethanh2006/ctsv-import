@@ -45,7 +45,7 @@ build
 # Sentry Auth Token
 #.sentryclirc
 
-
-
-
 .vercel
+.env
+.env.local
+

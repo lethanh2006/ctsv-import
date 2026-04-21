@@ -11,17 +11,16 @@ const ipNotif = ipRoot + 'notification'; // ip dev
 const ipDaoTao = ipRoot + 'qldt';
 const ipNhanSu = ipRoot + 'tcns';
 const ipCore = ipRoot + 'core';
-const ipTaiChinh = ipRoot + 'tai-chinh-api-v2';
+const ipTaiChinh = ipRoot + 'tai-chinh';
 const ipSlink = ipRoot + 'slink'; // ip dev
 const ipCCT = ipRoot + 'co-curriculum'; // ip dev
-// const ipCCT = 'http://192.168.1.146:3010'; // ip dev
 const ipCsvc = ipRoot + 'csvc';
-// const ipCCT = 'http://192.168.1.38:3010'; // ip dev
 const ipKhaoThi = ipRoot + 'khao-thi';
 
 const currentRole = EModuleKey.CTSV;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
+
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;

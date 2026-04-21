@@ -12,8 +12,14 @@ const ModalChinhSuaTrangThai = (props: { getData?: () => void }) => {
 	const intl = useIntl();
 	const { getData } = props;
 	const [form] = Form.useForm();
-	const { record, formSubmiting, putApproveActivityModel, visibleChangeStatus, setVisibleChangeStatus } =
-		useModel('cct.activityoutcome');
+	const {
+		record,
+		formSubmiting,
+		putApproveActivityModel,
+		visibleChangeStatus,
+		setVisibleChangeStatus,
+		setVisibleForm,
+	} = useModel('cct.activityoutcome');
 	const workflow: EApprovalStatus = Form.useWatch('workflow', form);
 
 	useEffect(() => {
@@ -36,6 +42,7 @@ const ModalChinhSuaTrangThai = (props: { getData?: () => void }) => {
 	const onFinish = async (values: ActivityOutCome.IRecord) => {
 		putApproveActivityModel(record?._id ?? '', values, getData).then(() => {
 			setVisibleChangeStatus(false);
+			setVisibleForm(false);
 		});
 	};
 
@@ -166,7 +173,7 @@ const ModalChinhSuaTrangThai = (props: { getData?: () => void }) => {
 													<strong>{intl.formatMessage({ id: 'activityresult.xuly.featured' })}</strong>
 												</div>
 												<div style={{ color: '#666' }}>
-													{intl.formatMessage({ id: 'activityresult.xuly.featured' })}{' '}
+													{intl.formatMessage({ id: 'activityresult.xuly.featured.place' })}{' '}
 												</div>
 											</div>
 										</Radio>

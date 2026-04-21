@@ -6,6 +6,7 @@ import { Button } from 'antd';
 import { useIntl, useModel } from 'umi';
 import CardChiTietSuKien from '../../Activity/ChiTiet';
 import ChiTietActivityOutCome from './ChiTiet';
+import FormPerstionActivityOutCome from './FormPerstion';
 
 const FormActivityStudent = (props: any) => {
 	const { isActivity, setTrangThai } = props;
@@ -46,7 +47,9 @@ const FormActivityStudent = (props: any) => {
 				header: { backgroundColor: '#F8F8F8' },
 			}}
 		>
-			{record?.activityCategory === EActivityCategory.REGISTERED ? (
+			{record?.isAwardRecognition ? (
+				<FormPerstionActivityOutCome />
+			) : record?.activityCategory === EActivityCategory.REGISTERED ? (
 				<CardChiTietSuKien
 					record={{
 						...record?.activities,
