@@ -14,6 +14,39 @@ import LoadingPage from '../Loading';
 import { unAuthPaths, unCheckPermissionPaths } from './constant';
 
 let OIDCBounderHandlers: ReturnType<typeof useAuthActions> | null = null;
+const POST_LOGIN_PATH_STORAGE_KEY = 'oidc_post_login_path';
+const appBasePath = APP_CONFIG_BASE_PATH.endsWith('/') ? APP_CONFIG_BASE_PATH.slice(0, -1) : APP_CONFIG_BASE_PATH;
+const buildAppPath = (path: string) => `${appBasePath}${path.startsWith('/') ? path : `/${path}`}`;
+const oidcCallbackPath = buildAppPath('/auth/callback');
+const defaultAfterLoginPath = buildAppPath('/dashboard');
+
+const isBasePath = (pathname: string) => pathname === appBasePath || pathname === `${appBasePath}/`;
+const isLoginPath = (pathname: string) => pathname === buildAppPath('/user/login');
+const isCallbackPath = (pathname: string) => pathname === oidcCallbackPath;
+
+const rememberPostLoginPath = () => {
+	const redirectTarget =
+		isBasePath(window.location.pathname) || isLoginPath(window.location.pathname) || isCallbackPath(window.location.pathname)
+			? defaultAfterLoginPath
+			: `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+	try {
+		sessionStorage.setItem(POST_LOGIN_PATH_STORAGE_KEY, redirectTarget);
+	} catch (error) {
+		console.error('[OIDC] Failed to store post login path', error);
+	}
+};
+
+const consumePostLoginPath = () => {
+	try {
+		const path = sessionStorage.getItem(POST_LOGIN_PATH_STORAGE_KEY);
+		sessionStorage.removeItem(POST_LOGIN_PATH_STORAGE_KEY);
+		return path || defaultAfterLoginPath;
+	} catch (error) {
+		console.error('[OIDC] Failed to read post login path', error);
+		return defaultAfterLoginPath;
+	}
+};
 
 export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children }) => {
 	const intl = useIntl();
@@ -21,7 +54,6 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 	const auth = useAuth();
 	const actions = useAuthActions();
 	const isUnauth = unAuthPaths.some((path) => window.location.pathname.includes(path));
-	let timeout: any = null;
 
 	const handleAxios = (access_token: string) => {
 		axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
@@ -34,14 +66,11 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 			.map((key) => `${key}=${other[key]}`)
 			.join('&');
 		if (newSearch) newSearch = '?' + newSearch;
-		// Reload trang để cập nhật access token mới
 		const pathname =
-			window.location.pathname === '/' || window.location.pathname === '/user/login'
-				? '/dashboard'
-				: window.location.pathname;
-		window.location.replace(`${pathname}${newSearch}${window.location.hash}`);
-		// window.history.replaceState({}, document.title, `${pathname}${newSearch}${window.location.hash}`);
-		// window.location.reload();
+			isBasePath(window.location.pathname) || isLoginPath(window.location.pathname) || isCallbackPath(window.location.pathname)
+				? consumePostLoginPath()
+				: `${window.location.pathname}${newSearch}${window.location.hash}`;
+		window.location.replace(pathname);
 	};
 
 	const handleLogin = async () => {
@@ -84,7 +113,8 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 					}
 					history.replace('/403');
 				} else {
-					if (window.location.pathname === '/' || window.location.pathname === '/user/login') redirectLocation();
+					if (isBasePath(window.location.pathname) || isLoginPath(window.location.pathname) || isCallbackPath(window.location.pathname))
+						redirectLocation();
 				}
 			} catch {
 				if (auth.isAuthenticated) auth.removeUser();
@@ -112,29 +142,34 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 
 		// Chưa login + chưa có auth params ==> Cần redirect keycloak để lấy auth params + cookie
 		if (!hasAuthParams() && !auth.isAuthenticated && initialState?.permissionLoading) {
-			if (!isUnauth) auth.signinRedirect();
+			if (!isUnauth) {
+				rememberPostLoginPath();
+				auth.signinRedirect();
+			}
 			return;
 		}
-
-		// Quá 5s nếu ko auth được thì xóa params
-		if (!timeout)
-			timeout = setTimeout(() => {
-				if (hasAuthParams() && !auth.isAuthenticated) redirectLocation();
-			}, 1000 * 5);
 
 		// Đã login => Xoá toàn bộ auth params được sử dụng để login trước đó
 		if (auth.isAuthenticated) {
 			if (hasAuthParams()) redirectLocation();
-			else {
-				if (timeout) clearTimeout(timeout);
-				handleLogin();
-			}
+			else handleLogin();
 		}
 	}, [auth.isAuthenticated, auth.isLoading]);
 
 	useEffect(() => {
 		if (auth.user?.access_token) handleAxios(auth.user.access_token);
 	}, [auth.user?.access_token]);
+
+	useEffect(() => {
+		if (auth.error) {
+			console.error('[OIDC] Authentication error', {
+				error: auth.error,
+				href: window.location.href,
+				hasAuthParams: hasAuthParams(),
+				isAuthenticated: auth.isAuthenticated,
+			});
+		}
+	}, [auth.error, auth.isAuthenticated]);
 
 	useEffect(() => {
 		OIDCBounderHandlers = actions;
@@ -149,11 +184,10 @@ export const OIDCBounder: FC<{ children: React.ReactElement }> & { getActions: (
 	return (
 		<AuthProvider
 			{...oidcConfig}
-			redirect_uri={
-				window.location.pathname.includes('/user')
-					? `${window.location.origin}${APP_CONFIG_BASE_PATH}`
-					: window.location.href
-			}
+			redirect_uri={`${window.location.origin}${oidcCallbackPath}`}
+			onSigninCallback={() => {
+				window.history.replaceState({}, document.title, consumePostLoginPath());
+			}}
 		>
 			<OIDCBounder_ {...props} />
 		</AuthProvider>
