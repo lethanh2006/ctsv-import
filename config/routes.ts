@@ -11,10 +11,6 @@
 			},
 		],
 	},
-	{
-		path: '/auth/callback',
-		component: 'Auth/Callback',
-	},
 
 	// GROUP TITLE
 	// {
