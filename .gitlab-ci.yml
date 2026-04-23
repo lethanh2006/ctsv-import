@@ -84,6 +84,8 @@ build_develop:
 
 jfrog_build_congtacsinhvien:
   extends: .jfrog_kaniko_build_job
+  tags:
+    - runner-vu-digital-dev
   variables:
     BUILD_CONTEXT: "${CI_PROJECT_DIR}"
     BUILD_DOCKERFILE: "${CI_PROJECT_DIR}/Dockerfile"
@@ -91,11 +93,15 @@ jfrog_build_congtacsinhvien:
 
 sbom_scan_congtacsinhvien:
   extends: .jfrog_sbom_scan_job
+  tags:
+    - runner-vu-digital-dev
   needs:
     - jfrog_build_congtacsinhvien
 
 vuln_scan_congtacsinhvien:
   extends: .standard_vuln_scan_job
+  tags:
+    - runner-vu-digital-dev
 
 update_gitops:
   extends: .update_image_tag
