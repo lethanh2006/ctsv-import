@@ -84,18 +84,23 @@ build_develop:
   interruptible: true
 
 jfrog_build_congtacsinhvien:
-  extends: .jfrog_kaniko_build_job
+  extends:
+    - .jfrog_kaniko_build_job
+    - .security_tools_image_defaults
   tags:
     - runner-vu-digital-dev
   variables:
     BUILD_CONTEXT: "${CI_PROJECT_DIR}"
     BUILD_DOCKERFILE: "${CI_PROJECT_DIR}/Dockerfile"
-    BUILD_DESTINATION: "${JFROG_REGISTRY}/${IMAGE_REPO}/${CI_PROJECT_NAME}:${CI_COMMIT_SHORT_SHA}"
+    BUILD_DESTINATION: "${JFROG_REGISTRY}/${IMAGE_REPO}/${APP_NAME}:${CI_COMMIT_SHORT_SHA}"
 
 sbom_scan_congtacsinhvien:
   extends: .jfrog_sbom_scan_job
   tags:
     - runner-vu-digital-dev
+  variables:
+    IMAGE_NAME: "${JFROG_REGISTRY}/${IMAGE_REPO}/${APP_NAME}"
+    DOCKER_IMAGE_NAME: "${JFROG_REGISTRY}/${IMAGE_REPO}/${APP_NAME}:${CI_COMMIT_SHORT_SHA}"
   needs:
     - jfrog_build_congtacsinhvien
 
