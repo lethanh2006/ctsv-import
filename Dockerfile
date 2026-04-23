@@ -1,5 +1,5 @@
 # 1. For build React app
-FROM node:22-alpine AS development
+FROM 520492793952.dkr.ecr.ap-southeast-1.amazonaws.com/vwa-congtacsinhvien:build-base-bad61fc3 AS development
 
 
 # Set environment variables
@@ -47,7 +47,7 @@ ENV APP_CONFIG_BASE_PATH=/cong-tac-sinh-vien/
 WORKDIR /app
 
 COPY package.json yarn.lock /app/
-RUN yarn install
+RUN if [ ! -d node_modules ] || [ ! -f /opt/build-base.yarn.lock ] || ! cmp -s yarn.lock /opt/build-base.yarn.lock; then yarn install; fi
 
 COPY . /app
 
