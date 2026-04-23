@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -723,6 +723,11 @@
 		path: '/danh-muc',
 		icon: 'copy',
 		routes: [
+			{
+				name: 'MiniApp',
+				path: 'mini-app',
+				component: 'CauHinh/MiniApp',
+			},
 			{
 				name: 'KhenThuong',
 				path: 'khen-thuong',
