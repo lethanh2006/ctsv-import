@@ -1,6 +1,7 @@
 stages:
   - prepare
   - build
+  - security-scan
   - update-gitops
 
 workflow:
@@ -25,6 +26,18 @@ include:
   - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-dev'
     ref: master
     file: '.gitlab/cd-update-image.yml'
+  - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-dev'
+    ref: master
+    file: '.gitlab/templates/jfrog-build.gitlab-ci.yml'
+  - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-dev'
+    ref: master
+    file: '.gitlab/templates/security-scan-defaults.gitlab-ci.yml'
+  - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-dev'
+    ref: master
+    file: '.gitlab/templates/sbom-scan.gitlab-ci.yml'
+  - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-dev'
+    ref: master
+    file: '.gitlab/templates/vuln-scan.gitlab-ci.yml'
   - project: 'vsf-qtvhgd/vinuni/digital-university/devsecops/gitops-prod'
     ref: master
     file: '.gitlab/cd-update-image.yml'
@@ -68,6 +81,21 @@ build_develop:
       --compressed-caching=false
       --cleanup
   interruptible: true
+
+jfrog_build_congtacsinhvien:
+  extends: .jfrog_kaniko_build_job
+  variables:
+    BUILD_CONTEXT: "${CI_PROJECT_DIR}"
+    BUILD_DOCKERFILE: "${CI_PROJECT_DIR}/Dockerfile"
+    BUILD_DESTINATION: "${JFROG_REGISTRY}/${IMAGE_REPO}/${CI_PROJECT_NAME}:${CI_COMMIT_SHORT_SHA}"
+
+sbom_scan_congtacsinhvien:
+  extends: .jfrog_sbom_scan_job
+  needs:
+    - jfrog_build_congtacsinhvien
+
+vuln_scan_congtacsinhvien:
+  extends: .standard_vuln_scan_job
 
 update_gitops:
   extends: .update_image_tag
