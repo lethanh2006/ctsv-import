@@ -42,6 +42,7 @@ include:
     ref: master
     file: '.gitlab/cd-update-image.yml'
 
+
 build_develop:
   stage: build
   image:
