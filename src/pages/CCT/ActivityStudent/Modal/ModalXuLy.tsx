@@ -181,7 +181,7 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 													<strong>{intl.formatMessage({ id: 'activityresult.xuly.featured' })}</strong>
 												</div>
 												<div style={{ color: '#666' }}>
-													{intl.formatMessage({ id: 'activityresult.xuly.featured' })}
+													{intl.formatMessage({ id: 'activityresult.xuly.featured.place' })}
 												</div>
 											</div>
 										</Radio>
