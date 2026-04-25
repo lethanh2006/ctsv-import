@@ -113,7 +113,7 @@ const ChiTietMyCCT = (props: any) => {
 								CO-CURRICULAR & <br /> COMPETENCY TRANSCRIPT
 							</div>
 							<div className='university-logo'>
-								<img src={'/images/cct/bg-cct.png'} style={{ height: 60 }} />
+								<img src={'/cong-tac-sinh-vien/images/cct/bg-cct.png'} style={{ height: 60 }} />
 							</div>
 						</div>
 					</header>
@@ -146,8 +146,11 @@ const ChiTietMyCCT = (props: any) => {
 
 							<section className='profile-section'>
 								<div className='section-title gold-text'>
-									<img src={'/images/cct/Profile.png'} style={{ width: 25, marginLeft: -4, marginTop: -4 }} /> Student
-									Aspiration Statement
+									<img
+										src={'/cong-tac-sinh-vien/images/cct/Profile.png'}
+										style={{ width: 25, marginLeft: -4, marginTop: -4 }}
+									/>{' '}
+									Student Aspiration Statement
 								</div>
 
 								<p className='italic-text'>{record?.myCCT?.selfAspiration ?? '--'}</p>
@@ -155,8 +158,11 @@ const ChiTietMyCCT = (props: any) => {
 
 							<section className='skills-section'>
 								<div className='section-title gold-text'>
-									<img src={'/images/cct/Skills.png'} style={{ width: 25, marginLeft: -4, marginTop: -7 }} /> Skills and
-									Competency Development
+									<img
+										src={'/cong-tac-sinh-vien/images/cct/Skills.png'}
+										style={{ width: 25, marginLeft: -4, marginTop: -7 }}
+									/>{' '}
+									Skills and Competency Development
 								</div>
 								<p className='italic-text'>
 									<i>
@@ -180,8 +186,11 @@ const ChiTietMyCCT = (props: any) => {
 
 							<section className='projects-section'>
 								<h2 className='section-title gold-text'>
-									<img src={'/images/cct/Featured.png'} style={{ width: 25, marginLeft: -4, marginTop: -4 }} /> Featured
-									Projects/Experience
+									<img
+										src={'/cong-tac-sinh-vien/images/cct/Featured.png'}
+										style={{ width: 25, marginLeft: -4, marginTop: -4 }}
+									/>{' '}
+									Featured Projects/Experience
 								</h2>
 
 								{selectedActivities.length ? (
@@ -195,8 +204,8 @@ const ChiTietMyCCT = (props: any) => {
 						<div className='column right-column'>
 							<section className='awards-section'>
 								<h2 className='section-title gold-text'>
-									<img src={'/images/cct/Awards.png'} style={{ width: 25, marginLeft: -7 }} /> Awards, Recognization and
-									Scholarship
+									<img src={'/cong-tac-sinh-vien/images/cct/Awards.png'} style={{ width: 25, marginLeft: -7 }} />{' '}
+									Awards, Recognization and Scholarship
 								</h2>
 
 								{selectedAwards.length ? (
