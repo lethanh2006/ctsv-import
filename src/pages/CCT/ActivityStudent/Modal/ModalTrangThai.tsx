@@ -53,6 +53,7 @@ const ModalChinhSuaTrangThai = (props: { getData?: () => void }) => {
 			title={intl.formatMessage({ id: 'activityresult.xuly.status.title' })}
 			footer={null}
 			width={600}
+			zIndex={1000}
 		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>

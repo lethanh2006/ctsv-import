@@ -49,7 +49,14 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 	};
 
 	return (
-		<Modal open={visibleXuLy} onCancel={() => setVisibleXuLy(false)} title={title} footer={null} width={600}>
+		<Modal
+			open={visibleXuLy}
+			onCancel={() => setVisibleXuLy(false)}
+			title={title}
+			footer={null}
+			width={600}
+			zIndex={1000}
+		>
 			<div
 				style={{
 					display: 'flex',
@@ -181,7 +188,7 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 													<strong>{intl.formatMessage({ id: 'activityresult.xuly.featured' })}</strong>
 												</div>
 												<div style={{ color: '#666' }}>
-													{intl.formatMessage({ id: 'activityresult.xuly.featured' })}
+													{intl.formatMessage({ id: 'activityresult.xuly.featured.place' })}
 												</div>
 											</div>
 										</Radio>
