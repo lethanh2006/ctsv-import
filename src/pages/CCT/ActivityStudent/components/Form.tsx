@@ -9,7 +9,7 @@ import ChiTietActivityOutCome from './ChiTiet';
 import FormPerstionActivityOutCome from './FormPerstion';
 
 const FormActivityStudent = (props: any) => {
-	const { isActivity, setTrangThai } = props;
+	const { isActivity, setTrangThai, iszindex } = props;
 	const intl = useIntl();
 	const { record, setVisibleForm, visibleForm, setVisibleXuLy, setVisibleChangeStatus, setVisibleImpact } =
 		useModel('cct.activityoutcome');
@@ -46,6 +46,7 @@ const FormActivityStudent = (props: any) => {
 				body: { backgroundColor: '#F8F8F8', borderRadius: 2 },
 				header: { backgroundColor: '#F8F8F8' },
 			}}
+			zIndex={iszindex ? 999 : undefined}
 		>
 			{record?.isAwardRecognition ? (
 				<FormPerstionActivityOutCome />
