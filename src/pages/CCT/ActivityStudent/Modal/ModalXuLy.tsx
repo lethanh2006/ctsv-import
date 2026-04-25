@@ -49,7 +49,14 @@ const ModalXuLyActivityStudent = (props: { title: string; trangThai: EApprovalSt
 	};
 
 	return (
-		<Modal open={visibleXuLy} onCancel={() => setVisibleXuLy(false)} title={title} footer={null} width={600}>
+		<Modal
+			open={visibleXuLy}
+			onCancel={() => setVisibleXuLy(false)}
+			title={title}
+			footer={null}
+			width={600}
+			zIndex={1000}
+		>
 			<div
 				style={{
 					display: 'flex',
