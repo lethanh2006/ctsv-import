@@ -37,6 +37,7 @@ const ModalChinhSuaImpact = (props: { getData?: () => void }) => {
 			title={'Verify Impact'}
 			footer={null}
 			width={600}
+			zIndex={1000}
 		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>

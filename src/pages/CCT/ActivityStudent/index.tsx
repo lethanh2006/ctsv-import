@@ -599,38 +599,39 @@ const HistoryActivityPage = () => {
 						]}
 					/>
 				</Card>
+
+				<ModalXuLyActivityStudent
+					title={trangThai?.title ?? ''}
+					trangThai={trangThai?.trangThai ?? EApprovalStatus.DRAFT}
+					getData={() => {
+						getData();
+						getThongKe();
+					}}
+				/>
+
+				<ModalChinhSuaImpact
+					getData={() => {
+						getData();
+						getThongKe();
+					}}
+				/>
+
+				<ModalChinhSuaTrangThai
+					getData={() => {
+						getData();
+						getThongKe();
+					}}
+				/>
+
+				<FormActivityStudent
+					getData={() => {
+						getData();
+						getThongKe();
+					}}
+					setTrangThai={setTrangThai}
+					iszindex
+				/>
 			</Card>
-
-			<FormActivityStudent
-				getData={() => {
-					getData();
-					getThongKe();
-				}}
-				setTrangThai={setTrangThai}
-			/>
-
-			<ModalXuLyActivityStudent
-				title={trangThai?.title ?? ''}
-				trangThai={trangThai?.trangThai ?? EApprovalStatus.DRAFT}
-				getData={() => {
-					getData();
-					getThongKe();
-				}}
-			/>
-
-			<ModalChinhSuaImpact
-				getData={() => {
-					getData();
-					getThongKe();
-				}}
-			/>
-
-			<ModalChinhSuaTrangThai
-				getData={() => {
-					getData();
-					getThongKe();
-				}}
-			/>
 		</>
 	);
 };

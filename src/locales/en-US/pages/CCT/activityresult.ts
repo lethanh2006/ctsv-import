@@ -67,7 +67,7 @@ export default {
 	'activityresult.xuly.endorsed.place':
 		'This activity demonstrates meaningful contribution and competency development, as endorsed by the approver.',
 	'activityresult.xuly.featured': 'Featured',
-	'activityresult.xuly.featured,place':
+	'activityresult.xuly.featured.place':
 		'This activity is recognized by VinUniversity as an outstanding and exemplary contribution.',
 	'activityresult.comfirm.xoa': 'Do You Want To Remove This Activity?',
 
