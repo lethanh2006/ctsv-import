@@ -53,7 +53,7 @@ RUN if [ ! -d node_modules ] || [ ! -f /opt/build-base.yarn.lock ] || ! cmp -s y
 COPY . /app
 
 FROM development AS build
-RUN yarn build
+RUN cp .env.uat .env.production && yarn build
 
 FROM nginx:alpine
 COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
