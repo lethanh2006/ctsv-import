@@ -1,29 +1,35 @@
 import { Button, Card, Form } from 'antd';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
 import UploadFile from '@/components/Upload/UploadFile';
 
 const ImportExcel = (props: { onCancel: any; title?: string; handleData: any }) => {
 	const [form] = Form.useForm();
 
 	const handleFile = (file: any) => {
-		const reader = new FileReader();
-		reader.onload = (e: any) => {
-			const ab = e.target.result;
-			const wb = XLSX?.read(ab, { type: 'array' });
-			const wsname = wb?.SheetNames[0];
-			const ws = wb?.Sheets[wsname];
-			const data = XLSX?.utils.sheet_to_json(ws, { header: 1 });
-			data?.shift();
-			props?.handleData(data);
-		};
-		reader.readAsArrayBuffer(file);
+		return new Promise<void>((resolve) => {
+			const reader = new FileReader();
+			reader.onload = async (e: any) => {
+				const ab = e.target.result;
+				const workbook = await ExcelJS.Workbook.load(ab);
+				const worksheet = workbook.worksheets[0];
+				const data: any[] = [];
+				worksheet.eachRow((row, rowNumber) => {
+					if (rowNumber > 1) { // skip header
+						data.push(row.values.slice(1)); // slice(1) to remove the first undefined
+					}
+				});
+				props?.handleData(data);
+				resolve();
+			};
+			reader.readAsArrayBuffer(file);
+		});
 	};
 
 	return (
 		<Card title={props?.title ?? 'Import dữ liệu'}>
 			<Form
 				onFinish={async (values) => {
-					handleFile(values?.file?.fileList?.[0]?.originFileObj);
+					await handleFile(values?.file?.fileList?.[0]?.originFileObj);
 				}}
 				form={form}
 			>
