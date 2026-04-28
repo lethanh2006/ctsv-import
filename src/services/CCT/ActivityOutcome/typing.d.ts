@@ -7,7 +7,7 @@ declare module ActivityOutCome {
 		name: string;
 		code: string;
 		email: string;
-		banner: string;
+		banner: string | null;
 		activitiesOutcomeName: string;
 		activitiesId: string;
 		activities: Activity.IRecord;
