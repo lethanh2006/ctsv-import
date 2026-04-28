@@ -88,6 +88,7 @@ const FormAttributes = (props: any) => {
 							rules={[...rules.fileRequired]}
 						>
 							<UploadFile
+								isPrivate
 								disabled={isView}
 								accept='.png, .jpeg, .jpg'
 								buttonDescription={intl.formatMessage({

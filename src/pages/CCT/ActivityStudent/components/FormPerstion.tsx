@@ -1,3 +1,5 @@
+import background from '@/assets/cct/background.png';
+import AuthImage from '@/components/Image/AuthImage';
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
 import SelectActivitiesTypeDomain from '@/pages/DanhMuc/CCD/components/Select';
@@ -13,7 +15,7 @@ import { buildUpLoadFile, handleSingleFile } from '@/services/uploadFile';
 import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { buildDisabledDateTime, resetFieldsForm } from '@/utils/utils';
-import { Col, Form, Image, Input, Row, Select } from 'antd';
+import { Col, Form, Input, Row, Select } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -50,7 +52,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 					: record?.activitiesType?.activitiesTypeDomainId,
 				listAchievedCompetencies: record?.listAchievedCompetencies?.map((item) => item?.competencyId),
 				onUni: record?.supervisorSsoId ? true : false,
-				banner: record?.banner ?? '/cong-tac-sinh-vien/images/cct/background.png',
+				banner: record?.banner ?? background,
 			});
 		}
 
@@ -64,14 +66,17 @@ const FormPerstionActivityOutCome = (props: any) => {
 				checkbox: false,
 				listAchievedCompetencies: null,
 				onUni: true,
-				banner: '/cong-tac-sinh-vien/images/cct/background.png',
+				banner: background,
 			});
 		}
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: ActivityOutCome.IRecord, submitted: boolean) => {
 		setFormSubmiting(true);
-		const banner = await buildUpLoadFile(values, 'banner', undefined, undefined, ipCCT);
+		let banner = await buildUpLoadFile(values, 'banner', undefined, undefined, ipCCT);
+		if (!banner || !banner.includes('http')) {
+			banner = null;
+		}
 		values.banner = banner;
 		setFormSubmiting(false);
 
@@ -114,16 +119,18 @@ const FormPerstionActivityOutCome = (props: any) => {
 						<Row gutter={[12, 0]}>
 							{isView ? (
 								<Col span={24} md={9}>
-									<Image
-										src={record?.banner ?? '/cong-tac-sinh-vien/images/cct/background.png'}
-										alt={record?.activitiesOutcomeName}
+									<AuthImage
+										src={record?.banner ?? background}
+										fallback={background}
 										className='activity-image'
+										isDetail
 									/>
 								</Col>
 							) : (
 								<Col span={24} md={9}>
 									<Form.Item name='banner' label='Banner'>
 										<UploadFile
+											isPrivate
 											isWidescreen
 											accept='.png,.jpg,.jpeg'
 											buttonDescription='Add Banner'
@@ -247,7 +254,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 
 							<Col span={22} md={12}>
 								<Form.Item label='File' name={['evidenceFile', 0, 'file']} rules={[...rules.required]}>
-									<UploadFile maxCount={1} disabled={isView} />
+									<UploadFile maxCount={1} disabled={isView} isPrivate />
 								</Form.Item>
 							</Col>
 						</Row>

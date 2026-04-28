@@ -22,7 +22,7 @@ export const handleSingleFile = async (
 				},
 				ip,
 			);
-			return returnResponse ? response : response?.data?.data?.url;
+			return returnResponse ? (response as any) : response?.data?.data?.url;
 		} catch (er) {
 			return Promise.reject(er);
 		}
@@ -84,4 +84,10 @@ export const buildUpLoadMultiFile = async (
 
 export const getFileInfo = (id: string, ip?: string) => {
 	return axios.get(`${ip ?? ip3}/file/${id}/info`, { data: { silent: true } });
+};
+
+export const getFileContent = (url: string) => {
+	return axios.get(url, {
+		responseType: 'arraybuffer',
+	});
 };

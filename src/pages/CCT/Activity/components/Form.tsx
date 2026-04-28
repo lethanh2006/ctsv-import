@@ -236,6 +236,7 @@ const FormActivity = (props: { getData?: () => void }) => {
 						<Col span={24} md={8}>
 							<Form.Item name='banner' label={intl.formatMessage({ id: 'activity.info.form.banner' })}>
 								<UploadFile
+									isPrivate
 									isWidescreen
 									accept='.png,.jpg,.jpeg'
 									buttonDescription={intl.formatMessage({ id: 'activity.info.form.banner.place' })}
