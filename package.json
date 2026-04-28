@@ -60,7 +60,7 @@
     "@umijs/route-utils": "^4.0.1",
     "antd": "^5.24.2",
     "apexcharts": "^4.5.0",
-    "axios": "^1.8.1",
+    "axios": "^1.15.2",
     "bizcharts": "^4.1.23",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
@@ -123,7 +123,10 @@
   },
   "resolutions": {
     "picomatch": "^2.3.2",
-    "minimatch": "^9.0.7"
+    "minimatch": "^9.0.7",
+    "immer": "^9.0.6",
+    "rollup": "^2.80.0",
+    "path-to-regexp": "^8.4.0"
   },
   "gitHooks": {
     "commit-msg": "fabric verify-commit"
