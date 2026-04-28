@@ -1,12 +1,14 @@
+import AuthImage from '@/components/Image/AuthImage';
 import KetQuaToanKhoaSinhVien from '@/pages/DaoTaoV2/KetQuaHocTap/KetQuaToanKhoa/KetQuaToanKhoaSinhVien';
 import { exportLyLich } from '@/services/DaoTaoV2/SinhVien';
 import type { ETrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
 import { colorTrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
 import { formatPhoneNumber } from '@/utils/utils';
 import { MenuOutlined, PrinterOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Empty, Image, Row, Spin, Tag } from 'antd';
+import { Button, Card, Col, Empty, Row, Spin, Tag } from 'antd';
 import dayjs from 'dayjs';
 import fileDownload from 'js-file-download';
+import { JSX } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChartCongNoSinhVien from '../CongNoSinhVien/ChartCongNo';
 
@@ -171,7 +173,7 @@ const PreviewHoSo = (props: any) => {
 
 							<Col span={24} sm={6} style={{ display: 'flex', justifyContent: 'center', padding: 12 }}>
 								<div style={{ width: 140, height: 180 }}>
-									<Image src={record?.anhDaiDienUrl ?? '/metadata.png'} />
+									<AuthImage isDetail src={record?.anhDaiDienUrl ?? '/metadata.png'} />
 								</div>
 							</Col>
 							<Col span={24} sm={18}>
@@ -196,9 +198,8 @@ const PreviewHoSo = (props: any) => {
 							<Col span={24} md={16}>
 								<Card
 									title={intl.formatMessage({ id: 'hosonguoihoc.previewhoso.ketquahoctap' })}
-									bordered={false}
-									headStyle={{ padding: 0 }}
-									styles={{ padding: '8px 0 0 0' }}
+									variant='borderless'
+									styles={{ body: { padding: '8px 0 0 0' }, header: { padding: 0 } }}
 								>
 									<KetQuaToanKhoaSinhVien sinhVienSsoId={record?.ssoId} hideDetail />
 								</Card>
@@ -206,9 +207,8 @@ const PreviewHoSo = (props: any) => {
 							<Col span={24} md={8}>
 								<Card
 									title={intl.formatMessage({ id: 'hosonguoihoc.previewhoso.congno' })}
-									bordered={false}
-									headStyle={{ padding: 0 }}
-									styles={{ padding: '8px 0 0 0' }}
+									variant='borderless'
+									styles={{ body: { padding: '8px 0 0 0' }, header: { padding: 0 } }}
 								>
 									<ChartCongNoSinhVien />
 								</Card>
