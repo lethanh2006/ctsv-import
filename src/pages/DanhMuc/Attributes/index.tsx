@@ -1,9 +1,10 @@
 import ExpandText from '@/components/ExpandText';
+import AuthImage from '@/components/Image/AuthImage';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Image, Popconfirm, Switch, Tag } from 'antd';
+import { Popconfirm, Switch, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import FormAttributes from './components/Form';
 
@@ -44,8 +45,9 @@ const AttributesPage = () => {
 			align: 'center',
 			width: 90,
 			render: (val) =>
-				val ? <Image src={val} width={64} height={64} preview={false} style={{ objectFit: 'contain' }} /> : null,
-			onCell,
+				val ? (
+					<AuthImage src={val} className='' style={{ width: 64, height: 64, objectFit: 'contain' }} isDetail />
+				) : null,
 		},
 		{
 			title: intl.formatMessage({ id: 'attributesmanagement.column.id' }),
