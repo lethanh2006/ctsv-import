@@ -58,6 +58,7 @@
     "@umijs/max": "^4.6.48",
     "@umijs/plugin-model": "^2.6.2",
     "@umijs/route-utils": "^4.0.1",
+    "elliptic": "npm:@soatok/elliptic-to-noble@9999.0.0",
     "antd": "^5.24.2",
     "apexcharts": "^4.5.0",
     "axios": "^1.15.2",
@@ -146,7 +147,8 @@
     "socket.io-parser": "^4.2.6",
     "brace-expansion": "^1.1.13",
     "lodash-es": "^4.18.1",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "elliptic": "npm:@soatok/elliptic-to-noble@9999.0.0"
   },
   "gitHooks": {
     "commit-msg": "fabric verify-commit"
