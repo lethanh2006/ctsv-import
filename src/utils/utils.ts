@@ -5,7 +5,7 @@ import { message, type FormInstance } from 'antd';
 import { type AxiosResponse } from 'axios';
 import type dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
-import * as ExcelJS from 'exceljs';
+import * as XLSX from 'xlsx';
 import dayjsLib from './dayjs';
 
 export const urlRegex =
@@ -463,10 +463,11 @@ export const chuanHoaObject = (obj: any) => {
  * @param sheetName Mặc định Sheet1
  */
 export const genExcelFile = (data: (string | number | null | undefined)[][], fileName: string, sheetName?: string) => {
-	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet(sheetName ?? 'Sheet1');
-	data.forEach(row => worksheet.addRow(row));
-	workbook.xlsx.writeFile(fileName || 'Danh sách.xlsx');
+	const workbook = XLSX.utils.book_new();
+	const worksheet = XLSX.utils.aoa_to_sheet(data);
+	XLSX.utils.book_append_sheet(workbook, worksheet, sheetName ?? 'Sheet1');
+
+	XLSX.writeFile(workbook, fileName || 'Danh sách.xlsx');
 };
 
 export const uploadMultiFile = async (arrFile: any[], returnFileType?: boolean, returnAllResponse?: boolean) => {
@@ -596,20 +597,15 @@ export const transformDataColumnsTableToJson = (columnsArr: any[], arr: any[], v
 };
 
 export const jsonToXlsx = (jsonData: any[], tenFile?: string) => {
-	// Create a new workbook
-	const workbook = new ExcelJS.Workbook();
-	const worksheet = workbook.addWorksheet('Sheet1');
+	// Convert JSON data to worksheet
+	const worksheet = XLSX.utils.json_to_sheet(jsonData);
 
-	// Set columns based on the first object keys
-	if (jsonData.length > 0) {
-		worksheet.columns = Object.keys(jsonData[0]).map(key => ({ header: key, key }));
-	}
-
-	// Add rows
-	jsonData.forEach(row => worksheet.addRow(row));
+	// Create a new workbook and append the worksheet
+	const workbook = XLSX.utils.book_new();
+	XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
 	// Write the workbook to a file
-	workbook.xlsx.writeFile(tenFile ? `${tenFile}.xlsx` : 'tai_lieu.xlsx');
+	XLSX.writeFile(workbook, tenFile ? `${tenFile}.xlsx` : 'tai_lieu.xlsx');
 };
 
 /**

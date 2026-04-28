@@ -6,13 +6,13 @@ import fileDownload from 'js-file-download';
 import { pick } from 'lodash';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import * as ExcelJS from 'exceljs';
+import * as XLSX from 'xlsx';
 
 const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTemplate: any; fileName?: string }) => {
 	const intl = useIntl();
 	const { onChange, onCancel, getTemplate } = props;
 	const { setHeadLine, setFileData, setStartLine } = useModel('import');
-	const [workbook, setWorkbook] = useState<ExcelJS.Workbook>();
+	const [workbook, setWorkbook] = useState<XLSX.WorkBook>();
 	const [sheetNames, setSheetNames] = useState<string[]>();
 	const [form] = Form.useForm();
 
@@ -26,10 +26,10 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
 		return letters;
 	};
 
-	const getWorksheets = async (data: any) => {
-		const wb = await ExcelJS.Workbook.load(data);
+	const getWorksheets = (data: any) => {
+		const wb = XLSX.read(data, { type: 'binary' });
 		setWorkbook(wb);
-		const sheets = wb.worksheets.map(ws => ws.name);
+		const sheets = wb.SheetNames;
 		setSheetNames(sheets);
 		form.setFieldsValue({ sheet: sheets[0], line: 1 });
 	};
@@ -42,7 +42,7 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
 		}
 		if (typeof FileReader !== 'undefined') {
 			const reader = new FileReader();
-			reader.onload = async (e) => await getWorksheets(e.target?.result);
+			reader.onload = (e) => getWorksheets(e.target?.result);
 			reader.readAsArrayBuffer(file);
 		} else {
 			message.error(intl.formatMessage({ id: 'global.table.import.choose.message1' }));
@@ -52,11 +52,15 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
 
 	const onFinish = (values: any) => {
 		const { sheet, line } = values;
-		const ws = workbook?.getWorksheet(sheet);
+		const ws = workbook?.Sheets[sheet];
 		if (ws) {
 			// Lấy hàng tiêu đề trong excel
-			const headerRow = ws.getRow(line);
-			const header = (headerRow.values as any[]).slice(1) as string[];
+			const headRow = XLSX.utils.sheet_to_json(ws, {
+				header: 1,
+				range: `A${line}:ZZ${line}`,
+				defval: '',
+			});
+			const header = Object.values(headRow[0] as any) as string[];
 			// Map Excel column - column title: A: "Mã"
 			let hline: Record<string, string> = {};
 			header.forEach((item, index) => {
@@ -65,16 +69,7 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
 
 			const cols = Object.values(hline); // Những tên cột thực tế, bỏ các cột trống
 			// Lấy toàn bộ data trong file
-			const sheetData: any[] = [];
-			ws.eachRow((row, rowNumber) => {
-				if (rowNumber > line) {
-					const rowData: any = { __rowNum__: rowNumber };
-					header.forEach((col, index) => {
-						rowData[col] = row.getCell(index + 1).value;
-					});
-					sheetData.push(rowData);
-				}
-			});
+			const sheetData = XLSX.utils.sheet_to_json(ws, { header, rawNumbers: false }) as any[];
 			const data = sheetData.filter((item) => item.__rowNum__ >= line).map((item) => pick(item, cols)); // Chỉ lấy từ data những trường cần lấy
 
 			if (data.length > 0 && cols.length > 0) {
