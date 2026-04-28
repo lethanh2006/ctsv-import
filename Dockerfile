@@ -1,5 +1,5 @@
 # 1. For build React app
-ARG BUILD_BASE_IMAGE=520492793952.dkr.ecr.ap-southeast-1.amazonaws.com/vwa-congtacsinhvien:build-base
+ARG BUILD_BASE_IMAGE=node:22-alpine
 FROM ${BUILD_BASE_IMAGE} AS development
 
 
