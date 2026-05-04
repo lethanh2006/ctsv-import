@@ -1,0 +1,32 @@
+export default {
+	'submisstion.title': 'Đợt nộp bài',
+	'submisstion.hocky.select': 'Chọn học kỳ',
+
+	'submisstion.column.name': 'Tên',
+	'submisstion.column.hocky': 'Học kỳ',
+	'submisstion.column.date': 'Thời gian',
+	'submisstion.column.note': 'Mô tả',
+	'submisstion.confirm.delete': 'Bạn có muốn xoá đợt nộp bài này không?',
+
+	'submisstion.form.themmoi': 'Thêm mới đợt nộp bài',
+	'submisstion.form.chinhsua': 'Chỉnh sửa đợt nộp bài',
+	'submisstion.form.chitiet': 'Chi tiết đợt nộp bài',
+	'submisstion.form.hocky': 'Học kỳ',
+	'submisstion.form.hocky.select': 'Chọn học kỳ',
+	'submisstion.form.name': 'Tên',
+	'submisstion.form.name.place': 'Nhập tên',
+	'submisstion.form.note': 'Mô tả',
+	'submisstion.form.note.place': 'Nhập mô tả',
+
+	'submisstion.danhsach.title': 'Danh sách nộp hồ sơ',
+	'submisstion.danhsach.studentName': 'Họ và tên sinh viên',
+	'submisstion.danhsach.studentId': 'Mã sinh viên',
+	'submisstion.danhsach.dob': 'Ngày sinh',
+	'submisstion.danhsach.approver': 'Người duyệt',
+	'submisstion.danhsach.reviewTime': 'Thời gian duyệt',
+	'submisstion.danhsach.submissionTime': 'Thời gian nộp',
+	'submisstion.danhsach.modal.detailTitle': 'Chi tiết My CCT',
+	'submisstion.danhsach.modal.approveTitle': 'Xác nhận phê duyệt hồ sơ Co-Curricular & Competency Transcript',
+	'submisstion.danhsach.modal.editTitle': 'Yêu cầu chỉnh sửa hồ sơ Co-Curricular & Competency Transcript',
+	'submisstion.danhsach.revisionNote': 'Ghi chú yêu cầu chỉnh sửa',
+};
