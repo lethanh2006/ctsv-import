@@ -388,10 +388,12 @@ const FormActivity = (props: { getData?: () => void }) => {
 					>
 						<Select
 							disabled={isView}
-							options={Object.values(EParticipantScope).map((item) => ({
-								value: item,
-								label: mapNameParticipantScope[item],
-							}))}
+							options={Object.values(EParticipantScope)
+								?.filter((item) => item === EParticipantScope.UNIVERSITY)
+								.map((item) => ({
+									value: item,
+									label: mapNameParticipantScope[item],
+								}))}
 							placeholder={intl.formatMessage({ id: 'activity.info.form.participantScope.place' })}
 						/>
 					</Form.Item>
