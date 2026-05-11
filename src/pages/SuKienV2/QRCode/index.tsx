@@ -1,4 +1,3 @@
-import * as Crypto from 'crypto';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -41,7 +40,7 @@ const QRCodePage = () => {
 			const bytes = CryptoJS.AES.decrypt(dis, attendancePrivateKey);
 			newMaDiemDanh = bytes.toString(CryptoJS.enc.Utf8);
 
-			newOtp = Crypto.createHmac('sha1', attendancePrivateKey).update(t.toString()).digest('hex');
+			newOtp = CryptoJS.HmacSHA1(t.toString(), attendancePrivateKey).toString(CryptoJS.enc.Hex);
 		}
 		setMaDiemDanh(newMaDiemDanh);
 		setOtp(newOtp);

@@ -79,7 +79,7 @@ const PDFViewerV2 = ({
 
 	return (
 		<div ref={viewerRef} style={{ height: heightProps ?? height }}>
-			<Worker workerUrl='https://unpkg.com/@react-pdf-viewer/pdfjs-dist-signature@2.5.207/build/pdf.worker.js'>
+			<Worker workerUrl='https://unpkg.com/@react-pdf-viewer/pdfjs-dist-signature@2.7.570/build/pdf.worker.js'>
 				<Viewer
 					fileUrl={fileUrl}
 					defaultScale={defaultScale}
