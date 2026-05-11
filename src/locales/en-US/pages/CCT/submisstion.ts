@@ -17,4 +17,16 @@ export default {
 	'submisstion.form.name.place': 'Enter Name',
 	'submisstion.form.note': 'Description',
 	'submisstion.form.note.place': 'Enter Description',
+
+	'submisstion.danhsach.title': 'Submission List',
+	'submisstion.danhsach.studentName': 'Student Name',
+	'submisstion.danhsach.studentId': 'Student ID',
+	'submisstion.danhsach.dob': 'Date of Birth',
+	'submisstion.danhsach.approver': 'Approver',
+	'submisstion.danhsach.reviewTime': 'Review Time',
+	'submisstion.danhsach.submissionTime': 'Submission Time',
+	'submisstion.danhsach.revisionNote': 'Revision Note',
+	'submisstion.danhsach.modal.detailTitle': 'My CCT Details',
+	'submisstion.danhsach.modal.approveTitle': 'Confirm Co-Curricular & Competency Transcript Approval',
+	'submisstion.danhsach.modal.editTitle': 'Request Co-Curricular & Competency Transcript Revision',
 };

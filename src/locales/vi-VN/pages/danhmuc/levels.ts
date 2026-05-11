@@ -1,5 +1,5 @@
 export default {
-	'levelsmanagement.title': 'Cấp độ',
+	'levelsmanagement.title': 'Mức độ',
 
 	'levelsmanagement.column.order': 'Thứ tự hiển thị',
 	'levelsmanagement.column.id': 'Mã',
@@ -7,13 +7,13 @@ export default {
 	'levelsmanagement.column.question': 'Câu hỏi tự đánh giá',
 	'levelsmanagement.column.des': 'Mô tả',
 	'levelsmanagement.column.auto': 'Tự động phê duyệt',
-	'levelsmanagement.column.active': 'Kích hoạt',
+	'levelsmanagement.column.active': 'Hoạt động',
 
-	'levelsmanagement.confirm.delete': 'Bạn có muốn xóa cấp độ này không?',
+	'levelsmanagement.confirm.delete': 'Bạn có chắc chắn muốn xóa mức độ này không?',
 
-	'levelsmanagement.form.themmoi': 'Thêm mới cấp độ',
-	'levelsmanagement.form.chinhsua': 'Chỉnh sửa cấp độ',
-	'levelsmanagement.form.chitiet': 'Chi tiết cấp độ',
+	'levelsmanagement.form.themmoi': 'Thêm mới mức độ',
+	'levelsmanagement.form.chinhsua': 'Chỉnh sửa mức độ',
+	'levelsmanagement.form.chitiet': 'Chi tiết mức độ',
 
 	'levelsmanagement.form.id': 'Mã',
 	'levelsmanagement.form.id.place': 'Nhập mã',
@@ -22,10 +22,12 @@ export default {
 	'levelsmanagement.form.name.place': 'Nhập tên',
 	'levelsmanagement.form.order': 'Thứ tự hiển thị',
 	'levelsmanagement.form.order.place': 'Nhập thứ tự hiển thị',
-	'levelsmanagement.form.active': 'Kích hoạt',
+	'levelsmanagement.form.active': 'Hoạt động',
 	'levelsmanagement.form.auto': 'Tự động phê duyệt',
+	'levelsmanagement.form.auto.place':
+		'Minh chứng sẽ được tự động phê duyệt nếu Vai trò & Mức độ được thiết lập Tự động phê duyệt',
 	'levelsmanagement.form.des': 'Mô tả',
 	'levelsmanagement.form.des.place': 'Nhập mô tả',
 
-	'levelsmanagement.select.place': 'Chọn cấp độ',
+	'levelsmanagement.select.place': 'Chọn mức độ',
 };
