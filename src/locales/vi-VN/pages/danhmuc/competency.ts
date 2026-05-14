@@ -5,10 +5,11 @@ export default {
 	'competency.column.id': 'Mã',
 	'competency.column.name': 'Tên',
 	'competency.column.des': 'Mô tả',
+	'competency.column.typical': 'Hoạt động tiêu biểu',
 	'competency.column.attribute': 'Thuộc tính',
-	'competency.column.active': 'Kích hoạt',
+	'competency.column.active': 'Hoạt động',
 
-	'competency.confirm.delete': 'Bạn có muốn xóa năng lực này không?',
+	'competency.confirm.delete': 'Bạn có chắc chắn muốn xóa năng lực này không?',
 
 	'competency.form.themmoi': 'Thêm mới năng lực',
 	'competency.form.chinhsua': 'Chỉnh sửa năng lực',
@@ -21,9 +22,13 @@ export default {
 	'competency.form.attributes': 'Thuộc tính',
 	'competency.form.order': 'Thứ tự hiển thị',
 	'competency.form.order.place': 'Nhập thứ tự hiển thị',
-	'competency.form.active': 'Kích hoạt',
+	'competency.form.active': 'Hoạt động',
 	'competency.form.des': 'Mô tả',
 	'competency.form.des.place': 'Nhập mô tả',
+	'competency.form.typical': 'Hoạt động tiêu biểu',
+	'competency.form.typical.value': 'Nhập giá trị',
+	'competency.form.typical.add': 'Thêm mới',
 
 	'competency.select.place': 'Chọn năng lực',
+	'competency.select.all': 'Chọn tất cả',
 };
