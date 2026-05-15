@@ -77,23 +77,23 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 
 	const columns: IColumn<MyCCT.IRecord>[] = [
 		{
-			title: 'Student name',
+			title: intl.formatMessage({ id: 'submisstion.danhsach.studentName' }),
 			dataIndex: 'name',
 			width: 180,
-			render: (val, rec) => val ?? '--',
+			render: (val) => val ?? '--',
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Student ID',
+			title: intl.formatMessage({ id: 'submisstion.danhsach.studentId' }),
 			dataIndex: 'code',
 			width: 150,
-			render: (val, rec) => val ?? '--',
+			render: (val) => val ?? '--',
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Date of Birth',
+			title: intl.formatMessage({ id: 'submisstion.danhsach.dob' }),
 			dataIndex: 'dob',
 			width: 160,
 			render: (val) => (val ? dayjs(val).format('DD/MM/YYYY') : '--'),
@@ -101,21 +101,21 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 			onCell,
 		},
 		{
-			title: 'Approver',
+			title: intl.formatMessage({ id: 'submisstion.danhsach.approver' }),
 			dataIndex: 'approvedByName',
 			width: 220,
 			render: (val) => val || '--',
 			onCell,
 		},
 		{
-			title: 'Review Time',
+			title: intl.formatMessage({ id: 'submisstion.danhsach.reviewTime' }),
 			dataIndex: 'approvedAt',
 			width: 180,
 			render: (val) => (val ? dayjs(val).format('HH:mm DD/MM/YYYY') : '--'),
 			onCell,
 		},
 		{
-			title: 'Submission Time',
+			title: intl.formatMessage({ id: 'submisstion.danhsach.submissionTime' }),
 			dataIndex: 'submittedAt',
 			width: 180,
 			render: (val) => (val ? dayjs(val).format('HH:mm DD/MM/YYYY') : '--'),
@@ -166,7 +166,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 						onClick={() => {
 							setRecord(rec);
 							setTrangThai({
-								title: 'Confirm Co-Curricular & Competency Transcript Approval',
+								title: intl.formatMessage({ id: 'submisstion.danhsach.modal.approveTitle' }),
 								trangThai: EStatusMyCCT.APPROVED,
 							});
 							setVisibleXuLy(true);
@@ -182,7 +182,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 						onClick={() => {
 							setRecord(rec);
 							setTrangThai({
-								title: 'Request Co-Curricular & Competency Transcript Revision',
+								title: intl.formatMessage({ id: 'submisstion.danhsach.modal.editTitle' }),
 								trangThai: EStatusMyCCT.CHANGES_REQUIRED,
 							});
 							setVisibleXuLy(true);
@@ -206,7 +206,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 				dependencies={[page, limit, recDot?._id, ssoId]}
 				modelName='cct.mycct'
 				Form={ChiTietMyCCT}
-				title='Submission List'
+				title={intl.formatMessage({ id: 'submisstion.danhsach.title' })}
 				formProps={{
 					getData: () => {
 						getData();
@@ -217,7 +217,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 				}}
 				widthDrawer={1300}
 				buttons={{ create: false }}
-				modalTitle='Detail My CCT'
+				modalTitle={intl.formatMessage({ id: 'submisstion.danhsach.modal.detail' })}
 				showModalTitle
 				onReload={() => {
 					getData();
