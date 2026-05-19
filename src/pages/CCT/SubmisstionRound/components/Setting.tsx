@@ -47,7 +47,7 @@ const SettingDot = (props: { visible: boolean; setVisible: (val: boolean) => voi
 						<Input placeholder='Enter File Name' />
 					</Form.Item>
 					<Form.Item label='File' name='fileId' rules={[...rules.required]}>
-						<UploadFile />
+						<UploadFile isPrivate />
 					</Form.Item>
 
 					<div className='form-footer'>
