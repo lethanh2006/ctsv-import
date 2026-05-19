@@ -603,10 +603,7 @@ const HistoryActivityPage = () => {
 								}}
 							/>,
 							<ButtonExtend onClick={() => setVisibleExport(true)}>Export data</ButtonExtend>,
-							<ButtonExtend
-								onClick={() => setVisibleXuLyMany(true)}
-								// disabled={!danhSach?.length}
-							>
+							<ButtonExtend onClick={() => setVisibleXuLyMany(true)} disabled={!danhSach?.length}>
 								Approve {selectedIds?.length && selectedIds?.length > 0 ? `(${selectedIds?.length})` : ''}
 							</ButtonExtend>,
 						]}
