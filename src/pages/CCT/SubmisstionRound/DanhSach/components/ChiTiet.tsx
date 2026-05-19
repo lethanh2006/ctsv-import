@@ -1,10 +1,13 @@
 import bgcct from '@/assets/cct/bg-cct.png';
 import Profile from '@/assets/cct/Profile.png';
 import Skills from '@/assets/cct/Skills.png';
+import { exportMyCCT } from '@/services/CCT/ActivityOutcome';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
 import { EStatusMyCCT } from '@/services/CCT/constant';
+import { getFilenameHeader } from '@/utils/utils';
 import { Button, Spin } from 'antd';
 import dayjs from 'dayjs';
+import fileDownload from 'js-file-download';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -43,6 +46,7 @@ const ChiTietMyCCT = (props: any) => {
 		myCCT: MyCCT.IRecord;
 		awardsAndRecognition: ActivityOutCome.IRecord[];
 	}>();
+	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 
 	const getData = () => {
 		if (recMyCCT?.ssoId)
@@ -102,6 +106,18 @@ const ChiTietMyCCT = (props: any) => {
 		);
 
 		return content;
+	};
+
+	const hanldeExport = () => {
+		if (recMyCCT?.ssoId) {
+			setLoadingExport(true);
+			exportMyCCT(recMyCCT?.ssoId)
+				.then((res) => {
+					fileDownload(res.data, getFilenameHeader(res));
+				})
+				.catch((er) => console.log(er))
+				.finally(() => setLoadingExport(false));
+		}
 	};
 
 	return (
@@ -288,6 +304,10 @@ const ChiTietMyCCT = (props: any) => {
 							className='btn-warning'
 						>
 							{intl.formatMessage({ id: 'activityresult.button.yccs' })}
+						</Button>
+
+						<Button type='primary' loading={loadingExport} onClick={hanldeExport}>
+							Export PDF
 						</Button>
 					</>
 				)}

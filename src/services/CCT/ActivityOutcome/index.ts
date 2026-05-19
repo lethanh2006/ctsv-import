@@ -58,3 +58,9 @@ export async function thongKeSinhVien() {
 export async function thongKeTopHoatDong() {
 	return axios.get(`${ipCCT}/activity-outcome/statistics/top-activities`);
 }
+
+export async function exportMyCCT(ssoId: string) {
+	return axios.get(`${ipCCT}/my-cct/export-pdf/${ssoId}`, {
+		responseType: 'arraybuffer',
+	});
+}

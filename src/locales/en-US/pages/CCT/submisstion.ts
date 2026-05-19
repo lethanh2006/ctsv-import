@@ -18,6 +18,8 @@ export default {
 	'submisstion.form.note': 'Description',
 	'submisstion.form.note.place': 'Enter Description',
 
+	'submisstion.danhsach.modal.detail': 'My CCT Details',
+
 	'submisstion.danhsach.title': 'Submission List',
 	'submisstion.danhsach.studentName': 'Student Name',
 	'submisstion.danhsach.studentId': 'Student ID',

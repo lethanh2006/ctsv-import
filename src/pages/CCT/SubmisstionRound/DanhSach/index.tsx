@@ -2,6 +2,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import { IColumn } from '@/components/Table/typing';
+import { exportMyCCT } from '@/services/CCT/ActivityOutcome';
 import {
 	EStatusMyCCT,
 	mapColorStatusMyCCT,
@@ -9,8 +10,10 @@ import {
 	mapNameStatusMyCCT,
 } from '@/services/CCT/constant';
 import dayjs from '@/utils/dayjs';
-import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
+import { getFilenameHeader } from '@/utils/utils';
+import { CheckCircleOutlined, EditOutlined, FilePdfOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectSubmisstionRound from '../components/Select';
@@ -26,6 +29,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 		useModel('cct.mycct');
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [dataThongKe, setDataThongKe] = useState<MyCCT.IAnalyticsMyCCT>();
+	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 
 	const [trangThai, setTrangThai] = useState<{
 		title: string;
@@ -156,10 +160,26 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 		{
 			title: intl.formatMessage({ id: 'global.column.action' }),
 			align: 'center',
-			width: 120,
+			width: 140,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
+					<ButtonExtend
+						tooltip={'Export PDF'}
+						loading={loadingExport}
+						onClick={() => {
+							setLoadingExport(true);
+							exportMyCCT(rec?.ssoId)
+								.then((res) => {
+									fileDownload(res.data, getFilenameHeader(res));
+								})
+								.catch((er) => console.log(er))
+								.finally(() => setLoadingExport(false));
+						}}
+						type='link'
+						icon={<FilePdfOutlined />}
+					/>
+
 					<ButtonExtend
 						disabled={rec?.status !== EStatusMyCCT.PENDING_APPROVAL}
 						tooltip={intl.formatMessage({ id: 'activityresult.button.duyet' })}
