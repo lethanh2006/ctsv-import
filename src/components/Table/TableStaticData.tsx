@@ -293,7 +293,7 @@ const TableStaticData = (props: TableStaticProps) => {
 					<Empty
 						style={{ marginTop: 32, marginBottom: 32 }}
 						description={props.emptyText ?? intl.formatMessage({ id: 'global.table.index.empty' })}
-						image='/cong-tac-sinh-vien/images/empty.png'
+						image='/images/empty.png'
 					/>
 				)}
 			>
