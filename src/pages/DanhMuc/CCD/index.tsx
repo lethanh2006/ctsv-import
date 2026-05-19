@@ -2,15 +2,18 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
 import { Popconfirm, Switch } from 'antd';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
+import SettingCCD from './components/Setting';
 
 const ActivitiesTypeDomain = () => {
 	const intl = useIntl();
 	const { getModel, page, limit, deleteModel, handleEdit, putModel, formSubmiting, handleView } =
 		useModel('danhmuc.ccd');
+	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel(undefined, undefined, {
@@ -115,17 +118,22 @@ const ActivitiesTypeDomain = () => {
 	];
 
 	return (
-		<TableBase
-			getData={getData}
-			columns={columns}
-			dependencies={[page, limit]}
-			modelName='danhmuc.ccd'
-			title={intl.formatMessage({ id: 'activitiestypedomain.title' })}
-			Form={Form}
-			formProps={{ getData }}
-			buttons={{ import: true, export: true }}
-			widthDrawer={800}
-		/>
+		<>
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit]}
+				modelName='danhmuc.ccd'
+				title={intl.formatMessage({ id: 'activitiestypedomain.title' })}
+				Form={Form}
+				formProps={{ getData }}
+				buttons={{ import: true, export: true }}
+				widthDrawer={800}
+				cardExtra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
+			/>
+
+			<SettingCCD visible={visibleSetting} setVisible={setVisibleSetting} />
+		</>
 	);
 };
 

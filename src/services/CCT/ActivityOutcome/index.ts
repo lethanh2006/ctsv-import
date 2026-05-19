@@ -5,6 +5,10 @@ export async function putApproveActivity(idActivity: string, payLoad: any) {
 	return axios.put(`${ipCCT}/activity-outcome/approve/${idActivity}`, payLoad);
 }
 
+export async function putApproveActivityMany(payLoad: any) {
+	return axios.put(`${ipCCT}/activity-outcome/approve-many`, payLoad);
+}
+
 export async function getAnalyticsStaff() {
 	return axios.get(`${ipCCT}/activity-outcome/analytics/staff`);
 }

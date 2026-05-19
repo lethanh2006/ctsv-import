@@ -4,11 +4,13 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import SelectHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/SelectHocKy';
 import dayjs from '@/utils/dayjs';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
 import { Popconfirm, Tag } from 'antd';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormSubmisstionRound from './components/Form';
 import ModalSubmisstionRound from './components/Modal';
+import SettingDot from './components/Setting';
 
 export const getActivityMeta = (rec: SubmisstionRound.IRecord) => {
 	const now = dayjs();
@@ -44,6 +46,7 @@ export const getActivityMeta = (rec: SubmisstionRound.IRecord) => {
 const SubmisstionRoundPage = () => {
 	const intl = useIntl();
 	const { getModel, page, limit, deleteModel, handleEdit, handleView, isView, edit } = useModel('cct.submissionround');
+	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel();
@@ -142,24 +145,29 @@ const SubmisstionRoundPage = () => {
 	];
 
 	return (
-		<TableBase
-			getData={getData}
-			columns={columns}
-			dependencies={[page, limit]}
-			modelName='cct.submissionround'
-			title={intl.formatMessage({ id: 'submisstion.title' })}
-			Form={isView ? ModalSubmisstionRound : FormSubmisstionRound}
-			formProps={{ getData }}
-			widthDrawer={isView ? 1000 : 800}
-			modalTitle={
-				edit
-					? intl.formatMessage({ id: 'submisstion.form.chinhsua' })
-					: isView
-						? intl.formatMessage({ id: 'submisstion.form.chitiet' })
-						: intl.formatMessage({ id: 'submisstion.form.themmoi' })
-			}
-			showModalTitle
-		/>
+		<>
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit]}
+				modelName='cct.submissionround'
+				title={intl.formatMessage({ id: 'submisstion.title' })}
+				Form={isView ? ModalSubmisstionRound : FormSubmisstionRound}
+				formProps={{ getData }}
+				widthDrawer={isView ? 1000 : 800}
+				modalTitle={
+					edit
+						? intl.formatMessage({ id: 'submisstion.form.chinhsua' })
+						: isView
+							? intl.formatMessage({ id: 'submisstion.form.chitiet' })
+							: intl.formatMessage({ id: 'submisstion.form.themmoi' })
+				}
+				showModalTitle
+				cardExtra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
+			/>
+
+			<SettingDot visible={visibleSetting} setVisible={setVisibleSetting} />
+		</>
 	);
 };
 

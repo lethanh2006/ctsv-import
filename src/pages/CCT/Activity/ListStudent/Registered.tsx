@@ -58,11 +58,12 @@ const RegisteredActivity = () => {
 	return (
 		<>
 			<TableBase
+				params={{ activitiesId: recActivity?._id }}
 				getData={getData}
 				columns={columns}
 				dependencies={[page, limit, recActivity?._id]}
 				modelName='cct.activityoutcome'
-				buttons={{ create: false }}
+				buttons={{ create: false, export: true }}
 				hideCard
 			/>
 

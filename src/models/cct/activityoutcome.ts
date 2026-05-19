@@ -3,6 +3,7 @@ import {
 	getAnalyticsApprovers,
 	getAnalyticsStaff,
 	putApproveActivity,
+	putApproveActivityMany,
 	thongKeHeatmap,
 	thongKePhanBoHoatDong,
 	thongKePhanBoLevel,
@@ -29,6 +30,7 @@ export default () => {
 
 	const [visibleChangeStatus, setVisibleChangeStatus] = useState<boolean>(false);
 	const [visibleXuLy, setVisibleXuLy] = useState<boolean>(false);
+	const [visibleXuLyMany, setVisibleXuLyMany] = useState<boolean>(false);
 	const [visibleImpact, setVisibleImpact] = useState<boolean>(false);
 
 	const [loadingThoiGianDuyet, setLoadingThoiGianDuyet] = useState<boolean>(false);
@@ -75,6 +77,28 @@ export default () => {
 		setFormSubmiting(true);
 		try {
 			const res = await putApproveActivity(idActivity, payLoad);
+			message.success(messageText ?? 'Lưu thành công');
+
+			if (getData) getData();
+			return res.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const putApproveActivityManyModel = async (
+		payLoad: {
+			listId: string[];
+		},
+		getData?: () => void,
+		messageText?: string,
+	): Promise<ActivityOutCome.IRecord> => {
+		if (formSubmiting) return Promise.reject('Form submiting');
+		setFormSubmiting(true);
+		try {
+			const res = await putApproveActivityMany(payLoad);
 			message.success(messageText ?? 'Lưu thành công');
 
 			if (getData) getData();
@@ -234,6 +258,7 @@ export default () => {
 		dataThongKe,
 		loadingThongKe,
 		putApproveActivityModel,
+		putApproveActivityManyModel,
 		getAnalyticsStaffModel,
 		dataThongKeApprovers,
 		loadingThongKeApprovers,
@@ -242,6 +267,8 @@ export default () => {
 		setVisibleChangeStatus,
 		visibleXuLy,
 		setVisibleXuLy,
+		visibleXuLyMany,
+		setVisibleXuLyMany,
 		visibleImpact,
 		setVisibleImpact,
 

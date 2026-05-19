@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 type TSettingType = Partial<{
 	[ESettingKey.KEY]: any; // Some type has `_id`
+	[ESettingKey.CCT_TRANSCRIPT]: SubmisstionRound.ISetting; // Some type has `_id`
 }>;
 
 export default () => {

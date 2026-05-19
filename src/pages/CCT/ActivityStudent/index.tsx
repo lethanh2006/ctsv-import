@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
+import ModalExport from '@/components/Table/Export';
 import { TFilter, type IColumn } from '@/components/Table/typing';
 import SelectLevelsManagement from '@/pages/DanhMuc/Levels/components/Select';
 import SelectRolesManagement from '@/pages/DanhMuc/Roles/components/Select';
@@ -32,6 +33,7 @@ import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormActivityStudent from './components/Form';
 import StatActivityOutCome from './components/Stat';
+import ApproveMany from './Modal/ApproveMany';
 import ModalChinhSuaImpact from './Modal/ModalImpact';
 import ModalChinhSuaTrangThai from './Modal/ModalTrangThai';
 import ModalXuLyActivityStudent from './Modal/ModalXuLy';
@@ -45,11 +47,14 @@ const HistoryActivityPage = () => {
 		handleView,
 		setRecord,
 		getAnalyticsStaffModel,
-		filters,
+		filters: filtersOutCome,
 		setFilters,
 		setVisibleChangeStatus,
 		setVisibleXuLy,
 		setVisibleImpact,
+		danhSach,
+		setVisibleXuLyMany,
+		selectedIds,
 	} = useModel('cct.activityoutcome');
 	const { getAllModel: getAllAtributes } = useModel('danhmuc.attributes');
 
@@ -58,10 +63,11 @@ const HistoryActivityPage = () => {
 		trangThai: EApprovalStatus;
 	}>();
 	const [segmentSelected, setSegmentSelected] = useState<EActivityCategory | string>(EActivityCategory.REGISTERED);
-	const valueFiltered = filters?.find((item) => item.field?.includes('workflow'))?.values ?? [];
+	const valueFiltered = filtersOutCome?.find((item) => item.field?.includes('workflow'))?.values ?? [];
 	const [loadingThongke, setLoadingThongKe] = useState<boolean>(false);
 	const [totalRegis, setTotalRegis] = useState<number>(0);
 	const [totalPersional, setTotalPersional] = useState<number>(0);
+	const [visibleExport, setVisibleExport] = useState<boolean>(false);
 
 	const PROCESSED = [EApprovalStatus.APPROVED, EApprovalStatus.REJECTED, EApprovalStatus.CHANGES_REQUIRED];
 
@@ -87,7 +93,7 @@ const HistoryActivityPage = () => {
 
 			const [resRegis, resPersional] = await Promise.all([
 				thongKeSoLuongActivityOutCome([
-					...(filters || []),
+					...(filtersOutCome || []),
 					...commonFilters,
 					{
 						active: true,
@@ -97,7 +103,7 @@ const HistoryActivityPage = () => {
 					},
 				]),
 				thongKeSoLuongActivityOutCome([
-					...(filters || []),
+					...(filtersOutCome || []),
 					...commonFilters,
 					{
 						active: true,
@@ -117,18 +123,18 @@ const HistoryActivityPage = () => {
 		}
 	};
 
+	const filters: any[] = [];
+
+	if (segmentSelected !== 'ALL') {
+		filters.push({
+			active: true,
+			field: 'activityCategory',
+			values: [segmentSelected],
+			operator: EOperatorType.INCLUDE,
+		});
+	}
+
 	const getData = () => {
-		const filters: any[] = [];
-
-		if (segmentSelected !== 'ALL') {
-			filters.push({
-				active: true,
-				field: 'activityCategory',
-				values: [segmentSelected],
-				operator: EOperatorType.INCLUDE,
-			});
-		}
-
 		getModel(
 			undefined,
 			[
@@ -159,7 +165,7 @@ const HistoryActivityPage = () => {
 
 	useEffect(() => {
 		thongKeSoLuongActivityOutComeAll();
-	}, [filters]);
+	}, [JSON.stringify(filtersOutCome)]);
 
 	const getStat = () => {
 		getAnalyticsStaffModel();
@@ -596,7 +602,15 @@ const HistoryActivityPage = () => {
 									setFilters((prev) => prev?.filter((f) => !isActivitiesNameFilter(f)));
 								}}
 							/>,
+							<ButtonExtend onClick={() => setVisibleExport(true)}>Export data</ButtonExtend>,
+							<ButtonExtend
+								onClick={() => setVisibleXuLyMany(true)}
+								// disabled={!danhSach?.length}
+							>
+								Approve {selectedIds?.length && selectedIds?.length > 0 ? `(${selectedIds?.length})` : ''}
+							</ButtonExtend>,
 						]}
+						rowSelection
 					/>
 				</Card>
 
@@ -630,6 +644,29 @@ const HistoryActivityPage = () => {
 					}}
 					setTrangThai={setTrangThai}
 					iszindex
+				/>
+
+				<ModalExport
+					visible={visibleExport}
+					modelName='cct.activityoutcome'
+					onCancel={() => setVisibleExport(false)}
+					fileName={`Danh sách ${intl.formatMessage({ id: 'activityresult.title' })}.xlsx`}
+					filters={[
+						...filters,
+						{
+							active: true,
+							field: 'workflow',
+							values: [EApprovalStatus.EVIDENCE_REQUIRED, EApprovalStatus.DRAFT],
+							operator: EOperatorType.NOT_INCLUDE,
+						},
+					]}
+				/>
+
+				<ApproveMany
+					getData={() => {
+						getData();
+						getThongKe();
+					}}
 				/>
 			</Card>
 		</>
