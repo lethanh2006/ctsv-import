@@ -264,7 +264,7 @@ const TableXepLich = (props: { tuanHienTai: number; getData: () => Promise<any> 
 			{mainContent()}
 
 			<ModalXepLich
-				{visibleModal}
+				visible={visibleModal}
 				onCancel={() => {
 					setVisibleModal(false);
 					setSelectedCells([]);

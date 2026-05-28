@@ -48,6 +48,9 @@ export default defineConfig({
 	alias: {
 		'pdfjs-dist': require.resolve('@react-pdf-viewer/pdfjs-dist-signature'),
 	},
+	chainWebpack(memo) {
+		memo.resolve.alias.set('canvas', false);
+	},
 
 	jsMinifier: 'terser',
 	exportStatic: {},

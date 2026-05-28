@@ -21,6 +21,7 @@ const currentRole = EModuleKey.CTSV;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
 
+
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
 const keycloakAuthority = APP_CONFIG_KEYCLOAK_AUTHORITY;
