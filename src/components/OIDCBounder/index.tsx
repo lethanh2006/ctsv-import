@@ -121,14 +121,29 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 					}
 					handleAuthError('Bạn không có quyền truy cập phân hệ này. Vui lòng liên hệ quản trị viên để được cấp quyền.');
 				} else {
+<<<<<<< HEAD
 					if (getRedirectPathname() !== window.location.pathname) redirectLocation();
+=======
+					if (window.location.pathname === '/' || window.location.pathname === '/cong-tac-sinh-vien/user/login')
+						redirectLocation();
+>>>>>>> d7aba450521f6198559bd87459f1b79a5901fa53
 				}
 			} catch (error) {
 				console.error('OIDC login failed:', error);
 				handleAuthError('Không thể lấy thông tin người dùng hoặc phân quyền. Vui lòng thử đăng nhập lại.');
 				if (auth.isAuthenticated) auth.removeUser();
+<<<<<<< HEAD
+=======
+				else {
+					notification.warning({
+						message: intl.formatMessage({ id: 'global.OIDCBounder.message' }),
+						description: intl.formatMessage({ id: 'global.OIDCBounder.description' }),
+					});
+					history.replace('/cong-tac-sinh-vien/user/login');
+				}
+>>>>>>> d7aba450521f6198559bd87459f1b79a5901fa53
 			}
-		} else history.replace('/user/login');
+		} else history.replace('/cong-tac-sinh-vien/user/login');
 	};
 
 	useEffect(() => {

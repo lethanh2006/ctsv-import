@@ -47,11 +47,11 @@ const HuongDanThanhToan = (props: {
 						) : (
 							<>
 								<Radio value={ETransactionPaymentType.BANK}>
-									<img src='/images/vietqr.png' alt='vietqr' />
+									<img src='/cong-tac-sinh-vien/images/vietqr.png' alt='vietqr' />
 									Thẻ nội địa
 								</Radio>
 								{/* <Radio value={ETransactionPaymentType.MOMO_WALLET}>
-									<img src='/images/momo.svg' alt='momo' />
+									<img src='/cong-tac-sinh-vien/images/momo.svg' alt='momo' />
 									Ví MOMO
 								</Radio> */}
 							</>

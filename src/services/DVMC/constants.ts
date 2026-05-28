@@ -32,7 +32,7 @@ export const Setting = {
 	colorWeak: false,
 	title: 'PTIT S-Link',
 	pwa: false,
-	logo: '/favicon.ico',
+	logo: '/cong-tac-sinh-vien/favicon.ico',
 	iconfontUrl: '',
 	version: 'v1.0',
 	tenTruong: unitName,
