@@ -36,7 +36,7 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 		if (newSearch) newSearch = '?' + newSearch;
 		// Reload trang để cập nhật access token mới
 		const pathname =
-			window.location.pathname === '/' || window.location.pathname === '/user/login'
+			window.location.pathname === '/' || window.location.pathname === '/cong-tac-sinh-vien/user/login'
 				? '/dashboard'
 				: window.location.pathname;
 		window.location.replace(`${pathname}${newSearch}${window.location.hash}`);
@@ -84,7 +84,8 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 					}
 					history.replace('/403');
 				} else {
-					if (window.location.pathname === '/' || window.location.pathname === '/user/login') redirectLocation();
+					if (window.location.pathname === '/' || window.location.pathname === '/cong-tac-sinh-vien/user/login')
+						redirectLocation();
 				}
 			} catch {
 				if (auth.isAuthenticated) auth.removeUser();
@@ -93,10 +94,10 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 						message: intl.formatMessage({ id: 'global.OIDCBounder.message' }),
 						description: intl.formatMessage({ id: 'global.OIDCBounder.description' }),
 					});
-					history.replace('/user/login');
+					history.replace('/cong-tac-sinh-vien/user/login');
 				}
 			}
-		} else history.replace('/user/login');
+		} else history.replace('/cong-tac-sinh-vien/user/login');
 	};
 
 	useEffect(() => {
@@ -149,7 +150,11 @@ export const OIDCBounder: FC<{ children: React.ReactElement }> & { getActions: (
 	return (
 		<AuthProvider
 			{...oidcConfig}
-			redirect_uri={window.location.pathname.includes('/user') ? window.location.origin : window.location.href}
+			redirect_uri={
+				window.location.pathname.includes('/user')
+					? `${window.location.origin}${APP_CONFIG_BASE_PATH}`
+					: window.location.href
+			}
 		>
 			<OIDCBounder_ {...props} />
 		</AuthProvider>
