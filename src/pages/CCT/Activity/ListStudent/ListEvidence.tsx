@@ -1,5 +1,6 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
+import { EOperatorType } from '@/components/Table/constant';
 import { type IColumn } from '@/components/Table/typing';
 import SelectLevelsManagement from '@/pages/DanhMuc/Levels/components/Select';
 import SelectRolesManagement from '@/pages/DanhMuc/Roles/components/Select';
@@ -25,10 +26,24 @@ const ListEvidenceActivity = () => {
 
 	const getData = () => {
 		if (recActivity?._id)
-			getModel({
-				activitiesId: recActivity?._id,
-				activityCategory: EActivityCategory.REGISTERED,
-			});
+			getModel(
+				{
+					activitiesId: recActivity?._id,
+				},
+				[
+					{
+						active: true,
+						field: 'workflow',
+						values: [
+							EApprovalStatus.SUBMITTED,
+							EApprovalStatus.APPROVED,
+							EApprovalStatus.REJECTED,
+							EApprovalStatus.CHANGES_REQUIRED,
+						],
+						operator: EOperatorType.INCLUDE,
+					},
+				],
+			);
 	};
 
 	const onCell = (rec: ActivityOutCome.IRecord) => ({
@@ -237,15 +252,11 @@ const ListEvidenceActivity = () => {
 	return (
 		<>
 			<TableBase
-				params={{
-					activitiesId: recActivity?._id,
-					activityCategory: EActivityCategory.REGISTERED,
-				}}
 				getData={getData}
 				columns={columns}
 				dependencies={[page, limit, recActivity?._id]}
 				modelName='cct.activityoutcome'
-				buttons={{ create: false, export: true }}
+				buttons={{ create: false }}
 				hideCard
 			/>
 

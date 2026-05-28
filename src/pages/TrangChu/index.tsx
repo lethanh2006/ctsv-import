@@ -1,11 +1,15 @@
 import { unitName } from '@/services/base/constant';
 import { Card } from 'antd';
-import { useIntl } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ThongKeCCT from '../CCT/ThongKe';
 import './components/style.less';
 
 const Home = () => {
 	const intl = useIntl();
+	const { initialState } = useModel('@@initialState');
+	const roles = initialState?.currentUser?.realm_access?.roles?.map((item) => item);
+
+	const quanTri = ['QUAN_TRI_VIEN', 'CHUYEN_VIEN_CTSV']?.some((role: string) => roles?.includes(role));
 
 	return (
 		<>
@@ -19,7 +23,7 @@ const Home = () => {
 				</div>
 			</Card>
 
-			<ThongKeCCT />
+			{quanTri && <ThongKeCCT />}
 		</>
 	);
 };

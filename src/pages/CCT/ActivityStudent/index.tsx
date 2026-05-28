@@ -55,6 +55,7 @@ const HistoryActivityPage = () => {
 		danhSach,
 		setVisibleXuLyMany,
 		selectedIds,
+		setSelectedIds,
 	} = useModel('cct.activityoutcome');
 	const { getAllModel: getAllAtributes } = useModel('danhmuc.attributes');
 
@@ -602,12 +603,28 @@ const HistoryActivityPage = () => {
 									setFilters((prev) => prev?.filter((f) => !isActivitiesNameFilter(f)));
 								}}
 							/>,
-							<ButtonExtend onClick={() => setVisibleExport(true)}>Export data</ButtonExtend>,
-							<ButtonExtend onClick={() => setVisibleXuLyMany(true)} disabled={!danhSach?.length}>
-								Approve {selectedIds?.length && selectedIds?.length > 0 ? `(${selectedIds?.length})` : ''}
+							// <ButtonExtend onClick={() => setVisibleExport(true)}>Export data</ButtonExtend>
+							<ButtonExtend
+								type='primary'
+								onClick={() => setVisibleXuLyMany(true)}
+								disabled={!danhSach?.length || !selectedIds?.length}
+							>
+								Mass Approval {selectedIds?.length && selectedIds?.length > 0 ? `(${selectedIds?.length})` : ''}
 							</ButtonExtend>,
 						]}
-						rowSelection
+						otherProps={{
+							rowKey: '_id',
+							rowSelection: {
+								type: 'checkbox',
+								selectedRowKeys: selectedIds ?? [],
+								preserveSelectedRowKeys: true,
+								onChange: (selectedRowKeys: any) => setSelectedIds(selectedRowKeys),
+								columnWidth: 40,
+								getCheckboxProps: (record) => ({
+									disabled: record?.workflow !== EApprovalStatus.SUBMITTED,
+								}),
+							},
+						}}
 					/>
 				</Card>
 

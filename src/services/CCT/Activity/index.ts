@@ -12,3 +12,12 @@ export async function postManyEquivalency(
 export async function getAnalyticsActivity(condition?: any) {
 	return axios.get(`${ipCCT}/activities/analytics`, { params: { condition: condition } });
 }
+
+export const exportActivity = (activitiesId: string) => {
+	return axios.get(`${ipCCT}/activity-outcome/export-event`, {
+		params: {
+			activitiesId: activitiesId,
+		},
+		responseType: 'arraybuffer',
+	});
+};

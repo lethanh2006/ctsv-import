@@ -3,6 +3,7 @@ import AuthImage from '@/components/Image/AuthImage';
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
 import SelectActivitiesTypeDomain from '@/pages/DanhMuc/CCD/components/Select';
+import { ESettingKey } from '@/services/base/constant';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
 import {
 	EApprovalStatus,
@@ -33,43 +34,55 @@ const FormPerstionActivityOutCome = (props: any) => {
 	const [form] = Form.useForm();
 
 	const { record, edit, isView, postModel, putModel, visibleForm, setFormSubmiting } = useModel('cct.activityoutcome');
+	const { getByKeyModel, settings } = useModel('tienich.caidat');
 
 	const startDate: Date = Form.useWatch('startDate', form);
 	const endDate: Date = Form.useWatch('endDate', form);
 	const activitiesTypeDomainId: string = Form.useWatch('activitiesTypeDomainId', form);
 
 	const [isSubmit, setIsSubmit] = useState<boolean>(false);
-	const isAward = activitiesTypeDomainId === 'award-recognition';
 
 	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
+		if (visibleForm) {
+			getByKeyModel(ESettingKey.CCT_TRANSCRIPT, ipCCT);
+		} else {
+			resetFieldsForm(form);
+		}
+	}, [visibleForm]);
+
+	const awardTypeDomainIds = settings?.CCT_TRANSCRIPT?.listTypeAwardAndRecognition ?? [];
+	const firstAwardTypeDomainId = awardTypeDomainIds?.[0];
+	const isAward = isView || edit ? record?.isAwardRecognition : awardTypeDomainIds?.includes(activitiesTypeDomainId);
+
+	useEffect(() => {
+		if (!visibleForm) return;
 
 		if (record?._id) {
 			form.setFieldsValue({
 				...record,
 				activitiesTypeDomainId: record?.isAwardRecognition
-					? 'award-recognition'
+					? firstAwardTypeDomainId
 					: record?.activitiesType?.activitiesTypeDomainId,
 				listAchievedCompetencies: record?.listAchievedCompetencies?.map((item) => item?.competencyId),
 				onUni: record?.supervisorSsoId ? true : false,
 				banner: record?.banner ?? background,
 			});
+
+			return;
 		}
 
-		if (!record?._id) {
-			form.setFieldsValue({
-				participantScope: EParticipantScope.UNIVERSITY,
-				participantRole: EparticipantRole.ALL,
-				cct: true,
-				allowPostEventResultsUpdate: false,
-				onCampus: true,
-				checkbox: false,
-				listAchievedCompetencies: null,
-				onUni: true,
-				banner: background,
-			});
-		}
-	}, [record?._id, visibleForm]);
+		form.setFieldsValue({
+			participantScope: EParticipantScope.UNIVERSITY,
+			participantRole: EparticipantRole.ALL,
+			cct: true,
+			allowPostEventResultsUpdate: false,
+			onCampus: true,
+			checkbox: false,
+			listAchievedCompetencies: null,
+			onUni: true,
+			banner: background,
+		});
+	}, [visibleForm, record?._id, firstAwardTypeDomainId]);
 
 	const onFinish = async (values: ActivityOutCome.IRecord, submitted: boolean) => {
 		setFormSubmiting(true);
@@ -169,16 +182,12 @@ const FormPerstionActivityOutCome = (props: any) => {
 										</Form.Item>
 									</Col>
 									<Col span={24} md={12}>
-										<Form.Item
-											name='startDate'
-											label={intl.formatMessage({ id: 'activity.perstion.startDate' })}
-											rules={[...rules.required]}
-										>
+										<Form.Item name='startDate' label='Start Date' rules={[...rules.required]}>
 											<MyDatePicker
 												showTime={{ showHour: true, showMinute: true }}
 												format='HH:mm DD/MM/YYYY'
 												disabled={isView}
-												placeholder={intl.formatMessage({ id: 'activity.perstion.startDate.place' })}
+												placeholder='Select Start Date'
 												onChange={() => form.resetFields(['endDate'])}
 											/>
 										</Form.Item>
@@ -186,14 +195,8 @@ const FormPerstionActivityOutCome = (props: any) => {
 									<Col span={24} md={12}>
 										<Form.Item
 											name='endDate'
-											label={intl.formatMessage({ id: 'activity.perstion.endDate' })}
-											rules={[
-												...rules.required,
-												...rules.sauThoiDiem(
-													dayjs(startDate),
-													intl.formatMessage({ id: 'activity.perstion.startDate' }),
-												),
-											]}
+											label='End Date'
+											rules={[...rules.required, ...rules.sauThoiDiem(dayjs(startDate), 'Start Date')]}
 										>
 											<MyDatePicker
 												showTime={{ showHour: true, showMinute: true }}
@@ -202,7 +205,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 												{...buildDisabledDateTime({
 													min: startDate ? dayjs(startDate) : undefined,
 												})}
-												placeholder={intl.formatMessage({ id: 'activity.perstion.endDate.place' })}
+												placeholder='Select End Date'
 											/>
 										</Form.Item>
 									</Col>
@@ -217,8 +220,8 @@ const FormPerstionActivityOutCome = (props: any) => {
 							label='Date Of Achievement'
 							rules={[
 								...rules.required,
-								...rules.sauThoiDiem(dayjs(startDate), intl.formatMessage({ id: 'activity.perstion.startDate' })),
-								...rules.truocThoiDiem(dayjs(endDate), intl.formatMessage({ id: 'activity.perstion.endDate' })),
+								...rules.sauThoiDiem(dayjs(startDate), 'Start Date'),
+								...rules.truocThoiDiem(dayjs(endDate), 'End Date'),
 							]}
 						>
 							<MyDatePicker

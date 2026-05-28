@@ -3,7 +3,7 @@ import { ESettingKey } from '@/services/base/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
-import { Button, Form, Input, Modal, Spin } from 'antd';
+import { Button, Col, Form, Input, Modal, Spin, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -23,8 +23,8 @@ const SettingDot = (props: { visible: boolean; setVisible: (val: boolean) => voi
 
 	const onFinish = async (value: SubmisstionRound.ISetting) => {
 		setFormSubmiting(true);
-		const fileId = await buildUpLoadFile(value, 'fileId', undefined, true);
-		value.fileId = fileId?.data?.data?._id;
+		const fileId = await buildUpLoadFile(value, 'fileId', undefined, true, ipCCT);
+		value.fileId = fileId?.data?.data?.file?._id;
 		setFormSubmiting(false);
 
 		const prev = settings[ESettingKey.CCT_TRANSCRIPT] as SubmisstionRound.ISetting | undefined;
@@ -46,8 +46,21 @@ const SettingDot = (props: { visible: boolean; setVisible: (val: boolean) => voi
 					<Form.Item label='File Name' name='fileName' rules={[...rules.required]}>
 						<Input placeholder='Enter File Name' />
 					</Form.Item>
+					<Col span={24}>
+						<Typography.Text style={{ color: 'red' }} italic>
+							Note: The import file must be in .pptx format.
+						</Typography.Text>
+					</Col>
 					<Form.Item label='File' name='fileId' rules={[...rules.required]}>
-						<UploadFile isPrivate />
+						<UploadFile
+							isPrivate
+							maxCount={1}
+							otherProps={{
+								maxCount: 1,
+								multiple: false,
+								accept: '.pptx',
+							}}
+						/>
 					</Form.Item>
 
 					<div className='form-footer'>
