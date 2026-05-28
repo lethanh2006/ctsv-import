@@ -3,6 +3,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import { type IColumn } from '@/components/Table/typing';
+import useCheckAccess from '@/hooks/useCheckAccess';
 import SelectActivitiesManagement from '@/pages/DanhMuc/Activities/components/Select';
 import SelectDonVi from '@/pages/ToChucNhanSu/DonVi/Select';
 import { exportActivity } from '@/services/CCT/Activity';
@@ -28,9 +29,7 @@ const ActivityPage = () => {
 	const [loadingExportId, setLoadingExportId] = useState<string>();
 
 	const { initialState } = useModel('@@initialState');
-	const phanQuyenSuKien = initialState?.currentUser?.realm_access?.roles?.find(
-		(item) => item === 'CHUYEN_VIEN_CTSV_DON_VI',
-	);
+	const quanTri = useCheckAccess('ctsv|activity-management');
 
 	useEffect(() => {
 		getAllAtributes(undefined, { order: 1 }, { isActive: true });
@@ -88,7 +87,7 @@ const ActivityPage = () => {
 
 	const getData = () => {
 		getModel(
-			phanQuyenSuKien
+			!quanTri
 				? {
 						activityCreatorSsoId: initialState?.currentUser?.ssoId,
 					}
@@ -112,7 +111,7 @@ const ActivityPage = () => {
 
 	const getThongKe = () => {
 		getAnalyticsActivityModel(
-			phanQuyenSuKien
+			!quanTri
 				? {
 						activityCreatorSsoId: initialState?.currentUser?.ssoId,
 					}
