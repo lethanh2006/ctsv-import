@@ -128,7 +128,7 @@ export const OIDCBounder_: FC<{ children: React.ReactElement }> = ({ children })
 				handleAuthError('Không thể lấy thông tin người dùng hoặc phân quyền. Vui lòng thử đăng nhập lại.');
 				if (auth.isAuthenticated) auth.removeUser();
 			}
-		} else history.replace('/user/login');
+		} else history.replace('/cong-tac-sinh-vien/user/login');
 	};
 
 	useEffect(() => {

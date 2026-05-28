@@ -5,6 +5,10 @@ export async function putApproveActivity(idActivity: string, payLoad: any) {
 	return axios.put(`${ipCCT}/activity-outcome/approve/${idActivity}`, payLoad);
 }
 
+export async function putApproveActivityMany(payLoad: any) {
+	return axios.put(`${ipCCT}/activity-outcome/approve-many`, payLoad);
+}
+
 export async function getAnalyticsStaff() {
 	return axios.get(`${ipCCT}/activity-outcome/analytics/staff`);
 }
@@ -53,4 +57,10 @@ export async function thongKeSinhVien() {
 
 export async function thongKeTopHoatDong() {
 	return axios.get(`${ipCCT}/activity-outcome/statistics/top-activities`);
+}
+
+export async function exportMyCCT(ssoId: string) {
+	return axios.get(`${ipCCT}/my-cct/export-pdf/${ssoId}`, {
+		responseType: 'arraybuffer',
+	});
 }

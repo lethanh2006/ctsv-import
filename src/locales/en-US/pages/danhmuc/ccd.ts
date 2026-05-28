@@ -31,4 +31,5 @@ export default {
 	'activitiestypedomain.student.column.hoten': 'Name',
 	'activitiestypedomain.student.column.email': 'Email',
 	'activitiestypedomain.student.form.themmoi': 'Add New Approvers',
+	'activitiestypedomain.student.comfirm.xoa': 'Do You Want To Remove This Approvers',
 };

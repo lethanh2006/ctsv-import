@@ -8,11 +8,7 @@ import type { IInitialState } from './services/base/typing';
 export default function access(initialState: IInitialState) {
 	// const scopes = initialState.authorizedPermissions?.find((item) => item.rsname === currentRole)?.scopes;
 	const scopes = initialState?.authorizedPermissions?.map((item) => item.scopes).flat();
-	const roles = initialState?.currentUser?.realm_access?.roles?.map((item: string) => item) || [];
-	// const vaiTro = initialState?.currentUser?.systemRole;
-	const isDonVi = roles.includes('CHUYEN_VIEN_CTSV_DON_VI');
-	const isXetDuyet = roles.includes('CHUYEN_VIEN_CTSV_XET_DUYET');
-	const hasActivityRole = isDonVi || isXetDuyet;
+	const roles = initialState?.currentUser?.realm_access?.roles?.map((item) => item);
 
 	return {
 		// canBoQLKH: token && vaiTro && vaiTro === 'can_bo_qlkh',
@@ -37,21 +33,8 @@ export default function access(initialState: IInitialState) {
 		accessFilter: (route: any) => scopes?.includes(route?.maChucNang) || false,
 		manyAccessFilter: (route: any) => route?.listChucNang?.some((role: string) => scopes?.includes(role)) || false,
 
-		activityAccess: () => {
-			if (!isDonVi && !isXetDuyet) return true;
-			if (isDonVi) return true;
-			return false;
-		},
-		activityResultsAccess: () => {
-			if (!isDonVi && !isXetDuyet) return true;
-			return isDonVi || isXetDuyet;
-		},
-		danhMucAccess: () => {
-			return !hasActivityRole;
-		},
-
-		/** Lớp tín chỉ đi theo học kỳ */
-		lopTinChiHocKyAccessFilter: () => tenTruongVietTatTiengAnh !== 'VWA',
+		accessRolesFilter: (route: any) => roles?.includes(route?.maChucNang) || false,
+		manyAccessRolesFilter: (route: any) => route?.listChucNang?.some((role: string) => roles?.includes(role)) || false,
 
 		/** Co-curricular Activities (CCA) */
 		cctFilter: () => tenTruongVietTatTiengAnh === 'VINUNI',

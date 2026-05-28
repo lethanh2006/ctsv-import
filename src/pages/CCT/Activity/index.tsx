@@ -5,12 +5,15 @@ import { EOperatorType } from '@/components/Table/constant';
 import { type IColumn } from '@/components/Table/typing';
 import SelectActivitiesManagement from '@/pages/DanhMuc/Activities/components/Select';
 import SelectDonVi from '@/pages/ToChucNhanSu/DonVi/Select';
+import { exportActivity } from '@/services/CCT/Activity';
 import { Activity } from '@/services/CCT/Activity/typing';
 import dayjs from '@/utils/dayjs';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { getFilenameHeader } from '@/utils/utils';
+import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Space, Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import { uniqBy } from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormActivity from './components/Form';
 import ModalActivity from './components/Modal';
@@ -22,6 +25,8 @@ const ActivityPage = () => {
 		useModel('cct.activity');
 	const { getAnalyticsActivityModel } = useModel('cct.activity');
 	const { getAllModel: getAllAtributes } = useModel('danhmuc.attributes');
+	const [loadingExportId, setLoadingExportId] = useState<string>();
+
 	const { initialState } = useModel('@@initialState');
 	const phanQuyenSuKien = initialState?.currentUser?.realm_access?.roles?.find(
 		(item) => item === 'CHUYEN_VIEN_CTSV_DON_VI',
@@ -226,7 +231,7 @@ const ActivityPage = () => {
 		{
 			title: intl.formatMessage({ id: 'global.column.action' }),
 			align: 'center',
-			width: 120,
+			width: 150,
 			fixed: 'right',
 			render: (_, rec) => {
 				const { isEditable } = getActivityMeta(rec);
@@ -266,6 +271,24 @@ const ActivityPage = () => {
 								disabled={!isEditable}
 							/>
 						</Popconfirm>
+
+						<ButtonExtend
+							loading={loadingExportId === rec?._id}
+							tooltip={intl.formatMessage({ id: 'global.button.xuatdulieu' })}
+							onClick={(e) => {
+								e.stopPropagation();
+
+								setLoadingExportId(rec?._id);
+								exportActivity(rec?._id)
+									.then((res) => {
+										fileDownload(res.data, getFilenameHeader(res));
+									})
+									.catch((er) => console.log(er))
+									.finally(() => setLoadingExportId(undefined));
+							}}
+							type='link'
+							icon={<ExportOutlined />}
+						/>
 					</>
 				);
 			},
@@ -310,6 +333,7 @@ const ActivityPage = () => {
 						getThongKe();
 					}}
 					hideCard
+					buttons={{ export: true }}
 				/>
 			</Card>
 		</Card>

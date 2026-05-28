@@ -1,10 +1,13 @@
 import bgcct from '@/assets/cct/bg-cct.png';
 import Profile from '@/assets/cct/Profile.png';
 import Skills from '@/assets/cct/Skills.png';
+import { exportMyCCT } from '@/services/CCT/ActivityOutcome';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
 import { EStatusMyCCT } from '@/services/CCT/constant';
+import { getFilenameHeader } from '@/utils/utils';
 import { Button, Spin } from 'antd';
 import dayjs from 'dayjs';
+import fileDownload from 'js-file-download';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -43,6 +46,7 @@ const ChiTietMyCCT = (props: any) => {
 		myCCT: MyCCT.IRecord;
 		awardsAndRecognition: ActivityOutCome.IRecord[];
 	}>();
+	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 
 	const getData = () => {
 		if (recMyCCT?.ssoId)
@@ -69,7 +73,7 @@ const ChiTietMyCCT = (props: any) => {
 				</div>
 
 				<div className='project-detail'>
-					<h3>{item?.activity}</h3>
+					<h3>{[item?.role, item?.activity].filter(Boolean).join(', ')}</h3>
 					<p>
 						<i>{item?.impact}</i>
 					</p>
@@ -104,6 +108,18 @@ const ChiTietMyCCT = (props: any) => {
 		return content;
 	};
 
+	const hanldeExport = () => {
+		if (recMyCCT?.ssoId) {
+			setLoadingExport(true);
+			exportMyCCT(recMyCCT?.ssoId)
+				.then((res) => {
+					fileDownload(res.data, getFilenameHeader(res));
+				})
+				.catch((er) => console.log(er))
+				.finally(() => setLoadingExport(false));
+		}
+	};
+
 	return (
 		<>
 			{!!record?.myCCT?.status && <CardNoteMyCCT myCCT={record?.myCCT ?? ({} as MyCCT.IRecord)} />}
@@ -112,9 +128,7 @@ const ChiTietMyCCT = (props: any) => {
 				<div className='cct-container'>
 					<header className='cct-header'>
 						<div className='header-content'>
-							<div className='header-title'>
-								CO-CURRICULAR & <br /> COMPETENCY TRANSCRIPT
-							</div>
+							<div className='header-title'>CO-CURRICULAR PORTFOLIO</div>
 							<div className='university-logo'>
 								<img src={bgcct} style={{ height: 60 }} />
 							</div>
@@ -125,10 +139,10 @@ const ChiTietMyCCT = (props: any) => {
 						<div className='column left-column'>
 							<section className='intro-section'>
 								<p className='intro-text'>
-									<b>Co-curricular & Competency Transcript (CCT)</b> is part of VinUniversity's commitment to developing
-									holistic graduates. This transcript documents the co-curricular experiences and developmental
-									activities that students engage in during their time at VinUni, capturing evidence of their
-									competencies, growth, and contributions beyond academic performance.
+									<b>Co-curricular Portfolio (CCP)</b> is part of VinUniversity’s commitment to developing holistic
+									graduates. This Portfolio documents the co-curricular experiences and developmental activities that
+									students engage in during their time at VinUni, capturing evidence of their competencies, growth, and
+									contributions beyond academic performance.
 								</p>
 								<div className='student-info'>
 									<div className='info-group'>
@@ -209,7 +223,7 @@ const ChiTietMyCCT = (props: any) => {
 
 							<section className='footer-legend'>
 								<div className='end-transcript-divider'>
-									<span>END OF TRANSCRIPT</span>
+									<span>END OF PORTFOLIO</span>
 								</div>
 								<p className='italic-text' style={{ fontSize: 7 }}>
 									<i>
@@ -219,7 +233,35 @@ const ChiTietMyCCT = (props: any) => {
 								</p>
 
 								<div className='legend-table'>
-									{record?.levelOfEngagement
+									<div className='legend-row'>
+										<span className='symbol'>▶</span>
+										<span className='label'>Participant</span>
+										<span className='desc'>
+											<i>Engages in activities and contributes to implementation</i>
+										</span>
+									</div>
+									<div className='legend-row'>
+										<span className='symbol'>▶▶</span>
+										<span className='label'>Contributor</span>
+										<span className='desc'>
+											<i>Demonstrates initiative by contributing ideas and owning specific outputs.</i>
+										</span>
+									</div>
+									<div className='legend-row'>
+										<span className='symbol'>▶▶▶</span>
+										<span className='label'>Leader</span>
+										<span className='desc'>
+											<i>Provides direction, mobilizes people, and delivers results.</i>
+										</span>
+									</div>
+									<div className='legend-row'>
+										<span className='symbol'>▶▶▶▶</span>
+										<span className='label'>Impact Driver</span>
+										<span className='desc'>
+											<i>Creates scalable impact that extends beyond the original project or context.</i>
+										</span>
+									</div>
+									{/* {record?.levelOfEngagement
 										?.sort((a, b) => a.level.order - b.level.order)
 										?.map((item) => (
 											<div className='legend-row' key={item.level._id}>
@@ -230,7 +272,7 @@ const ChiTietMyCCT = (props: any) => {
 													<i>{item.level.description}</i>
 												</span>
 											</div>
-										))}
+										))} */}
 								</div>
 
 								<div className='signatures'>
@@ -252,7 +294,7 @@ const ChiTietMyCCT = (props: any) => {
 					</main>
 
 					<div className='title-bottom'>
-						<i>This Transcript is officially issued and verified by VinUniversity</i>
+						<i>This Portfolio is officially issued and verified by VinUniversity</i>
 					</div>
 				</div>
 			</Spin>
@@ -288,6 +330,10 @@ const ChiTietMyCCT = (props: any) => {
 							className='btn-warning'
 						>
 							{intl.formatMessage({ id: 'activityresult.button.yccs' })}
+						</Button>
+
+						<Button type='primary' loading={loadingExport} onClick={hanldeExport}>
+							Export PDF
 						</Button>
 					</>
 				)}
