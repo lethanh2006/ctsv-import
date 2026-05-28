@@ -1,15 +1,13 @@
+import useCheckAccess from '@/hooks/useCheckAccess';
 import { unitName } from '@/services/base/constant';
 import { Card } from 'antd';
-import { useIntl, useModel } from 'umi';
+import { useIntl } from 'umi';
 import ThongKeCCT from '../CCT/ThongKe';
 import './components/style.less';
 
 const Home = () => {
 	const intl = useIntl();
-	const { initialState } = useModel('@@initialState');
-	const roles = initialState?.currentUser?.realm_access?.roles?.map((item) => item);
-
-	const quanTri = ['QUAN_TRI_VIEN', 'CHUYEN_VIEN_CTSV']?.some((role: string) => roles?.includes(role));
+	const quanTri = useCheckAccess('ctsv|home');
 
 	return (
 		<>
