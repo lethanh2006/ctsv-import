@@ -14,13 +14,13 @@ const ipCore = ipRoot + 'core';
 const ipTaiChinh = ipRoot + 'tai-chinh';
 const ipSlink = ipRoot + 'slink'; // ip dev
 const ipCCT = ipRoot + 'co-curriculum'; // ip dev
+const ipFile = ipRoot + 'file';
 const ipCsvc = ipRoot + 'csvc';
 const ipKhaoThi = ipRoot + 'khao-thi';
 
 const currentRole = EModuleKey.CTSV;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
-
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
@@ -39,6 +39,7 @@ export {
 	ipCore,
 	ipCsvc,
 	ipDaoTao,
+	ipFile,
 	ipKhaoThi,
 	ipNhanSu,
 	ipNotif,

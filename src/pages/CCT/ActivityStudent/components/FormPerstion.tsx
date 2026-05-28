@@ -12,7 +12,7 @@ import {
 	EScopeAward,
 	mapNameScopeAward,
 } from '@/services/CCT/constant';
-import { buildUpLoadFile, handleSingleFile } from '@/services/uploadFile';
+import { buildUpLoadFile, EFileScope, uploadFileManagerMultipart } from '@/services/uploadFile';
 import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { buildDisabledDateTime, resetFieldsForm } from '@/utils/utils';
@@ -24,8 +24,18 @@ import CardNoteActivity from './CardNote';
 
 const uploadFilesOfCompetency = async (files: any[] = []) => {
 	if (!files.length) return [];
-	const urls = await Promise.all(files?.map((f) => handleSingleFile(f, undefined, undefined, ipCCT).catch(() => null)));
-	return urls.filter(Boolean) as string[];
+	const fileIds = await Promise.all(
+		files?.map(async (f) => {
+			if (!f?.originFileObj) return f?.url || null;
+			const response = await uploadFileManagerMultipart({
+				file: f.originFileObj,
+				scope: EFileScope.PRIVATE,
+				module: 'co-curriculum',
+			});
+			return response?.data?.data?.file?._id ?? response?.data?.data?._id ?? null;
+		}),
+	);
+	return fileIds.filter(Boolean) as string[];
 };
 
 const FormPerstionActivityOutCome = (props: any) => {
