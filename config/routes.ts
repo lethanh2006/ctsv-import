@@ -178,8 +178,8 @@
 		name: 'SubmisstionRound',
 		icon: 'ScheduleOutlined',
 		path: '/activity-submission',
-		access: 'manyAccessRolesFilter',
-		listChucNang: ['CHUYEN_VIEN_CTSV', 'QUAN_TRI_VIEN'],
+		access: 'accessFilter',
+		maChucNang: 'ctsv|submission-period',
 		routes: [
 			{
 				name: 'Management',
@@ -199,8 +199,8 @@
 		icon: 'AppstoreOutlined',
 		path: '/activity-management',
 		component: 'CCT/Activity',
-		access: 'manyAccessRolesFilter',
-		listChucNang: ['CHUYEN_VIEN_CTSV', 'QUAN_TRI_VIEN', 'CHUYEN_VIEN_CTSV_DON_VI'],
+		access: 'manyAccessFilter',
+		listChucNang: ['ctsv|activity-management', 'ctsv|activity-management|chuyen-vien'],
 	},
 
 	{
@@ -208,8 +208,8 @@
 		icon: 'TrophyOutlined',
 		path: '/activity-results-approval',
 		component: 'CCT/ActivityStudent',
-		access: 'manyAccessRolesFilter',
-		listChucNang: ['CHUYEN_VIEN_CTSV', 'QUAN_TRI_VIEN', 'CHUYEN_VIEN_CTSV_DON_VI', 'CHUYEN_VIEN_CTSV_XET_DUYET'],
+		access: 'accessFilter',
+		maChucNang: 'ctsv|activity-results',
 	},
 
 	// {
@@ -726,8 +726,8 @@
 		name: 'DanhMuc',
 		path: '/danh-muc',
 		icon: 'copy',
-		access: 'manyAccessRolesFilter',
-		listChucNang: ['CHUYEN_VIEN_CTSV', 'QUAN_TRI_VIEN'],
+		access: 'accessFilter',
+		maChucNang: 'ctsv|categories',
 		routes: [
 			// {
 			// 	name: 'KhenThuong',
