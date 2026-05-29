@@ -1,12 +1,69 @@
 import UploadFile from '@/components/Upload/UploadFile';
-import { buildUpLoadFile } from '@/services/uploadFile';
-import { ipCCT } from '@/utils/ip';
+import { EFileScope, uploadFileManagerMultipart } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, InputNumber, Row, Switch } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, message, Row, Switch } from 'antd';
 import { Colorpicker } from 'antd-colorpicker';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+
+const getUploadedFileId = (file: any) => {
+	return file?.response?.file?._id ?? file?.response?._id ?? file?.url ?? null;
+};
+
+const getUploadErrorMessage = (error: any) =>
+	error?.response?.data?.message ??
+	error?.response?.data?.detail?.exception?.message ??
+	error?.message ??
+	'File upload failed. Please try again.';
+
+const uploadActivityFileRequest = async ({ file, onSuccess, onError }: any) => {
+	try {
+		const response = await uploadFileManagerMultipart({
+			file,
+			scope: EFileScope.PRIVATE,
+			module: 'co-curriculum',
+		});
+
+		const fileId = response?.data?.data?.file?._id ?? response?.data?.data?._id;
+
+		if (!fileId) {
+			throw new Error('Missing uploaded file id');
+		}
+
+		onSuccess?.({ ...response?.data?.data, _id: fileId, fileId }, file);
+	} catch (error) {
+		message.error(getUploadErrorMessage(error));
+		onError?.(error);
+	}
+};
+
+const getUploadedSingleFileId = (fileValue: any) => {
+	if (!fileValue) return null;
+
+	if (typeof fileValue === 'string') return fileValue;
+
+	const fileList = fileValue?.fileList ?? [];
+	const file = fileList?.[0];
+
+	if (!file) return null;
+
+	if (file?.status === 'uploading') {
+		throw new Error('File is still uploading. Please wait for the upload to complete.');
+	}
+
+	if (file?.status === 'error') {
+		throw new Error('File upload failed. Please remove the failed file and upload again.');
+	}
+
+	const fileId = getUploadedFileId(file);
+
+	if (!fileId) {
+		throw new Error('File has not been uploaded successfully. Please upload again.');
+	}
+
+	return fileId;
+};
 
 const FormAttributes = (props: any) => {
 	const { getData } = props;
@@ -37,9 +94,15 @@ const FormAttributes = (props: any) => {
 	const onFinish = async (values: AttributesManagement.IRecord) => {
 		try {
 			setFormSubmiting(true);
+			try {
+				values.icon = getUploadedSingleFileId(values.icon);
+			} catch (error: any) {
+				message.error(error?.message);
+				setFormSubmiting(false);
+				return;
+			}
+			setFormSubmiting(false);
 
-			const icon = await buildUpLoadFile(values, 'icon', undefined, undefined, ipCCT);
-			values.icon = icon;
 			values.color = values.color || '#fafafa';
 
 			if (edit) {
@@ -57,7 +120,6 @@ const FormAttributes = (props: any) => {
 		} catch (error) {
 			console.log(error);
 		} finally {
-			setFormSubmiting(false);
 		}
 	};
 
@@ -97,6 +159,9 @@ const FormAttributes = (props: any) => {
 								extra={intl.formatMessage({
 									id: 'attributesmanagement.form.icon.extra',
 								})}
+								otherProps={{
+									customRequest: uploadActivityFileRequest,
+								}}
 							/>
 						</Form.Item>
 					</Col>

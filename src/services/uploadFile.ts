@@ -34,6 +34,11 @@ const getFileExtension = (filename: string): string => {
 	return ext && ext !== filename ? ext : '';
 };
 
+const getFileRouteBase = (ip?: string) => {
+	const base = ip ?? ip3;
+	return base === ipFile ? base : `${base}/file`;
+};
+
 const uploadMultipartParts = async (file: Blob, initData: TMultipartInitData): Promise<TMultipartCompletePart[]> => {
 	const partSize = initData.multipartPartSize;
 	const parts = await Promise.all(
@@ -70,7 +75,8 @@ export async function uploadFileManagerMultipart(
 ) {
 	const file = payload.file;
 	const filename = getFilename(file);
-	const initResponse = await axios.post(`${ip}/file/multipart/init`, {
+	const fileRouteBase = getFileRouteBase(ip);
+	const initResponse = await axios.post(`${fileRouteBase}/multipart/init`, {
 		filename,
 		size: file.size,
 		mimetype: file.type || 'application/octet-stream',
@@ -81,7 +87,7 @@ export async function uploadFileManagerMultipart(
 	const initData: TMultipartInitData = initResponse?.data?.data;
 	const parts = await uploadMultipartParts(file, initData);
 
-	const completeResponse = await axios.post(`${ip}/file/multipart/complete`, {
+	const completeResponse = await axios.post(`${fileRouteBase}/multipart/complete`, {
 		fileId: initData.fileId,
 		parts,
 	});
@@ -119,7 +125,7 @@ export async function uploadFile(payload: { file: string | Blob; scope: EFileSco
 	const form = new FormData();
 	form.append('file', payload?.file);
 	form.append('scope', payload?.scope);
-	return axios.post(`${ip ?? ip3}/file`, form);
+	return axios.post(ip ? `${ip}/file` : `${ipFile}/file`, form);
 }
 
 /**
@@ -169,11 +175,11 @@ export const buildUpLoadMultiFile = async (
 };
 
 export const getFileInfo = (id: string, ip?: string) => {
-	return axios.get(`${ip ?? ip3}/file/${id}/info`, { data: { silent: true } });
+	return axios.get(`${getFileRouteBase(ip)}/${id}/info`, { data: { silent: true } });
 };
 
 export const getFileUrl = (id: string, ip?: string) => {
-	return axios.get(`${ip ?? ip3}/file/${id}/url`, { data: { silent: true } });
+	return axios.get(`${getFileRouteBase(ip)}/${id}/url`, { data: { silent: true } });
 };
 
 export const getFileContent = (url: string) => {

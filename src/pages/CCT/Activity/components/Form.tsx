@@ -12,9 +12,8 @@ import SelectKhoaSinhVien from '@/pages/DaoTaoV2/SinhVien/KhoaSinhVien/SelectKho
 import SelectDonVi from '@/pages/ToChucNhanSu/DonVi/Select';
 import { Activity } from '@/services/CCT/Activity/typing';
 import { EparticipantRole, EParticipantScope, mapNameParticipantScope } from '@/services/CCT/constant';
-import { buildUpLoadFile } from '@/services/uploadFile';
+import { EFileScope, uploadFileManagerMultipart } from '@/services/uploadFile';
 import dayjs from '@/utils/dayjs';
-import { ipCCT } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { buildDisabledDateTime, resetFieldsForm } from '@/utils/utils';
 import { Button, Checkbox, Col, Divider, Form, Input, InputNumber, message, Radio, Row, Select } from 'antd';
@@ -47,6 +46,64 @@ const normalizeEquivalencyData = (data: any[]) => {
 	});
 
 	return Object.values(map);
+};
+
+const getUploadedFileId = (file: any) => {
+	return file?.response?.file?._id ?? file?.response?._id ?? file?.url ?? null;
+};
+
+const getUploadErrorMessage = (error: any) =>
+	error?.response?.data?.message ??
+	error?.response?.data?.detail?.exception?.message ??
+	error?.message ??
+	'File upload failed. Please try again.';
+
+const uploadActivityFileRequest = async ({ file, onSuccess, onError }: any) => {
+	try {
+		const response = await uploadFileManagerMultipart({
+			file,
+			scope: EFileScope.PRIVATE,
+			module: 'co-curriculum',
+		});
+
+		const fileId = response?.data?.data?.file?._id ?? response?.data?.data?._id;
+
+		if (!fileId) {
+			throw new Error('Missing uploaded file id');
+		}
+
+		onSuccess?.({ ...response?.data?.data, _id: fileId, fileId }, file);
+	} catch (error) {
+		message.error(getUploadErrorMessage(error));
+		onError?.(error);
+	}
+};
+
+const getUploadedSingleFileId = (fileValue: any) => {
+	if (!fileValue) return null;
+
+	if (typeof fileValue === 'string') return fileValue;
+
+	const fileList = fileValue?.fileList ?? [];
+	const file = fileList?.[0];
+
+	if (!file) return null;
+
+	if (file?.status === 'uploading') {
+		throw new Error('File is still uploading. Please wait for the upload to complete.');
+	}
+
+	if (file?.status === 'error') {
+		throw new Error('File upload failed. Please remove the failed file and upload again.');
+	}
+
+	const fileId = getUploadedFileId(file);
+
+	if (!fileId) {
+		throw new Error('File has not been uploaded successfully. Please upload again.');
+	}
+
+	return fileId;
 };
 
 const FormActivity = (props: { getData?: () => void }) => {
@@ -123,10 +180,13 @@ const FormActivity = (props: { getData?: () => void }) => {
 
 	const onFinish = async (values: Activity.IRecord) => {
 		setFormSubmiting(true);
-		const banner = await buildUpLoadFile(values, 'banner', undefined, undefined, ipCCT);
-		const backgroundImage = await buildUpLoadFile(values, 'backgroundImage', undefined, undefined, ipCCT);
-		values.banner = banner;
-		values.backgroundImage = backgroundImage;
+		try {
+			values.banner = getUploadedSingleFileId(values.banner);
+		} catch (error: any) {
+			message.error(error?.message);
+			setFormSubmiting(false);
+			return;
+		}
 		setFormSubmiting(false);
 
 		values.codeOrganizer = recNhanSu?.donViChinh?.maDonVi;
@@ -241,6 +301,9 @@ const FormActivity = (props: { getData?: () => void }) => {
 									accept='.png,.jpg,.jpeg'
 									buttonDescription={intl.formatMessage({ id: 'activity.info.form.banner.place' })}
 									extra={intl.formatMessage({ id: 'activity.info.form.banner.extra' })}
+									otherProps={{
+										customRequest: uploadActivityFileRequest,
+									}}
 								/>
 							</Form.Item>
 						</Col>
