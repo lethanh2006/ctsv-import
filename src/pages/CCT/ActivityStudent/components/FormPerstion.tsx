@@ -96,7 +96,7 @@ const FormPerstionActivityOutCome = (props: any) => {
 
 	const onFinish = async (values: ActivityOutCome.IRecord, submitted: boolean) => {
 		setFormSubmiting(true);
-		let banner = await buildUpLoadFile(values, 'banner', undefined, undefined, ipCCT);
+		let banner = await buildUpLoadFile(values, 'banner');
 		if (!banner || !banner.includes('http')) {
 			banner = null;
 		}
