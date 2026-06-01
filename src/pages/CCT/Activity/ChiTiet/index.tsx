@@ -13,13 +13,7 @@ import FormRoleEvidence from '../../ActivityStudent/components/FormRoleEvidence'
 import CardSuKienCCT from './CardSuKien';
 import './style.less';
 
-const isFileUrl = (value: string) => /^https?:\/\//.test(value) || value?.startsWith('/');
 
-const getPreviewUrl = async (value: string) => {
-	if (isFileUrl(value)) return value;
-	const result = await getFileUrl(value, ipFile);
-	return result?.data?.data?.url ?? value;
-};
 
 const CardChiTietSuKien = (props: {
 	record: Activity.IRecord;

@@ -11,13 +11,7 @@ import { useState } from 'react';
 import { useIntl } from 'umi';
 import CardSuKienCCT from '../../Activity/ChiTiet/CardSuKien';
 
-const isFileUrl = (value: string) => /^https?:\/\//.test(value) || value?.startsWith('/');
 
-const getPreviewUrl = async (value: string) => {
-	if (isFileUrl(value)) return value;
-	const result = await getFileUrl(value, ipFile);
-	return result?.data?.data?.url ?? value;
-};
 
 const ChiTietActivityOutCome = (props: { recOutcome: ActivityOutCome.IRecord }) => {
 	const { recOutcome } = props;
