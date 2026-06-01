@@ -3,9 +3,13 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
 import { EApprovalStatus } from '@/services/CCT/constant';
+<<<<<<< HEAD
 import { getFileUrl } from '@/services/uploadFile';
 import { ipFile } from '@/utils/ip';
 import { getNameFile } from '@/utils/utils';
+=======
+import { getNameFile, getPreviewUrl, isFileUrl } from '@/utils/utils';
+>>>>>>> 836687e8a85a756d49cd601a53aa548dab6bfd88
 import { FileOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Divider, Empty, Input, List, Row, Typography } from 'antd';
 import dayjs from 'dayjs';

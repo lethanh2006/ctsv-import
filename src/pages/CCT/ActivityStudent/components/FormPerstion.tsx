@@ -24,6 +24,7 @@ import CardNoteActivity from './CardNote';
 
 const uploadFilesOfCompetency = async (files: any[] = []) => {
 	if (!files.length) return [];
+<<<<<<< HEAD
 	const fileIds = await Promise.all(
 		files?.map(async (f) => {
 			if (!f?.originFileObj) return f?.url || null;
@@ -36,6 +37,10 @@ const uploadFilesOfCompetency = async (files: any[] = []) => {
 		}),
 	);
 	return fileIds.filter(Boolean) as string[];
+=======
+	const urls = await Promise.all(files?.map((f) => handleSingleFile(f).catch(() => null)));
+	return urls.filter(Boolean) as string[];
+>>>>>>> 836687e8a85a756d49cd601a53aa548dab6bfd88
 };
 
 const FormPerstionActivityOutCome = (props: any) => {
