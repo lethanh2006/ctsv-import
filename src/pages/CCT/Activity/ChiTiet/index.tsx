@@ -3,9 +3,7 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import { Activity } from '@/services/CCT/Activity/typing';
 import { EApprovalStatus } from '@/services/CCT/constant';
-import { getFileUrl } from '@/services/uploadFile';
-import { ipFile } from '@/utils/ip';
-import { getNameFile } from '@/utils/utils';
+import { getNameFile, getPreviewUrl, isFileUrl } from '@/utils/utils';
 import { FileOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Divider, Empty, Input, List, Row, Typography } from 'antd';
 import dayjs from 'dayjs';
@@ -15,13 +13,7 @@ import FormRoleEvidence from '../../ActivityStudent/components/FormRoleEvidence'
 import CardSuKienCCT from './CardSuKien';
 import './style.less';
 
-const isFileUrl = (value: string) => /^https?:\/\//.test(value) || value?.startsWith('/');
 
-const getPreviewUrl = async (value: string) => {
-	if (isFileUrl(value)) return value;
-	const result = await getFileUrl(value, ipFile);
-	return result?.data?.data?.url ?? value;
-};
 
 const CardChiTietSuKien = (props: {
 	record: Activity.IRecord;
