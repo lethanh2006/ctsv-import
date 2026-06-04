@@ -36,7 +36,7 @@ const getFileExtension = (filename: string): string => {
 
 const getFileRouteBase = (ip?: string) => {
 	const base = ip ?? ip3;
-	return base === ipFile ? base : `${base}/file`;
+	return base === ipFile || base.endsWith('/file') ? base : `${base}/file`;
 };
 
 const uploadMultipartParts = async (file: Blob, initData: TMultipartInitData): Promise<TMultipartCompletePart[]> => {

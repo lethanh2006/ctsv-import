@@ -137,7 +137,7 @@ const UploadFile: React.FC<TUploadProps> = ({
 	/** Xem trước file */
 	const handlePreviewFile = async (file: TFileProps) => {
 		if (file.url) {
-			setPreviewImage(await getPreviewUrl(file.url ?? ''));
+			setPreviewImage(file.url);
 			setPreviewOpen(true);
 		}
 	};

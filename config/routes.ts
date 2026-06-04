@@ -727,7 +727,7 @@
 		path: '/danh-muc',
 		icon: 'copy',
 		access: 'accessFilter',
-		maChucNang: 'ctsv|categories',
+		maChucNang: 'ctsv|danh-muc-chung',
 		routes: [
 			// {
 			// 	name: 'KhenThuong',

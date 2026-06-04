@@ -1,11 +1,11 @@
 import { EDinhDangFile } from '@/services/base/constant';
 import type { IFileInfo } from '@/services/base/typing';
-import { getFileContent, getFileInfo } from '@/services/uploadFile';
+import { getFileContent, getFileInfo, getFileUrl } from '@/services/uploadFile';
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/ip';
-import { getFileType, getNameFile } from '@/utils/utils';
+import { ip3, ipFile } from '@/utils/ip';
+import { getFileIdFromValue, getFileType, getNameFile } from '@/utils/utils';
 import { DownloadOutlined, FileSearchOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Empty, message, Spin } from 'antd';
+import { Button, Empty, Spin } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -85,7 +85,8 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 	};
 
 	const getFileDataFromUrl = async (srcUrl: string) => {
-		const idFile = isFileId ? srcUrl : undefined; // srcUrl.split('/').at(-2);
+		const idFile = isFileId ? srcUrl : getFileIdFromValue(srcUrl);
+		const fileServiceIp = srcUrl.includes('/file/') ? `${srcUrl.split('/file/')[0]}/file` : ip;
 		const frame: TFrameProps = {
 			url: srcUrl,
 			type: EDinhDangFile.UNKNOWN,
@@ -95,9 +96,20 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 			// Nếu có thông tin id file thì get thông tin chi tiết
 			if (idFile) {
 				setLoading(true);
-				const result = await getFileInfo(idFile, ip);
-				const fileInfo: IFileInfo = result?.data?.data;
-				frame.url = fileInfo?.url ?? (!isFileId ? srcUrl : `${ip}/file/${idFile}/${fileInfo?.name}`);
+				const [fileInfoResult, fileUrlResult] = await Promise.all([
+					getFileInfo(idFile, fileServiceIp),
+					getFileUrl(idFile, fileServiceIp).catch((error) => {
+						console.error(error);
+						return undefined;
+					}),
+				]);
+				const fileInfo: IFileInfo = fileInfoResult?.data?.data;
+				const fileBaseUrl =
+					fileServiceIp === ipFile || fileServiceIp.endsWith('/file') ? fileServiceIp : `${fileServiceIp}/file`;
+				frame.url =
+					fileUrlResult?.data?.data?.url ??
+					fileInfo?.url ??
+					`${fileBaseUrl}/${idFile}/${encodeURIComponent(fileInfo?.name ?? 'file')}`;
 				frame.name = fileInfo?.name;
 
 				// Mapping { mimetype : "application/vnd.openxmlformats-officedocument.wordprocessingml.document"} sang EDinhDangFile
@@ -135,15 +147,6 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 		fetchFileType();
 	}, [fileList, currentFileIndex]);
 
-	const isDownloadableUrl = (url: string): boolean => {
-		const blockedSources = ['view.officeapps.live.com', 'docs.google.com/document'];
-		if (blockedSources.some((domain) => url.includes(domain))) return false;
-
-		const downloadableExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip'];
-		const ext = url.split('.').pop()?.split('?')[0]?.toLowerCase() ?? '';
-		return downloadableExtensions.includes(ext);
-	};
-
 	const handleDownloadOrView = async () => {
 		if (!frameData?.url) return;
 
@@ -162,19 +165,6 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 		// } else {
 		// 	window.open(frameData.url, '_blank');
 		// }
-	};
-
-	const handleCopy = () => {
-		if (frameData?.url) {
-			navigator.clipboard
-				.writeText(frameData?.url)
-				.then(() => {
-					message.success(intl.formatMessage({ id: 'global.previewfile.message.saochep' }));
-				})
-				.catch((error) => {
-					console.error(error);
-				});
-		}
 	};
 
 	const handlePrev = () => {

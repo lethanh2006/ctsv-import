@@ -1,5 +1,5 @@
 import { EDinhDangFile } from '@/services/base/constant';
-import { EFileScope, getFileInfo, uploadFile } from '@/services/uploadFile';
+import { EFileScope, getFileInfo, getFileUrl, uploadFile } from '@/services/uploadFile';
 import { ip3, ipFile } from '@/utils/ip';
 import { message, type FormInstance } from 'antd';
 import { type AxiosResponse } from 'axios';
@@ -782,9 +782,19 @@ export const getFileIdFromValue = (value: string) => {
 	try {
 		const url = new URL(value);
 		const parts = url.pathname.split('/').filter(Boolean);
-		if (parts.includes('file')) return undefined;
+		const fileIndex = parts.indexOf('file');
+		if (fileIndex >= 0) {
+			const id = parts[fileIndex + 1];
+			return /^[0-9a-f]{24}$/i.test(id) ? id : undefined;
+		}
 		return parts.length === 1 && /^[0-9a-f]{24}$/i.test(parts[0]) ? parts[0] : undefined;
 	} catch {
+		const parts = cleanPath.split('/').filter(Boolean);
+		const fileIndex = parts.indexOf('file');
+		if (fileIndex >= 0) {
+			const id = parts[fileIndex + 1];
+			return /^[0-9a-f]{24}$/i.test(id) ? id : undefined;
+		}
 		return undefined;
 	}
 };
@@ -795,6 +805,12 @@ export const getPreviewUrl = async (value: string) => {
 	const fileId = getFileIdFromValue(value);
 	if (!fileId && isFileUrl(value)) return value;
 	const id = fileId ?? value;
+	try {
+		const result = await getFileUrl(id, ipFile);
+		if (result?.data?.data?.url) return result.data.data.url;
+	} catch (error) {
+		console.error(error);
+	}
 	const result = await getFileInfo(id, ipFile);
 	const fileInfo = result?.data?.data;
 	return `${ipFile}/file/${id}/${encodeURIComponent(fileInfo?.name ?? 'file')}`;

@@ -3,7 +3,8 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import { Activity } from '@/services/CCT/Activity/typing';
 import { EApprovalStatus } from '@/services/CCT/constant';
-import { getNameFile, getPreviewUrl, isFileUrl } from '@/utils/utils';
+import { ipFile } from '@/utils/ip';
+import { getNameFile, isFileUrl } from '@/utils/utils';
 import { FileOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Divider, Empty, Input, List, Row, Typography } from 'antd';
 import dayjs from 'dayjs';
@@ -12,8 +13,6 @@ import { useIntl } from 'umi';
 import FormRoleEvidence from '../../ActivityStudent/components/FormRoleEvidence';
 import CardSuKienCCT from './CardSuKien';
 import './style.less';
-
-
 
 const CardChiTietSuKien = (props: {
 	record: Activity.IRecord;
@@ -256,8 +255,8 @@ const CardChiTietSuKien = (props: {
 																<Typography.Link
 																	key={index}
 																	style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-																	onClick={async () => {
-																		setPreviewImage(await getPreviewUrl(url));
+																	onClick={() => {
+																		setPreviewImage(url);
 																		setPreviewOpen(true);
 																	}}
 																>
@@ -330,7 +329,7 @@ const CardChiTietSuKien = (props: {
 				footer={null}
 				onCancel={() => setPreviewOpen(false)}
 			>
-				<PreviewFile file={previewImage} isPrivate />
+				<PreviewFile file={previewImage} ip={ipFile} isPrivate />
 
 				<div className='form-footer'>
 					<Button onClick={() => setPreviewOpen(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>

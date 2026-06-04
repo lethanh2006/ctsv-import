@@ -3,15 +3,14 @@ import PreviewFile from '@/components/PreviewFile';
 import ModalExpandable from '@/components/Table/ModalExpandable';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
 import { EApprovalStatus } from '@/services/CCT/constant';
-import { getNameFile, getPreviewUrl, isFileUrl } from '@/utils/utils';
+import { ipFile } from '@/utils/ip';
+import { getNameFile, isFileUrl } from '@/utils/utils';
 import { FileOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Divider, Empty, Input, List, Row, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useIntl } from 'umi';
 import CardSuKienCCT from '../../Activity/ChiTiet/CardSuKien';
-
-
 
 const ChiTietActivityOutCome = (props: { recOutcome: ActivityOutCome.IRecord }) => {
 	const { recOutcome } = props;
@@ -175,8 +174,8 @@ const ChiTietActivityOutCome = (props: { recOutcome: ActivityOutCome.IRecord }) 
 															<Typography.Link
 																key={index}
 																style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-																onClick={async () => {
-																	setPreviewImage(await getPreviewUrl(url));
+																onClick={() => {
+																	setPreviewImage(url);
 																	setPreviewOpen(true);
 																}}
 															>
@@ -228,7 +227,7 @@ const ChiTietActivityOutCome = (props: { recOutcome: ActivityOutCome.IRecord }) 
 				footer={null}
 				onCancel={() => setPreviewOpen(false)}
 			>
-				<PreviewFile file={previewImage} isPrivate />
+				<PreviewFile file={previewImage} ip={ipFile} isPrivate />
 
 				<div className='form-footer'>
 					<Button onClick={() => setPreviewOpen(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
