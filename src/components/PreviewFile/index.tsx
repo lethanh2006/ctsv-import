@@ -7,7 +7,7 @@ import { getFileIdFromValue, getFileType, getNameFile } from '@/utils/utils';
 import { DownloadOutlined, FileSearchOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Empty, Spin } from 'antd';
 import fileDownload from 'js-file-download';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'umi';
 import AuthImage from '../Image/AuthImage';
 import PDFViewerV2 from '../PDFViewerV2';
@@ -47,6 +47,16 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 	const [currentFileIndex, setCurrentFileIndex] = useState(0);
 	const [fileList, setFileList] = useState<string[]>([]);
 	const [fileNameList, setFileNameList] = useState<string[]>([]);
+	const imageObjectUrl = useMemo(() => {
+		if (frameData?.type !== EDinhDangFile.IMAGE || !frameData.data) return undefined;
+		return URL.createObjectURL(new Blob([frameData.data]));
+	}, [frameData?.data, frameData?.type]);
+
+	useEffect(() => {
+		return () => {
+			if (imageObjectUrl) URL.revokeObjectURL(imageObjectUrl);
+		};
+	}, [imageObjectUrl]);
 
 	useEffect(() => {
 		if (Array.isArray(file)) {
@@ -295,7 +305,7 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 				) : frameData?.type === EDinhDangFile.IMAGE && !!frameData?.src ? (
 					<div className='preview-image-container'>
 						<AuthImage
-							src={frameData.src}
+							src={imageObjectUrl || frameData.src}
 							alt={frameData.name}
 							style={{
 								maxWidth: '100%',

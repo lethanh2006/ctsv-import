@@ -24,7 +24,8 @@ const AuthImage: React.FC<AuthImageProps> = ({ src, fallback = '', alt = '', cla
 			return;
 		}
 
-		const shouldResolveFileUrl = !!getFileIdFromValue(src) || src.includes('/file/');
+		const isProxyFileUrl = src.includes('/file/') && /[?&]proxy=1(?:&|$)/.test(src);
+		const shouldResolveFileUrl = !isProxyFileUrl && (!!getFileIdFromValue(src) || src.includes('/file/'));
 
 		if (!shouldResolveFileUrl && (/^(data|blob):/.test(src) || !/^https?:\/\//.test(src))) {
 			setImgSrc(src);
