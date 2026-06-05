@@ -179,6 +179,8 @@ export function renderFileListUrl(url: string) {
  */
 export function getFileType(mimeType: string) {
 	if (!mimeType) return EDinhDangFile.UNKNOWN;
+	const normalized = mimeType.toLowerCase().split(';')[0].split('?')[0].split('#')[0].trim();
+	const extension = normalized.includes('/') ? normalized.split('/').at(-1) : normalized.split('.').at(-1);
 
 	const mimeGroups: Record<string, string[]> = {
 		[EDinhDangFile.WORD]: [
@@ -224,16 +226,31 @@ export function getFileType(mimeType: string) {
 			'ppt',
 			'pptx',
 		],
-		[EDinhDangFile.PDF]: ['application/pdf'],
-		[EDinhDangFile.IMAGE]: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
-		[EDinhDangFile.VIDEO]: ['video/mp4', 'video/avi', 'video/mpeg'],
-		[EDinhDangFile.AUDIO]: ['audio/mpeg', 'audio/wav', 'audio/ogg'],
-		[EDinhDangFile.TEXT]: ['text/plain', 'text/csv', 'text/html'],
+		[EDinhDangFile.PDF]: ['application/pdf', 'pdf'],
+		[EDinhDangFile.IMAGE]: [
+			'image/png',
+			'image/jpeg',
+			'image/jpg',
+			'image/gif',
+			'image/webp',
+			'image/bmp',
+			'image/svg+xml',
+			'png',
+			'jpeg',
+			'jpg',
+			'gif',
+			'webp',
+			'bmp',
+			'svg',
+		],
+		[EDinhDangFile.VIDEO]: ['video/mp4', 'video/avi', 'video/mpeg', 'mp4', 'avi', 'mpeg', 'mpg'],
+		[EDinhDangFile.AUDIO]: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'mp3', 'wav', 'ogg'],
+		[EDinhDangFile.TEXT]: ['text/plain', 'text/csv', 'text/html', 'txt', 'csv', 'html'],
 	};
 
 	let result: EDinhDangFile = EDinhDangFile.UNKNOWN;
 	for (const [fileType, mimeList] of Object.entries(mimeGroups)) {
-		if (mimeList.some((mime) => mime.includes(mimeType))) {
+		if (mimeList.some((mime) => mime === normalized || mime === extension)) {
 			result = fileType as EDinhDangFile;
 			break;
 		}

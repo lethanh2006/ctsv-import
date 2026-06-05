@@ -80,6 +80,14 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 		!!frame.data &&
 		(frame.name?.toLowerCase().endsWith('.docx') || getFileExtension(frame.url) === 'docx');
 
+	const resolveFileType = (...values: Array<string | undefined>) => {
+		for (const value of values) {
+			const type = getFileType(value || '');
+			if (type !== EDinhDangFile.UNKNOWN) return type;
+		}
+		return EDinhDangFile.UNKNOWN;
+	};
+
 	const getIframeSrc = (type: EDinhDangFile, fileUrl?: string) => {
 		if (!fileUrl) return '';
 		const officeFileType = [EDinhDangFile.WORD, EDinhDangFile.EXCEL, EDinhDangFile.POWERPOINT];
@@ -120,12 +128,16 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 						`${fileBaseUrl}/${idFile}/${encodeURIComponent(fileInfo?.name ?? 'file')}`);
 				frame.name = fileInfo?.name;
 
-				// Mapping { mimetype : "application/vnd.openxmlformats-officedocument.wordprocessingml.document"} sang EDinhDangFile
-				frame.type =
-					getFileType(fileInfo?.mimetype ? fileInfo.mimetype : (getFileExtension(frame.url) ?? '')) ||
-					EDinhDangFile.UNKNOWN;
+				// Mapping mimetype/name/url sang EDinhDangFile. Some records miss mimetype, so keep fallbacks.
+				frame.type = resolveFileType(
+					fileInfo?.mimetype,
+					fileInfo?.name,
+					getFileExtension(fileInfo?.name || ''),
+					getFileExtension(frame.url),
+					srcUrl,
+				);
 			} else {
-				frame.type = getFileType(getFileExtension(srcUrl) ?? '') || EDinhDangFile.UNKNOWN;
+				frame.type = resolveFileType(srcUrl, getFileExtension(srcUrl));
 			}
 
 			if (isPrivate) {
