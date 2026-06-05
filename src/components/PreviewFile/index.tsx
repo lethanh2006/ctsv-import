@@ -106,10 +106,12 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 				const fileInfo: IFileInfo = fileInfoResult?.data?.data;
 				const fileBaseUrl =
 					fileServiceIp === ipFile || fileServiceIp.endsWith('/file') ? fileServiceIp : `${fileServiceIp}/file`;
-				frame.url =
-					fileUrlResult?.data?.data?.url ??
-					fileInfo?.url ??
-					`${fileBaseUrl}/${idFile}/${encodeURIComponent(fileInfo?.name ?? 'file')}`;
+				const proxiedFileUrl = `${fileBaseUrl}/${idFile}/${encodeURIComponent(fileInfo?.name ?? 'file')}?proxy=1`;
+				frame.url = isPrivate
+					? proxiedFileUrl
+					: (fileUrlResult?.data?.data?.url ??
+						fileInfo?.url ??
+						`${fileBaseUrl}/${idFile}/${encodeURIComponent(fileInfo?.name ?? 'file')}`);
 				frame.name = fileInfo?.name;
 
 				// Mapping { mimetype : "application/vnd.openxmlformats-officedocument.wordprocessingml.document"} sang EDinhDangFile
