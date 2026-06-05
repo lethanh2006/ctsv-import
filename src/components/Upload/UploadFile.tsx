@@ -1,6 +1,7 @@
-import { blobToBase64, getNameFile, getPreviewUrl } from '@/utils/utils';
-import { DeleteOutlined, EyeOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Image, Upload, message } from 'antd';
+import { blobToBase64, getFileIdFromValue, getNameFile, getPreviewUrl } from '@/utils/utils';
+import { ipFile } from '@/utils/ip';
+import { DeleteOutlined, EyeOutlined, FileOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Image, Typography, Upload, message } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import { useEffect, useState } from 'react';
 import Resizer from 'react-image-file-resizer';
@@ -40,12 +41,14 @@ const UploadFile: React.FC<TUploadProps> = ({
 	const [previewImage, setPreviewImage] = useState('');
 	const resizeProps: TResizeProps | undefined = typeof resize === 'boolean' ? {} : resize;
 	const showImage = isAvatar || isAvatarSmall || isLandscapeAvatar || isWidescreen;
+	const getDisplayFileName = (url: string, index?: number) =>
+		getFileIdFromValue(url) ? `Tập tin${typeof index === 'number' ? ` ${index + 1}` : ''}` : getNameFile(url);
 
 	useEffect(() => {
 		let files: any[] = [];
 		// Single URL
 		if (typeof value === 'string') {
-			files = [{ url: value, remote: true, name: props.previewFileProps?.isFileId ? 'Tập tin' : getNameFile(value) }];
+			files = [{ url: value, remote: true, name: props.previewFileProps?.isFileId ? 'Tập tin' : getDisplayFileName(value) }];
 			setFileList(files);
 			// Callback về Form để Form Item có fileList => Phục vụ check rules fileRequired
 			if (onChange) onChange({ fileList: files });
@@ -55,7 +58,7 @@ const UploadFile: React.FC<TUploadProps> = ({
 			files = value.map((url, ind) => ({
 				url,
 				remote: true,
-				name: props.previewFileProps?.isFileId ? `Tập tin ${ind + 1}` : getNameFile(url),
+				name: props.previewFileProps?.isFileId ? `Tập tin ${ind + 1}` : getDisplayFileName(url, ind),
 			}));
 			setFileList(files);
 			// Callback về Form để Form Item có fileList => Phục vụ check rules fileRequired
@@ -290,6 +293,27 @@ const UploadFile: React.FC<TUploadProps> = ({
 				multiple={maxCount > 1}
 				accept={accept}
 				onPreview={hasPreviewFile ? handlePreviewFile : undefined}
+				itemRender={
+					hasPreviewFile
+						? (originNode, file, _currFileList, actions) => {
+								const fileUrl = String(file.url || '');
+								if (!getFileIdFromValue(fileUrl)) return originNode;
+
+								return (
+									<div style={{ display: 'flex', alignItems: 'center', gap: 8, lineHeight: '22px' }}>
+										<FileOutlined />
+										<Typography.Link onClick={() => handlePreviewFile(file)}>{file.name}</Typography.Link>
+										{!isDisabled && (
+											<DeleteOutlined
+												style={{ color: '#ff4d4f', cursor: 'pointer' }}
+												onClick={() => actions.remove()}
+											/>
+										)}
+									</div>
+								);
+							}
+						: undefined
+				}
 				{...otherProps}
 			>
 				{!isDisabled ? (
@@ -308,7 +332,7 @@ const UploadFile: React.FC<TUploadProps> = ({
 					footer={null}
 					onCancel={() => setPreviewOpen(false)}
 				>
-					<PreviewFile file={previewImage} {...props.previewFileProps} isPrivate={isPrivate} />
+					<PreviewFile file={previewImage} ip={ipFile} {...props.previewFileProps} isPrivate={isPrivate} />
 
 					<div className='form-footer'>
 						<Button onClick={() => setPreviewOpen(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>

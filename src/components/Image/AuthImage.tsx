@@ -1,4 +1,5 @@
 import axios from '@/utils/axios';
+import { getFileIdFromValue, getPreviewUrl } from '@/utils/utils';
 import { Image } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -23,8 +24,10 @@ const AuthImage: React.FC<AuthImageProps> = ({ src, fallback = '', alt = '', cla
 			return;
 		}
 
-		if (cache.has(src)) {
-			setImgSrc(cache.get(src)!);
+		const shouldResolveFileUrl = !!getFileIdFromValue(src) || src.includes('/file/');
+
+		if (!shouldResolveFileUrl && (/^(data|blob):/.test(src) || !/^https?:\/\//.test(src))) {
+			setImgSrc(src);
 			return;
 		}
 
@@ -33,13 +36,20 @@ const AuthImage: React.FC<AuthImageProps> = ({ src, fallback = '', alt = '', cla
 
 		const fetchImage = async () => {
 			try {
-				const res = await axios.get(src, {
+				const resolvedSrc = shouldResolveFileUrl ? await getPreviewUrl(src) : src;
+
+				if (cache.has(resolvedSrc)) {
+					if (isMounted) setImgSrc(cache.get(resolvedSrc)!);
+					return;
+				}
+
+				const res = await axios.get(resolvedSrc, {
 					responseType: 'blob',
 					data: { silent: true },
 				});
 
 				objectUrl = URL.createObjectURL(res.data);
-				cache.set(src, objectUrl);
+				cache.set(resolvedSrc, objectUrl);
 
 				if (isMounted) setImgSrc(objectUrl);
 			} catch {
