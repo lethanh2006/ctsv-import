@@ -29,7 +29,7 @@ const uploadFilesOfCompetency = async (files: any[] = []) => {
 			if (!f?.originFileObj) return f?.url || null;
 			const response = await uploadFileManagerMultipart({
 				file: f.originFileObj,
-				scope: EFileScope.PRIVATE,
+				scope: EFileScope.INTERNAL,
 				module: 'co-curriculum',
 			});
 			return response?.data?.data?.file?._id ?? response?.data?.data?._id ?? null;
