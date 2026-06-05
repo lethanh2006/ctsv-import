@@ -1,5 +1,5 @@
-import { blobToBase64, getFileIdFromValue, getNameFile, getPreviewUrl } from '@/utils/utils';
 import { ipFile } from '@/utils/ip';
+import { blobToBase64, getFileIdFromValue, getNameFile, getPreviewUrl } from '@/utils/utils';
 import { DeleteOutlined, EyeOutlined, FileOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Image, Typography, Upload, message } from 'antd';
 import type { RcFile } from 'antd/es/upload';
@@ -48,7 +48,9 @@ const UploadFile: React.FC<TUploadProps> = ({
 		let files: any[] = [];
 		// Single URL
 		if (typeof value === 'string') {
-			files = [{ url: value, remote: true, name: props.previewFileProps?.isFileId ? 'Tập tin' : getDisplayFileName(value) }];
+			files = [
+				{ url: value, remote: true, name: props.previewFileProps?.isFileId ? 'Tập tin' : getDisplayFileName(value) },
+			];
 			setFileList(files);
 			// Callback về Form để Form Item có fileList => Phục vụ check rules fileRequired
 			if (onChange) onChange({ fileList: files });

@@ -152,7 +152,8 @@ export function chuanHoaTen(ten: any) {
  */
 export function getNameFile(url: string): string {
 	if (typeof url !== 'string') return 'Đường dẫn không đúng';
-	return decodeURI(url.split('/')?.at(-1) ?? '');
+	const filename = url.split('?')[0].split('#')[0].split('/')?.at(-1) ?? '';
+	return decodeURIComponent(filename);
 }
 
 export function renderFileListUrl(url: string) {

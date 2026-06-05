@@ -13,6 +13,7 @@ import AuthImage from '../Image/AuthImage';
 import PDFViewerV2 from '../PDFViewerV2';
 import type { TPreviewFileProps } from '../PreviewFile/typing';
 import ButtonExtend from '../Table/ButtonExtend';
+import DocxViewer from './DocxViewer';
 import './style.less';
 
 type TFrameProps = {
@@ -70,9 +71,14 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 	}, [file, tenFile]);
 
 	const getFileExtension = (url: string) => {
-		const arr = url.split('.');
+		const arr = url.split('?')[0].split('#')[0].split('.');
 		return arr.length > 1 ? arr.at(-1)!.toLowerCase() : '';
 	};
+
+	const canPreviewDocx = (frame?: TFrameProps) =>
+		frame?.type === EDinhDangFile.WORD &&
+		!!frame.data &&
+		(frame.name?.toLowerCase().endsWith('.docx') || getFileExtension(frame.url) === 'docx');
 
 	const getIframeSrc = (type: EDinhDangFile, fileUrl?: string) => {
 		if (!fileUrl) return '';
@@ -159,7 +165,7 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 			});
 
 			const blob = response.data;
-			fileDownload(blob, getNameFile(frameData.url));
+			fileDownload(blob, frameData.name || getNameFile(frameData.url));
 		} catch (error) {
 			console.error('Error downloading file:', error);
 			window.open(frameData.url, '_blank');
@@ -264,7 +270,9 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 			</div>
 
 			<div className='preview-content'>
-				{frameData?.type === EDinhDangFile.PDF && frameData?.src ? (
+				{canPreviewDocx(frameData) ? (
+					<DocxViewer data={frameData.data} />
+				) : frameData?.type === EDinhDangFile.PDF && frameData?.src ? (
 					<div className='preview-pdf'>
 						<PDFViewerV2
 							data={frameData.data}
