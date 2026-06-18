@@ -1,15 +1,15 @@
 import bgcct from '@/assets/cct/bg-cct.png';
+import CCTCover from '@/assets/cct/CCT_Bia.png';
 import Profile from '@/assets/cct/Profile.png';
 import Skills from '@/assets/cct/Skills.png';
-import { exportMyCCT } from '@/services/CCT/ActivityOutcome';
 import { ActivityOutCome } from '@/services/CCT/ActivityOutcome/typing';
 import { EStatusMyCCT } from '@/services/CCT/constant';
-import { getFilenameHeader } from '@/utils/utils';
 import { Button, Spin } from 'antd';
 import dayjs from 'dayjs';
-import fileDownload from 'js-file-download';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import CardNoteMyCCT from './CardNote';
 import './style.less';
@@ -25,6 +25,15 @@ export const getLevelSymbol = (levelName: string) => {
 	return '▶'.repeat(map[levelName] || 0);
 };
 
+const loadImage = (src: string) =>
+	new Promise<HTMLImageElement>((resolve, reject) => {
+		const image = new Image();
+		image.crossOrigin = 'anonymous';
+		image.onload = () => resolve(image);
+		image.onerror = reject;
+		image.src = src;
+	});
+
 const ChiTietMyCCT = (props: any) => {
 	const { setTrangThai, ssoId } = props;
 	const intl = useIntl();
@@ -37,7 +46,7 @@ const ChiTietMyCCT = (props: any) => {
 		isView,
 		setVisibleXuLy,
 	} = useModel('cct.mycct');
-
+	const printRef = useRef<HTMLDivElement>(null);
 	const [record, setRecord] = useState<{
 		activities: MyCCT.IActivityMyCCT[];
 		allCompetencies: string[];
@@ -47,6 +56,12 @@ const ChiTietMyCCT = (props: any) => {
 		awardsAndRecognition: ActivityOutCome.IRecord[];
 	}>();
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
+
+	const getExportFilename = () => {
+		const name = record?.myCCT?.code || record?.myCCT?.name || dayjs().format('YYYYMMDD_HHmm');
+
+		return `My_CCT_${name}`.replace(/[\\/:*?"<>|]/g, '_');
+	};
 
 	const getData = () => {
 		if (recMyCCT?.ssoId)
@@ -108,15 +123,58 @@ const ChiTietMyCCT = (props: any) => {
 		return content;
 	};
 
-	const hanldeExport = () => {
-		if (recMyCCT?.ssoId) {
-			setLoadingExport(true);
-			exportMyCCT(recMyCCT?.ssoId)
-				.then((res) => {
-					fileDownload(res.data, getFilenameHeader(res));
-				})
-				.catch((er) => console.log(er))
-				.finally(() => setLoadingExport(false));
+	const hanldeExport = async () => {
+		if (!printRef.current) {
+			return;
+		}
+
+		setLoadingExport(true);
+
+		try {
+			const exportNode = printRef.current;
+			const exportWidth = 1587;
+			const exportHeight = 1123;
+
+			await document.fonts.ready;
+
+			const canvas = await html2canvas(exportNode, {
+				backgroundColor: '#ffffff',
+				scale: 3,
+				useCORS: true,
+				width: exportWidth,
+				height: exportHeight,
+				windowWidth: exportWidth,
+				windowHeight: exportHeight,
+				onclone: (clonedDocument) => {
+					const clonedExportArea = clonedDocument.querySelector<HTMLElement>('.cct-export-area');
+					const clonedTitle = clonedDocument.querySelector<HTMLElement>('.header-title');
+
+					clonedExportArea?.classList.add('exporting-pdf');
+
+					if (clonedTitle) {
+						clonedTitle.style.background = 'none';
+						clonedTitle.style.color = '#f4dab2';
+						clonedTitle.style.webkitTextFillColor = '#f4dab2';
+					}
+				},
+			});
+			const pdf = new jsPDF({
+				orientation: 'landscape',
+				unit: 'mm',
+				format: 'a3',
+			});
+			const pageWidth = 420;
+			const pageHeight = 297;
+			const coverImage = await loadImage(CCTCover);
+
+			pdf.addImage(coverImage, 'PNG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
+			pdf.addPage('a3', 'landscape');
+			pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
+			pdf.save(`${getExportFilename()}.pdf`);
+		} catch (er) {
+			console.log(er);
+		} finally {
+			setLoadingExport(false);
 		}
 	};
 
@@ -125,10 +183,12 @@ const ChiTietMyCCT = (props: any) => {
 			{!!record?.myCCT?.status && <CardNoteMyCCT myCCT={record?.myCCT ?? ({} as MyCCT.IRecord)} />}
 
 			<Spin spinning={loading}>
-				<div className='cct-container'>
+				<div className='cct-export-area' ref={printRef}>
 					<header className='cct-header'>
-						<div className='header-content'>
-							<div className='header-title'>CO-CURRICULAR PORTFOLIO</div>
+						<div className='header-content-cct'>
+							<div className='header-title'>
+								CO-CURRICULUM RECORD - STUDENT DEVELOPMENT <br /> PORFOLIO
+							</div>
 							<div className='university-logo'>
 								<img src={bgcct} style={{ height: 60 }} />
 							</div>
@@ -139,10 +199,10 @@ const ChiTietMyCCT = (props: any) => {
 						<div className='column left-column'>
 							<section className='intro-section'>
 								<p className='intro-text'>
-									<b>Co-curricular Portfolio (CCP)</b> is part of VinUniversity’s commitment to developing holistic
-									graduates. This Portfolio documents the co-curricular experiences and developmental activities that
-									students engage in during their time at VinUni, capturing evidence of their competencies, growth, and
-									contributions beyond academic performance.
+									<b>Co-curriculum Record - Student Development Porfolio (CCP)</b> is part of VinUniversity’s commitment
+									to developing holistic graduates. This Portfolio documents the co-curricular experiences and
+									developmental activities that students engage in during their time at VinUni, capturing evidence of
+									their competencies, growth, and contributions beyond academic performance.
 								</p>
 								<div className='student-info'>
 									<div className='info-group'>

@@ -2,7 +2,6 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import { IColumn } from '@/components/Table/typing';
-import { exportMyCCT } from '@/services/CCT/ActivityOutcome';
 import {
 	EStatusMyCCT,
 	mapColorStatusMyCCT,
@@ -10,10 +9,8 @@ import {
 	mapNameStatusMyCCT,
 } from '@/services/CCT/constant';
 import dayjs from '@/utils/dayjs';
-import { getFilenameHeader } from '@/utils/utils';
-import { CheckCircleOutlined, EditOutlined, FilePdfOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EditOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
-import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectSubmisstionRound from '../components/Select';
@@ -160,11 +157,11 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 		{
 			title: intl.formatMessage({ id: 'global.column.action' }),
 			align: 'center',
-			width: 140,
+			width: 100,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend
+					{/* <ButtonExtend
 						tooltip={'Export PDF'}
 						loading={loadingExport}
 						onClick={() => {
@@ -178,7 +175,7 @@ const DanhSachMyCCT = (props: { isDot?: boolean; ssoId?: string }) => {
 						}}
 						type='link'
 						icon={<FilePdfOutlined />}
-					/>
+					/> */}
 
 					<ButtonExtend
 						disabled={rec?.status !== EStatusMyCCT.PENDING_APPROVAL}

@@ -4,7 +4,7 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import SelectHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/SelectHocKy';
 import dayjs from '@/utils/dayjs';
-import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -163,7 +163,7 @@ const SubmisstionRoundPage = () => {
 							: intl.formatMessage({ id: 'submisstion.form.themmoi' })
 				}
 				showModalTitle
-				cardExtra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
+				// cardExtra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
 			/>
 
 			<SettingDot visible={visibleSetting} setVisible={setVisibleSetting} />
