@@ -178,8 +178,8 @@
 		name: 'SubmisstionRound',
 		icon: 'ScheduleOutlined',
 		path: '/activity-submission',
-		access: 'accessFilter',
-		maChucNang: 'ctsv|submission-period',
+		// access: 'accessFilter',
+		// maChucNang: 'ctsv|submission-period',
 		routes: [
 			{
 				name: 'Management',
@@ -199,8 +199,8 @@
 		icon: 'AppstoreOutlined',
 		path: '/activity-management',
 		component: 'CCT/Activity',
-		access: 'manyAccessFilter',
-		listChucNang: ['ctsv|activity-management', 'ctsv|activity-management|chuyen-vien'],
+		// access: 'manyAccessFilter',
+		// listChucNang: ['ctsv|activity-management', 'ctsv|activity-management|chuyen-vien'],
 	},
 
 	{
@@ -208,8 +208,8 @@
 		icon: 'TrophyOutlined',
 		path: '/activity-results-approval',
 		component: 'CCT/ActivityStudent',
-		access: 'accessFilter',
-		maChucNang: 'ctsv|activity-results',
+		// access: 'accessFilter',
+		// maChucNang: 'ctsv|activity-results',
 	},
 
 	// {
