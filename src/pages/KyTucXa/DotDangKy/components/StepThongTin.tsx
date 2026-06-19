@@ -1,11 +1,14 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { Col, Form, Input, Row, Select } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 	const { isOngoing, isEnded } = props;
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const form = Form.useFormInstance();
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 	const thoiGianBatDau = Form.useWatch('thoiGianBatDau', form);
@@ -15,35 +18,39 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 	return (
 		<Row gutter={[12, 0]}>
 			<Col span={24} md={12}>
-				<Form.Item name='tenDot' label='Tên đợt' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
-					<Input disabled={lockCoreInfo} placeholder='Nhập tên đợt' />
+				<Form.Item
+					name='tenDot'
+					label={t('kytucxa.dotdangky.tenDot')}
+					rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+				>
+					<Input disabled={lockCoreInfo} placeholder={t('kytucxa.dotdangky.nhapTenDot')} />
 				</Form.Item>
 			</Col>
 			<Col span={24} md={12}>
 				<Form.Item name='maHocKy' hidden rules={[...rules.required]}>
 					<Input />
 				</Form.Item>
-				<Form.Item label='Học kỳ'>
+				<Form.Item label={t('kytucxa.dotdangky.hocKy')}>
 					<Input disabled value={recHocKy?.ten ? `${recHocKy.ten} - ${recHocKy.ma}` : recHocKy?.ma} />
 				</Form.Item>
 			</Col>
 			<Col span={24} md={12}>
-				<Form.Item name='thoiGianBatDau' label='Thời gian bắt đầu' rules={[...rules.required]}>
+				<Form.Item name='thoiGianBatDau' label={t('kytucxa.dotdangky.thoiGianBatDau')} rules={[...rules.required]}>
 					<MyDatePicker disabled={lockCoreInfo} format='DD/MM/YYYY' />
 				</Form.Item>
 			</Col>
 			<Col span={24} md={12}>
 				<Form.Item
 					name='thoiGianKetThuc'
-					label='Thời gian kết thúc'
+					label={t('kytucxa.dotdangky.thoiGianKetThuc')}
 					dependencies={['thoiGianBatDau']}
 					rules={[
 						...rules.required,
-						...rules.sauNgay(thoiGianBatDau, 'thời gian bắt đầu'),
+						...rules.sauNgay(thoiGianBatDau, t('kytucxa.dotdangky.thoiGianBatDauLower')),
 						{
 							validator: async (_, value) => {
 								if (isOngoing && value && dayjs(value).endOf('day').isBefore(dayjs())) {
-									throw new Error('Registration end time must be greater than or equal to the current time.');
+									throw new Error(t('kytucxa.dotdangky.validation.endTimeAfterNow'));
 								}
 							},
 						},
@@ -63,8 +70,8 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 			<Col span={24} md={12}>
 				<Form.Item
 					name='ngayChuyenVao'
-					label='Ngày chuyển vào'
-					rules={[...rules.required, ...rules.sauNgay(thoiGianBatDau, 'thời gian bắt đầu')]}
+					label={t('kytucxa.dotdangky.ngayChuyenVao')}
+					rules={[...rules.required, ...rules.sauNgay(thoiGianBatDau, t('kytucxa.dotdangky.thoiGianBatDauLower'))]}
 				>
 					<MyDatePicker
 						format='DD/MM/YYYY'
@@ -75,12 +82,12 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 			<Col span={24} md={12}>
 				<Form.Item
 					name='ngayChuyenRa'
-					label='Ngày chuyển ra'
+					label={t('kytucxa.dotdangky.ngayChuyenRa')}
 					dependencies={['thoiGianBatDau', 'ngayChuyenVao']}
 					rules={[
 						...rules.required,
-						...rules.sauNgay(thoiGianBatDau, 'thời gian bắt đầu'),
-						...rules.sauNgay(ngayChuyenVao, 'ngày chuyển vào'),
+						...rules.sauNgay(thoiGianBatDau, t('kytucxa.dotdangky.thoiGianBatDauLower')),
+						...rules.sauNgay(ngayChuyenVao, t('kytucxa.dotdangky.ngayChuyenVaoLower')),
 					]}
 				>
 					<MyDatePicker
@@ -94,20 +101,20 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 				</Form.Item>
 			</Col>
 			<Col span={24} md={12}>
-				<Form.Item name='loaiDot' label='Loại đợt' rules={[...rules.required]}>
+				<Form.Item name='loaiDot' label={t('kytucxa.dotdangky.loaiDot')} rules={[...rules.required]}>
 					<Select
 						disabled={lockCoreInfo}
 						options={[
-							{ label: 'Theo khóa', value: 'Theo khoa' },
-							{ label: 'Theo danh sách', value: 'Theo danh sách' },
+							{ label: t('kytucxa.dotdangky.loaiDot.theoKhoa'), value: ELoaiDotDangKyKTX.THEO_KHOA },
+							{ label: t('kytucxa.dotdangky.loaiDot.theoDanhSach'), value: ELoaiDotDangKyKTX.THEO_DANH_SACH },
 						]}
-						placeholder='Chọn loại đợt'
+						placeholder={t('kytucxa.dotdangky.chonLoaiDot')}
 					/>
 				</Form.Item>
 			</Col>
 			<Col xs={24}>
-				<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text, ...rules.length(2000)]}>
-					<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+				<Form.Item name='ghiChu' label={t('kytucxa.dotdangky.ghiChu')} rules={[...rules.text, ...rules.length(2000)]}>
+					<Input.TextArea rows={3} placeholder={t('kytucxa.dotdangky.nhapGhiChu')} />
 				</Form.Item>
 			</Col>
 		</Row>

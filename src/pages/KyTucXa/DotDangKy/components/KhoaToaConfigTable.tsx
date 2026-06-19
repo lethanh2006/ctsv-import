@@ -1,6 +1,7 @@
 import SelectToaNha from '@/pages/KyTucXa/DotDangKy/components/SelectToaNha';
 import { Button, Space, Table } from 'antd';
 import { useState } from 'react';
+import { useIntl } from 'umi';
 
 const KhoaToaConfigTable = (props: {
 	selectedKhoaNganh: Array<{
@@ -17,6 +18,8 @@ const KhoaToaConfigTable = (props: {
 	onChange?: (nextValue: Record<string, string[]>) => void;
 }) => {
 	const { selectedKhoaNganh, value = {}, initialValue = {}, onlyAllowExpand, disabled, onChange } = props;
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const [bulkToaNha, setBulkToaNha] = useState<string[]>([]);
 
 	const updateValue = (maKhoaSinhVien: string, danhSachToaNha: string[]) => {
@@ -60,7 +63,7 @@ const KhoaToaConfigTable = (props: {
 				>
 					<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 auto', minWidth: '280px' }}>
 						<span style={{ fontWeight: 500, color: '#334155', whiteSpace: 'nowrap' }}>
-							Áp dụng nhanh cho tất cả các khóa:
+							{t('kytucxa.dotdangky.apDungNhanhChoTatCaKhoa')}
 						</span>
 						<div style={{ flex: 1, minWidth: '200px', maxWidth: '400px' }}>
 							<SelectToaNha
@@ -75,7 +78,7 @@ const KhoaToaConfigTable = (props: {
 					</div>
 					<Space>
 						<Button type='primary' onClick={applyToAll} disabled={disabled || bulkToaNha.length === 0}>
-							Áp dụng cho tất cả
+							{t('kytucxa.dotdangky.apDungChoTatCa')}
 						</Button>
 					</Space>
 				</div>
@@ -88,13 +91,13 @@ const KhoaToaConfigTable = (props: {
 				dataSource={selectedKhoaNganh}
 				columns={[
 					{
-						title: 'Khóa ngành',
+						title: t('kytucxa.dotdangky.khoaNganh'),
 						dataIndex: 'maKhoaSinhVien',
 						width: 180,
 						render: (_value, record) => record?.khoaSinhVien?.ten ?? record?.maKhoaSinhVien ?? record?.ma ?? '-',
 					},
 					{
-						title: 'Tòa nhà áp dụng',
+						title: t('kytucxa.dotdangky.toaNhaApDung'),
 						dataIndex: 'danhSachToaNha',
 						render: (_value, record: { maKhoaSinhVien?: string; ma?: string }) => {
 							const maKhoaSinhVien = record?.maKhoaSinhVien ?? record?.ma ?? '';

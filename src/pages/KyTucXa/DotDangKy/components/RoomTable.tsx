@@ -2,7 +2,7 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import React, { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const RoomTable: React.FC<{
 	toaNhaIds?: string[];
@@ -10,6 +10,8 @@ const RoomTable: React.FC<{
 	disabled?: boolean;
 	onChangeSelectedKeys?: (keys: string[], rows: any[]) => void;
 }> = ({ toaNhaIds, selectedRowKeys = [], disabled, onChangeSelectedKeys }) => {
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { danhSach: rooms, getAllModel, loading } = useModel('theodoitaisanvattu.phong');
 
 	useEffect(() => {
@@ -28,34 +30,34 @@ const RoomTable: React.FC<{
 
 	const columns: IColumn<any>[] = [
 		{
-			title: 'Tên phòng',
+			title: t('kytucxa.dotdangky.tenPhong'),
 			dataIndex: 'ten',
 			key: 'ten',
 			width: 180,
 		},
 		{
-			title: 'Tòa nhà',
+			title: t('kytucxa.dotdangky.toaNha'),
 			dataIndex: ['toaNha', 'ten'],
 			key: 'toaNha',
 			width: 180,
 			render: (_: any, rec: any) => rec?.toaNha?.ten || rec?.maToaNha || '-',
 		},
 		{
-			title: 'Tầng thứ',
+			title: t('kytucxa.dotdangky.tangThu'),
 			dataIndex: 'tangThu',
 			key: 'tangThu',
 			width: 100,
 			render: (val: any) => val ?? '-',
 		},
 		{
-			title: 'Diện tích',
+			title: t('kytucxa.dotdangky.dienTich'),
 			dataIndex: 'dienTich',
 			key: 'dienTich',
 			width: 110,
 			render: (val: any) => val ?? '-',
 		},
 		{
-			title: 'Số lượng tối đa',
+			title: t('kytucxa.dotdangky.soLuongToiDa'),
 			dataIndex: 'soLuongToiDa',
 			key: 'soLuongToiDa',
 			width: 120,

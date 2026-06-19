@@ -1,7 +1,7 @@
 import UploadFile from '@/components/Upload/UploadFile';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { ipCsvc } from '@/utils/ip';
-import { useModel } from '@umijs/max';
+import { useIntl, useModel } from '@umijs/max';
 import { Form, message, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 
@@ -20,6 +20,8 @@ export const UploadMinhChungModal: React.FC<UploadMinhChungModalProps> = ({
 	activeSemesterId,
 	onSuccess,
 }) => {
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { putDonMienKTX } = useModel('kytucxa.danhsachmienkytucxa');
 	const [uploadForm] = Form.useForm();
 	const [submitting, setSubmitting] = useState(false);
@@ -41,7 +43,7 @@ export const UploadMinhChungModal: React.FC<UploadMinhChungModalProps> = ({
 			setSubmitting(true);
 			const fileUrl = await buildUpLoadFile(values, 'urlMinhChung', undefined, undefined, ipCsvc);
 			if (!fileUrl) {
-				message.error('Tải file lên thất bại');
+				message.error(t('kytucxa.danhsachmien.message.uploadFailed'));
 				return;
 			}
 
@@ -52,16 +54,16 @@ export const UploadMinhChungModal: React.FC<UploadMinhChungModalProps> = ({
 				hoTen: currentRecord.fullname,
 				khoaSinhVien: currentRecord.khoaSinhVien,
 				urlMinhChung: fileUrl,
-				trangThaiMinhChung: 'Chờ duyệt',
+				trangThaiMinhChung: t('kytucxa.danhsachmien.choDuyet'),
 			};
 
 			await putDonMienKTX(currentRecord._id, payload);
 
-			message.success('Cập nhật minh chứng thành công');
+			message.success(t('kytucxa.danhsachmien.message.updateProofSuccess'));
 			onSuccess();
 		} catch (err: any) {
 			console.error(err);
-			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
+			message.error(err?.response?.data?.message || t('kytucxa.danhsachmien.message.error'));
 		} finally {
 			setSubmitting(false);
 		}
@@ -70,9 +72,9 @@ export const UploadMinhChungModal: React.FC<UploadMinhChungModalProps> = ({
 	return (
 		<Modal
 			open={open}
-			title={<span style={{ fontWeight: 700, fontSize: 16 }}>Cập nhật minh chứng miễn giảm KTX</span>}
-			okText='Xác nhận'
-			cancelText='Hủy'
+			title={<span style={{ fontWeight: 700, fontSize: 16 }}>{t('kytucxa.danhsachmien.updateProofTitle')}</span>}
+			okText={t('global.button.xacnhan')}
+			cancelText={t('global.button.huy')}
 			confirmLoading={submitting}
 			onOk={handleUploadSubmit}
 			onCancel={onCancel}
@@ -90,13 +92,14 @@ export const UploadMinhChungModal: React.FC<UploadMinhChungModalProps> = ({
 		>
 			<div style={{ marginTop: 16 }}>
 				<div style={{ marginBottom: 12, fontSize: 14 }}>
-					Sinh viên: <strong>{currentRecord?.fullname || ''}</strong> ({currentRecord?.code || ''})
+					{t('kytucxa.danhsachmien.sinhVien')}: <strong>{currentRecord?.fullname || ''}</strong> (
+					{currentRecord?.code || ''})
 				</div>
 				<Form form={uploadForm} layout='vertical'>
 					<Form.Item
 						name='urlMinhChung'
-						label={<strong>File minh chứng</strong>}
-						rules={[{ required: true, message: 'Vui lòng tải lên file minh chứng!' }]}
+						label={<strong>{t('kytucxa.danhsachmien.fileMinhChung')}</strong>}
+						rules={[{ required: true, message: t('kytucxa.danhsachmien.message.uploadRequired') }]}
 					>
 						<UploadFile maxCount={1} accept='.pdf,.png,.jpg,.jpeg,.doc,.docx' />
 					</Form.Item>

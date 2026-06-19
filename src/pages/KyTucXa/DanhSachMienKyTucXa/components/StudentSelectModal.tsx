@@ -5,6 +5,7 @@ import { EVaiTroKhaoSat } from '@/services/ThongBao/constant';
 import { Button, Modal } from 'antd';
 import fileDownload from 'js-file-download';
 import React, { useEffect, useRef, useState } from 'react';
+import { useIntl } from 'umi';
 import * as XLSX from 'xlsx';
 
 const ModalImportAny = ModalImport as any;
@@ -36,6 +37,8 @@ export const StudentSelectModal: React.FC<StudentSelectModalProps> = ({
 	existingStudents,
 	onOk,
 }) => {
+	const intl = useIntl();
+	const t = (id: string, values?: Record<string, any>) => intl.formatMessage({ id }, values);
 	const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
 	const [submitting, setSubmitting] = useState(false);
 	const [showTable, setShowTable] = useState(false);
@@ -56,15 +59,25 @@ export const StudentSelectModal: React.FC<StudentSelectModalProps> = ({
 
 	const customImportConfig = {
 		onDownloadTemplate: () => {
-			const headers = [['TT', 'Mã sinh viên', 'Họ tên', 'Khoá sinh viên', 'Khóa ngành', 'SĐT', 'Email']];
+			const headers = [
+				[
+					'TT',
+					t('kytucxa.danhsachmien.maSinhVien'),
+					t('kytucxa.danhsachmien.hoTen'),
+					t('kytucxa.danhsachmien.khoaSinhVien'),
+					t('kytucxa.danhsachmien.khoaNganh'),
+					t('kytucxa.danhsachmien.soDienThoai'),
+					'Email',
+				],
+			];
 			const worksheet = XLSX.utils.aoa_to_sheet(headers);
 			const workbook = XLSX.utils.book_new();
-			XLSX.utils.book_append_sheet(workbook, worksheet, 'Mẫu');
+			XLSX.utils.book_append_sheet(workbook, worksheet, t('kytucxa.danhsachmien.excel.sheetTemplate'));
 			const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 			const blob = new Blob([excelBuffer], {
 				type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			});
-			fileDownload(blob, 'Mẫu nhập danh sách sinh viên miễn KTX.xlsx');
+			fileDownload(blob, t('kytucxa.danhsachmien.excel.templateFileName'));
 		},
 		onImport: (file: File): Promise<any[]> => {
 			return new Promise((resolve, reject) => {
@@ -77,11 +90,11 @@ export const StudentSelectModal: React.FC<StudentSelectModalProps> = ({
 						const sheetData: any[] = XLSX.utils.sheet_to_json(ws);
 						const parsed = sheetData
 							.map((row: any) => {
-								const code = row['Mã sinh viên']?.toString()?.trim() || '';
-								const fullname = row['Họ tên']?.toString()?.trim() || '';
-								const khoa = row['Khoá sinh viên']?.toString()?.trim() || '';
-								const khoaNganh = row['Khóa ngành']?.toString()?.trim() || '';
-								const soDienThoai = row['SĐT']?.toString()?.trim() || '';
+								const code = row[t('kytucxa.danhsachmien.maSinhVien')]?.toString()?.trim() || '';
+								const fullname = row[t('kytucxa.danhsachmien.hoTen')]?.toString()?.trim() || '';
+								const khoa = row[t('kytucxa.danhsachmien.khoaSinhVien')]?.toString()?.trim() || '';
+								const khoaNganh = row[t('kytucxa.danhsachmien.khoaNganh')]?.toString()?.trim() || '';
+								const soDienThoai = row[t('kytucxa.danhsachmien.soDienThoai')]?.toString()?.trim() || '';
 								const email = row['Email']?.toString()?.trim() || '';
 								return {
 									code,
@@ -194,7 +207,9 @@ export const StudentSelectModal: React.FC<StudentSelectModalProps> = ({
 				onCancel={onCancel}
 				title={
 					<span style={{ fontWeight: 700, fontSize: 16 }}>
-						Chọn/nhập danh sách sinh viên miễn KTX – HK {activeSemester?.maHocKy || selectedSemesterMa || ''}
+						{t('kytucxa.danhsachmien.selectModalTitle', {
+							maHocKy: activeSemester?.maHocKy || selectedSemesterMa || '',
+						})}
 					</span>
 				}
 				width={950}
@@ -209,7 +224,7 @@ export const StudentSelectModal: React.FC<StudentSelectModalProps> = ({
 						setSelectedUsers={handleSetSelectedUsers}
 						customImport={customImportConfig}
 						customStudentColumn={{
-							title: 'Khoá sinh viên',
+							title: t('kytucxa.danhsachmien.khoaSinhVien'),
 							dataIndex: 'khoaSinhVien',
 						}}
 						singleTable={true}
@@ -222,7 +237,7 @@ export const StudentSelectModal: React.FC<StudentSelectModalProps> = ({
 							type='primary'
 							style={{ backgroundColor: '#125195', borderColor: '#125195', borderRadius: 6, padding: '0 24px' }}
 						>
-							Chọn xong
+							{t('kytucxa.danhsachmien.chonXong')}
 						</Button>
 					</div>
 				</div>

@@ -6,12 +6,14 @@ import { DeleteOutlined, EditOutlined, ExportOutlined, ImportOutlined } from '@a
 import { Popconfirm, message } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import * as XLSX from 'xlsx';
 import FormSinhVien from './components/FormSinhVien';
 import { StudentSelectModal } from './components/StudentSelectModal';
 
 const DanhSachMienKyTucXa = () => {
+	const intl = useIntl();
+	const t = (id: string, values?: Record<string, any>) => intl.formatMessage({ id }, values);
 	const { page, limit, handleEdit, deleteModel, getModel, postManyByMaHocKy, danhSach, currentDanhSachMien } =
 		useModel('kytucxa.danhsachmiensinhvien');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
@@ -57,7 +59,7 @@ const DanhSachMienKyTucXa = () => {
 		}[],
 	) => {
 		if (!recHocKy?.ma) {
-			message.warning('Vui lòng chọn học kỳ trước');
+			message.warning(t('kytucxa.danhsachmien.message.selectSemesterFirst'));
 			return;
 		}
 
@@ -77,56 +79,56 @@ const DanhSachMienKyTucXa = () => {
 
 	const handleExportExcel = () => {
 		if (!danhSach?.length) {
-			message.warning('Không có dữ liệu để xuất');
+			message.warning(t('kytucxa.danhsachmien.message.noDataToExport'));
 			return;
 		}
 
 		const dataToExport = danhSach.map((item: any, index: number) => ({
 			TT: index + 1,
-			'Mã sinh viên': item.code || '',
-			'Họ tên': item.fullname || '',
-			'Khoá sinh viên': item.khoaSinhVien || '',
-			'Khóa ngành': getKhoaNganh(item) || '',
-			SĐT: getSoDienThoai(item) || '',
+			[t('kytucxa.danhsachmien.maSinhVien')]: item.code || '',
+			[t('kytucxa.danhsachmien.hoTen')]: item.fullname || '',
+			[t('kytucxa.danhsachmien.khoaSinhVien')]: item.khoaSinhVien || '',
+			[t('kytucxa.danhsachmien.khoaNganh')]: getKhoaNganh(item) || '',
+			[t('kytucxa.danhsachmien.soDienThoai')]: getSoDienThoai(item) || '',
 			Email: getEmail(item) || '',
-			'Trạng thái minh chứng': item.trangThaiMinhChung || 'Chờ duyệt',
+			[t('kytucxa.danhsachmien.trangThaiMinhChung')]: item.trangThaiMinhChung || t('kytucxa.danhsachmien.choDuyet'),
 		}));
 
 		const worksheet = XLSX.utils.json_to_sheet(dataToExport);
 		const workbook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách');
+		XLSX.utils.book_append_sheet(workbook, worksheet, t('kytucxa.danhsachmien.excel.sheetDanhSach'));
 		const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 		const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-		fileDownload(blob, `Danh sách miễn KTX - HK ${recHocKy?.ma || ''}.xlsx`);
+		fileDownload(blob, t('kytucxa.danhsachmien.excel.fileName', { maHocKy: recHocKy?.ma || '' }));
 	};
 
 	const columns: IColumn<any>[] = [
 		{
-			title: 'Mã SV',
+			title: t('kytucxa.danhsachmien.maSV'),
 			dataIndex: 'code',
 			width: 120,
 			filterType: 'string',
 			render: (text: string) => <strong>{text}</strong>,
 		},
 		{
-			title: 'Họ tên',
+			title: t('kytucxa.danhsachmien.hoTen'),
 			dataIndex: 'fullname',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Khoá',
+			title: t('kytucxa.danhsachmien.khoa'),
 			dataIndex: 'khoaSinhVien',
 			width: 120,
 		},
 		{
-			title: 'Khóa ngành',
+			title: t('kytucxa.danhsachmien.khoaNganh'),
 			dataIndex: 'khoaNganh',
 			width: 180,
 			render: (_value, record) => renderText(getKhoaNganh(record)),
 		},
 		{
-			title: 'SĐT',
+			title: t('kytucxa.danhsachmien.soDienThoai'),
 			dataIndex: 'soDienThoai',
 			width: 130,
 			filterType: 'string',
@@ -140,12 +142,12 @@ const DanhSachMienKyTucXa = () => {
 			render: (_value, record) => renderText(getEmail(record)),
 		},
 		{
-			title: 'Minh chứng',
+			title: t('kytucxa.danhsachmien.minhChung'),
 			dataIndex: 'urlMinhChung',
 			key: 'urlMinhChung',
 			width: 180,
 			render: (val: string) => {
-				if (!val) return <span style={{ color: '#bfbfbf' }}>Chưa nộp</span>;
+				if (!val) return <span style={{ color: '#bfbfbf' }}>{t('kytucxa.danhsachmien.chuaNop')}</span>;
 
 				const filename = val.substring(val.lastIndexOf('/') + 1) || 'minh-chung.pdf';
 				return (
@@ -162,20 +164,25 @@ const DanhSachMienKyTucXa = () => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: t('kytucxa.danhsachmien.thaoTac'),
 			key: 'action',
 			width: 100,
 			align: 'center',
 			fixed: 'right',
 			render: (_value, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={t('global.button.chinhsua')}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id, getData)}
-						title='Bạn có chắc chắn muốn xóa sinh viên này khỏi danh sách miễn?'
+						title={t('kytucxa.danhsachmien.confirmDeleteStudent')}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend tooltip={t('global.button.xoa')} danger type='link' icon={<DeleteOutlined />} />
 					</Popconfirm>
 				</>
 			),
@@ -189,7 +196,7 @@ const DanhSachMienKyTucXa = () => {
 				columns={columns}
 				dependencies={[page, limit, recHocKy?.ma]}
 				modelName='kytucxa.danhsachmiensinhvien'
-				title='Danh sách miễn KTX'
+				title={t('kytucxa.danhsachmien.title')}
 				Form={FormSinhVien}
 				formProps={{ danhSachId: currentDanhSachMien?._id, maHocKy: recHocKy?.ma, getData }}
 				scroll={{ x: 1300 }}
@@ -205,10 +212,10 @@ const DanhSachMienKyTucXa = () => {
 						disabled={!currentDanhSachMien?._id}
 						onClick={() => setVisibleSelect(true)}
 					>
-						Nhập dữ liệu
+						{t('global.button.nhapdulieu')}
 					</ButtonExtend>,
 					<ButtonExtend key='btn-export-student' icon={<ExportOutlined />} onClick={handleExportExcel}>
-						Xuất dữ liệu
+						{t('global.button.xuatdulieu')}
 					</ButtonExtend>,
 				]}
 				showModalTitle

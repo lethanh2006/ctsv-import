@@ -5,7 +5,7 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Row } from 'antd';
 import React, { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 interface FormSinhVienProps {
 	danhSachId?: string;
@@ -15,6 +15,8 @@ interface FormSinhVienProps {
 
 const FormSinhVien: React.FC<FormSinhVienProps> = ({ danhSachId, maHocKy, getData }) => {
 	const [form] = Form.useForm();
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { record, visibleForm, edit, setVisibleForm, putModel, postModel, formSubmiting } =
 		useModel('kytucxa.danhsachmiensinhvien');
 
@@ -51,7 +53,7 @@ const FormSinhVien: React.FC<FormSinhVienProps> = ({ danhSachId, maHocKy, getDat
 		<Form layout='vertical' onFinish={onFinish} form={form}>
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
-					<Form.Item name='code' label='Sinh viên' rules={[...rules.required]}>
+					<Form.Item name='code' label={t('kytucxa.danhsachmien.sinhVien')} rules={[...rules.required]}>
 						<SelectSinhVienDebounce
 							selectMa
 							disabled={edit}
@@ -70,6 +72,7 @@ const FormSinhVien: React.FC<FormSinhVienProps> = ({ danhSachId, maHocKy, getDat
 										'',
 									soDienThoai: rawData?.soDienThoai || rawData?.sdt || '',
 									email: rawData?.email || '',
+									ssoId: rawData?.ssoId || '',
 								});
 							}}
 						/>
@@ -80,11 +83,12 @@ const FormSinhVien: React.FC<FormSinhVienProps> = ({ danhSachId, maHocKy, getDat
 				<Form.Item name='khoaNganh' hidden />
 				<Form.Item name='soDienThoai' hidden />
 				<Form.Item name='email' hidden />
+				<Form.Item name='ssoId' hidden />
 				<Col xs={24}>
 					<Form.Item
 						name='urlMinhChung'
-						label='Upload minh chứng'
-						// rules={edit ? [] : [{ required: true, message: 'Vui lòng tải lên file minh chứng!' }]}
+						label={t('kytucxa.danhsachmien.uploadMinhChung')}
+						rules={edit ? [] : [{ required: true, message: t('kytucxa.danhsachmien.message.uploadRequired') }]}
 					>
 						<UploadFile maxCount={1} accept='.pdf,.png,.jpg,.jpeg,.doc,.docx' />
 					</Form.Item>
@@ -93,7 +97,7 @@ const FormSinhVien: React.FC<FormSinhVienProps> = ({ danhSachId, maHocKy, getDat
 
 			<div className='form-footer'>
 				<Button onClick={() => setVisibleForm(false)} style={{ borderRadius: 6 }}>
-					Hủy
+					{t('global.button.huy')}
 				</Button>
 				<Button
 					loading={formSubmiting}
@@ -101,7 +105,7 @@ const FormSinhVien: React.FC<FormSinhVienProps> = ({ danhSachId, maHocKy, getDat
 					type='primary'
 					style={{ backgroundColor: '#125195', borderColor: '#125195', borderRadius: 6 }}
 				>
-					{!edit ? 'Thêm mới' : 'Lưu lại'}
+					{!edit ? t('global.button.themmoi') : t('global.button.luulai')}
 				</Button>
 			</div>
 		</Form>

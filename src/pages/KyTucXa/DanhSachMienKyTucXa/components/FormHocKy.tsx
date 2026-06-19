@@ -5,10 +5,12 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const FormHocKy = () => {
 	const [form] = Form.useForm();
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { record, visibleForm, edit, setVisibleForm, putModel, postModel, formSubmiting } =
 		useModel('kytucxa.danhsachmienkytucxa');
 	const { danhSach: danhSachHocKy } = useModel('daotaov2.hocky.hocky');
@@ -50,12 +52,16 @@ const FormHocKy = () => {
 			<Form layout='vertical' onFinish={onFinish} form={form}>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>
-						<Form.Item name='maHocKy' label='Học kỳ' rules={[...rules.required]}>
+						<Form.Item name='maHocKy' label={t('kytucxa.danhsachmien.hocKy')} rules={[...rules.required]}>
 							<SelectHocKy selectMa />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>
-						<Form.Item name='hanNopMinhChung' label='Hạn nộp minh chứng' rules={[...rules.required]}>
+						<Form.Item
+							name='hanNopMinhChung'
+							label={t('kytucxa.danhsachmien.hanNopMinhChung')}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker
 								showTime={{ showHour: true, showMinute: true }}
 								format='HH:mm DD/MM/YYYY'
@@ -65,15 +71,19 @@ const FormHocKy = () => {
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text, ...rules.length(2000)]}>
-							<Input.TextArea rows={3} placeholder='Nhập ghi chú' style={{ borderRadius: 6 }} />
+						<Form.Item
+							name='ghiChu'
+							label={t('kytucxa.danhsachmien.ghiChu')}
+							rules={[...rules.text, ...rules.length(2000)]}
+						>
+							<Input.TextArea rows={3} placeholder={t('kytucxa.danhsachmien.nhapGhiChu')} style={{ borderRadius: 6 }} />
 						</Form.Item>
 					</Col>
 				</Row>
 
 				<div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
 					<Button onClick={() => setVisibleForm(false)} style={{ borderRadius: 6 }}>
-						Hủy
+						{t('global.button.huy')}
 					</Button>
 					<Button
 						loading={formSubmiting}
@@ -81,7 +91,7 @@ const FormHocKy = () => {
 						type='primary'
 						style={{ backgroundColor: '#125195', borderColor: '#125195', borderRadius: 6 }}
 					>
-						{!edit ? 'Thêm mới' : 'Lưu lại'}
+						{!edit ? t('global.button.themmoi') : t('global.button.luulai')}
 					</Button>
 				</div>
 			</Form>

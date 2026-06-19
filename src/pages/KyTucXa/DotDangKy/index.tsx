@@ -1,27 +1,31 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
 import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
+import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { useModel } from '@umijs/max';
+import { useIntl, useModel } from '@umijs/max';
 import { Button, Popconfirm, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import Form from './components/Form';
 
-const getTrangThaiDot = (record: KyTucXa.IDotDangKyKTX) => {
+const getTrangThaiDot = (record: KyTucXa.IDotDangKyKTX, t: (id: string) => string) => {
 	const now = dayjs();
 	const thoiGianBatDau = record?.thoiGianBatDau ? dayjs(record.thoiGianBatDau) : undefined;
 	const thoiGianKetThuc = record?.thoiGianKetThuc ? dayjs(record.thoiGianKetThuc) : undefined;
 
-	if (thoiGianKetThuc && now.isAfter(thoiGianKetThuc)) return { label: 'Đã kết thúc', color: 'default' };
+	if (thoiGianKetThuc && now.isAfter(thoiGianKetThuc))
+		return { label: t('kytucxa.dotdangky.status.ended'), color: 'default' };
 	if (thoiGianBatDau && thoiGianKetThuc && !now.isBefore(thoiGianBatDau) && !now.isAfter(thoiGianKetThuc)) {
-		return { label: 'Đang diễn ra', color: 'success' };
+		return { label: t('kytucxa.dotdangky.status.ongoing'), color: 'success' };
 	}
 
-	return { label: 'Chưa diễn ra', color: 'processing' };
+	return { label: t('kytucxa.dotdangky.status.upcoming'), color: 'processing' };
 };
 
 const DotDangKy = () => {
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { page, limit, handleEdit, deleteModel, getModel } = useModel('kytucxa.dotdangky');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 
@@ -31,21 +35,22 @@ const DotDangKy = () => {
 
 	const columns: IColumn<KyTucXa.IDotDangKyKTX>[] = [
 		{
-			title: 'Tên đợt',
+			title: t('kytucxa.dotdangky.tenDot'),
 			dataIndex: 'tenDot',
 			width: 220,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Loại đợt',
+			title: t('kytucxa.dotdangky.loaiDot'),
 			dataIndex: 'loaiDot',
 			width: 140,
 			filterType: 'string',
-			render: (value) => (value === 'Theo khoa' ? 'Theo khóa' : value || '--'),
+			render: (value) =>
+				value === ELoaiDotDangKyKTX.THEO_KHOA ? t('kytucxa.dotdangky.loaiDot.theoKhoa') : value || '--',
 		},
 		{
-			title: 'Bắt đầu',
+			title: t('kytucxa.dotdangky.batDau'),
 			dataIndex: 'thoiGianBatDau',
 			width: 170,
 			align: 'center',
@@ -54,7 +59,7 @@ const DotDangKy = () => {
 			render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '--'),
 		},
 		{
-			title: 'Kết thúc',
+			title: t('kytucxa.dotdangky.ketThuc'),
 			dataIndex: 'thoiGianKetThuc',
 			width: 170,
 			align: 'center',
@@ -63,29 +68,29 @@ const DotDangKy = () => {
 			render: (value) => (value ? dayjs(value).format('DD/MM/YYYY') : '--'),
 		},
 		{
-			title: 'Trạng thái',
+			title: t('kytucxa.dotdangky.trangThai'),
 			width: 130,
 			align: 'center',
 			render: (_value, record) => {
-				const trangThai = getTrangThaiDot(record);
+				const trangThai = getTrangThaiDot(record, t);
 				return <Tag color={trangThai.color}>{trangThai.label}</Tag>;
 			},
 		},
 		{
-			title: 'Ghi chú',
+			title: t('kytucxa.dotdangky.ghiChu'),
 			dataIndex: 'ghiChu',
 			width: 220,
 			filterType: 'string',
 			render: (value) => value || '--',
 		},
 		{
-			title: 'Thao tác',
+			title: t('kytucxa.dotdangky.thaoTac'),
 			width: 150,
 			align: 'center',
 			fixed: 'right',
 			render: (_value, record) => (
 				<>
-					<Tooltip title='Chỉnh sửa'>
+					<Tooltip title={t('global.button.chinhsua')}>
 						<Button onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
 					</Tooltip>
 					{/* <Tooltip title='Xem ID'>
@@ -100,10 +105,10 @@ const DotDangKy = () => {
 						</Button>
 					</Tooltip> */}
 
-					<Tooltip title='Xóa'>
+					<Tooltip title={t('global.button.xoa')}>
 						<Popconfirm
 							onConfirm={() => deleteModel(record._id, getData)}
-							title='Bạn có chắc chắn muốn xóa đợt đăng ký này?'
+							title={t('kytucxa.dotdangky.confirmDelete')}
 							placement='topLeft'
 						>
 							<Button danger type='link' icon={<DeleteOutlined />} />
@@ -120,7 +125,7 @@ const DotDangKy = () => {
 			columns={columns}
 			dependencies={[page, limit, recHocKy?.ma]}
 			modelName='kytucxa.dotdangky'
-			title='Đợt đăng ký ký túc xá'
+			title={t('kytucxa.dotdangky.title')}
 			Form={Form}
 			formProps={{ getData }}
 			buttons={{ create: !!recHocKy?.ma }}

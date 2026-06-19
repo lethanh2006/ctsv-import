@@ -173,4 +173,6 @@ export default {
 	'menu.KyTucXa.DotDangKy': 'Registration Periods',
 	'menu.KyTucXa.DanhMucChung': 'Categories',
 	'menu.KyTucXa.NhanPhong': 'Check-in',
+	'menu.KyTucXa.DanhSachMienKyTucXa': 'List of dormitory exemptions',
+	'menu.KyTucXa.DanhSachUuTien': 'List of priority dormitory occupancy',
 };

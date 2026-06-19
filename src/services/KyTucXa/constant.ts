@@ -30,6 +30,11 @@ export enum ELoaiKhoanThu {
 	KTX = 'KTX',
 }
 
+export enum ELoaiDotDangKyKTX {
+	THEO_KHOA = 'Theo khoa',
+	THEO_DANH_SACH = 'Theo danh sách',
+}
+
 export enum ERuleType {
 	GIOI_TINH = 'GIOI_TINH',
 	MAX_PER_KHOA = 'MAX_PER_KHOA',

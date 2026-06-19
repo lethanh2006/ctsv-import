@@ -7,7 +7,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Modal, message, type FormInstance } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import * as XLSX from 'xlsx';
 
 const TableSelectUserAny = TableSelectUser as any;
@@ -54,9 +54,11 @@ const FormThemSinhVien = (props: {
 	}) => Promise<boolean | void> | boolean | void;
 }) => {
 	const [form] = Form.useForm();
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 
 	return (
-		<Card title='Thêm mới sinh viên'>
+		<Card title={t('kytucxa.dotdangky.themMoiSinhVien')}>
 			<Form
 				form={form}
 				layout='vertical'
@@ -66,7 +68,11 @@ const FormThemSinhVien = (props: {
 					props.onCancel?.();
 				}}
 			>
-				<Form.Item name='maSinhVien' label='Sinh viên' rules={[{ required: true, message: 'Vui lòng chọn sinh viên' }]}>
+				<Form.Item
+					name='maSinhVien'
+					label={t('kytucxa.dotdangky.sinhVien')}
+					rules={[{ required: true, message: t('kytucxa.dotdangky.message.chonSinhVien') }]}
+				>
 					<SelectSinhVienDebounce
 						selectMa
 						onChange={(value, option) => {
@@ -83,10 +89,10 @@ const FormThemSinhVien = (props: {
 				<Form.Item name='khoaSinhVien' hidden />
 				<div className='form-footer'>
 					<Button htmlType='submit' type='primary'>
-						Thêm mới
+						{t('global.button.themmoi')}
 					</Button>
 					<Button htmlType='button' onClick={props.onCancel}>
-						Hủy
+						{t('global.button.huy')}
 					</Button>
 				</div>
 			</Form>
@@ -101,6 +107,8 @@ const SinhVienDangKySection = (props: {
 	isOngoing?: boolean;
 	isEnded?: boolean;
 }) => {
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { form, visible, dotId, isOngoing, isEnded } = props;
 	const [visibleSelect, setVisibleSelect] = useState(false);
 	const [showAddStudent, setShowAddStudent] = useState(false);
@@ -153,15 +161,17 @@ const SinhVienDangKySection = (props: {
 
 	const customImportConfig = {
 		onDownloadTemplate: () => {
-			const headers = [['TT', 'Mã sinh viên', 'Họ tên', 'Khoá sinh viên']];
+			const headers = [
+				['TT', t('kytucxa.dotdangky.maSinhVien'), t('kytucxa.dotdangky.hoTen'), t('kytucxa.dotdangky.khoaSinhVien')],
+			];
 			const worksheet = XLSX.utils.aoa_to_sheet(headers);
 			const workbook = XLSX.utils.book_new();
-			XLSX.utils.book_append_sheet(workbook, worksheet, 'Mẫu');
+			XLSX.utils.book_append_sheet(workbook, worksheet, t('kytucxa.dotdangky.excel.sheetTemplate'));
 			const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 			const blob = new Blob([excelBuffer], {
 				type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			});
-			fileDownload(blob, 'Mẫu nhập danh sách sinh viên.xlsx');
+			fileDownload(blob, t('kytucxa.dotdangky.excel.templateFileName'));
 		},
 		onImport: (file: File): Promise<any[]> => {
 			return new Promise((resolve, reject) => {
@@ -174,9 +184,9 @@ const SinhVienDangKySection = (props: {
 						const sheetData: any[] = XLSX.utils.sheet_to_json(ws);
 						const parsed = sheetData
 							.map((row: any) => {
-								const code = row['Mã sinh viên']?.toString()?.trim() || '';
-								const fullname = row['Họ tên']?.toString()?.trim() || '';
-								const khoa = row['Khoá sinh viên']?.toString()?.trim() || '';
+								const code = row[t('kytucxa.dotdangky.maSinhVien')]?.toString()?.trim() || '';
+								const fullname = row[t('kytucxa.dotdangky.hoTen')]?.toString()?.trim() || '';
+								const khoa = row[t('kytucxa.dotdangky.khoaSinhVien')]?.toString()?.trim() || '';
 								return {
 									code,
 									username: code,
@@ -199,18 +209,18 @@ const SinhVienDangKySection = (props: {
 
 	const onDelete = async (record: any) => {
 		if (isEnded || (isOngoing && record._id)) {
-			message.warning('Không được xóa danh sách sinh viên hiện tại');
+			message.warning(t('kytucxa.dotdangky.message.keepCurrentStudentList'));
 			return;
 		}
 
 		if (dotId && record._id) {
 			try {
 				await deleteSinhVienDangKy(dotId, record._id);
-				message.success('Xóa sinh viên thành công');
+				message.success(t('kytucxa.dotdangky.message.deleteStudentSuccess'));
 				fetchStudents();
 			} catch (err) {
 				console.error(err);
-				message.error('Không thể xóa sinh viên');
+				message.error(t('kytucxa.dotdangky.message.deleteStudentFailed'));
 			}
 		} else {
 			const nextUsers = selectedUsers.filter((u) => u.code !== record.code);
@@ -220,7 +230,7 @@ const SinhVienDangKySection = (props: {
 
 	const onAddStudent = async (values: { maSinhVien: string; hoTen?: string; khoaSinhVien?: string }) => {
 		if (isEnded) {
-			message.warning('Đợt đăng ký đã kết thúc, không được chỉnh sửa danh sách sinh viên');
+			message.warning(t('kytucxa.dotdangky.message.endedCannotEditStudentList'));
 			return false;
 		}
 
@@ -228,7 +238,7 @@ const SinhVienDangKySection = (props: {
 		if (!maSinhVien) return false;
 
 		if (selectedUsers.some((item) => item.code === maSinhVien)) {
-			message.warning('Sinh viên đã có trong danh sách');
+			message.warning(t('kytucxa.dotdangky.message.studentAlreadyExists'));
 			return false;
 		}
 
@@ -240,7 +250,7 @@ const SinhVienDangKySection = (props: {
 
 		if (dotId) {
 			await postSinhVienDangKy(dotId, [payload]);
-			message.success('Thêm sinh viên thành công');
+			message.success(t('kytucxa.dotdangky.message.addStudentSuccess'));
 			await fetchStudents();
 			return true;
 		}
@@ -260,28 +270,28 @@ const SinhVienDangKySection = (props: {
 
 	const columns: IColumn<TSinhVienDangKy>[] = [
 		{
-			title: 'Mã sinh viên',
+			title: t('kytucxa.dotdangky.maSinhVien'),
 			dataIndex: 'code',
 			key: 'code',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Họ tên',
+			title: t('kytucxa.dotdangky.hoTen'),
 			dataIndex: 'fullname',
 			key: 'fullname',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Khóa sinh viên',
+			title: t('kytucxa.dotdangky.khoaSinhVien'),
 			dataIndex: 'khoaSinhVien',
 			key: 'khoaSinhVien',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: t('kytucxa.dotdangky.thaoTac'),
 			key: 'action',
 			width: 80,
 			align: 'center' as const,
@@ -306,7 +316,7 @@ const SinhVienDangKySection = (props: {
 				<input type='hidden' />
 			</Form.Item>
 
-			<span style={{ fontWeight: 'bold', marginBottom: 12 }}>Danh sách sinh viên đăng ký KTX</span>
+			<span style={{ fontWeight: 'bold', marginBottom: 12 }}>{t('kytucxa.dotdangky.danhSachSinhVienDangKy')}</span>
 
 			<TableStaticData
 				data={selectedUsers}
@@ -320,23 +330,12 @@ const SinhVienDangKySection = (props: {
 				setShowEdit={setShowAddStudent}
 				Form={FormThemSinhVien}
 				formProps={{ onSubmit: onAddStudent }}
-				// otherButtons={[
-				// 	<Button
-				// 		size='small'
-				// 		key='import'
-				// 		onClick={() => setVisibleSelect(true)}
-				// 		icon={<ImportOutlined />}
-				// 		type='primary'
-				// 	>
-				// 		Nhập danh sách sinh viên
-				// 	</Button>,
-				// ]}
 			/>
 
 			<Modal
 				open={visibleSelect}
 				onCancel={() => setVisibleSelect(false)}
-				title={'Chọn/nhập danh sách sinh viên'}
+				title={t('kytucxa.dotdangky.chonNhapDanhSachSinhVien')}
 				width={900}
 				footer={null}
 				destroyOnClose
@@ -350,7 +349,7 @@ const SinhVienDangKySection = (props: {
 					}}
 					customImport={customImportConfig}
 					customStudentColumn={{
-						title: 'Khoá sinh viên',
+						title: t('kytucxa.dotdangky.khoaSinhVien'),
 						dataIndex: 'khoaSinhVien',
 					}}
 					singleTable={true}
@@ -363,7 +362,7 @@ const SinhVienDangKySection = (props: {
 						}}
 						type='primary'
 					>
-						Chọn xong
+						{t('kytucxa.dotdangky.chonXong')}
 					</Button>
 				</div>
 			</Modal>

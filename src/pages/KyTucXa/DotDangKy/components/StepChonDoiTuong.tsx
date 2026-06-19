@@ -3,11 +3,12 @@ import KhoaToaConfigTable from '@/pages/KyTucXa/DotDangKy/components/KhoaToaConf
 import RoomTable from '@/pages/KyTucXa/DotDangKy/components/RoomTable';
 import SelectToaNha from '@/pages/KyTucXa/DotDangKy/components/SelectToaNha';
 import SinhVienDangKySection from '@/pages/KyTucXa/DotDangKy/components/SinhVienDangKySection';
+import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import rules from '@/utils/rules';
 import type { FormInstance } from 'antd';
 import { Col, Form, Row, message } from 'antd';
 import React from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 interface StepChonDoiTuongProps {
 	form: FormInstance;
@@ -50,6 +51,8 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 	isOngoing,
 	isEnded,
 }) => {
+	const intl = useIntl();
+	const t = (id: string) => intl.formatMessage({ id });
 	const { record, visibleForm, edit } = useModel('kytucxa.dotdangky');
 	const { danhSach: allPhong } = useModel('theodoitaisanvattu.phong');
 
@@ -69,22 +72,22 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 	return (
 		<>
 			<Row gutter={[12, 0]}>
-				{loaiDot === 'Theo khoa' ? (
+				{loaiDot === ELoaiDotDangKyKTX.THEO_KHOA ? (
 					<Col xs={24}>
-						<Form.Item name='maKhoaNganh' label='Khóa sinh viên áp dụng' rules={[...rules.required]}>
+						<Form.Item name='maKhoaNganh' label={t('kytucxa.dotdangky.khoaSinhVienApDung')} rules={[...rules.required]}>
 							<SelectKhoaSinhVien
 								multiple
 								selectMa
 								allowClear={!isOngoing}
 								disabled={isEnded}
-								placeholder='Chọn khóa sinh viên'
+								placeholder={t('kytucxa.dotdangky.chonKhoaSinhVien')}
 								onChange={(value) => {
 									const rawNextValue = Array.isArray(value) ? (value as string[]) : [];
 									const nextValue = isOngoing
 										? ensureKeepInitialValues(
 												rawNextValue,
 												initialKhoaNganh,
-												'Không được xóa khóa sinh viên hiện có khi đợt đăng ký đang diễn ra',
+												t('kytucxa.dotdangky.message.keepCurrentStudentCohorts'),
 											)
 										: rawNextValue;
 									setSelectedKhoaNganh(nextValue);
@@ -114,9 +117,9 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 						)}
 					</Col>
 				) : null}
-				{loaiDot === 'Theo danh sách' ? (
+				{loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH ? (
 					<Col xs={24} md={12}>
-						<Form.Item name='danhSachToaNha' label='Tòa nhà' rules={[...rules.required]}>
+						<Form.Item name='danhSachToaNha' label={t('kytucxa.dotdangky.toaNha')} rules={[...rules.required]}>
 							<SelectToaNha
 								multiple
 								selectMa
@@ -128,7 +131,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 										? ensureKeepInitialValues(
 												rawNextValue,
 												initialToaNhaIds,
-												'Không được xóa tòa nhà hiện có khi đợt đăng ký đang diễn ra',
+												t('kytucxa.dotdangky.message.keepCurrentBuildings'),
 											)
 										: rawNextValue;
 									setSelectedToaNhaIds(nextValue);
@@ -152,7 +155,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 				) : null}
 			</Row>
 
-			{loaiDot === 'Theo danh sách' && selectedToaNhaIds.length ? (
+			{loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH && selectedToaNhaIds.length ? (
 				<div style={{ marginTop: 12 }}>
 					<RoomTable
 						toaNhaIds={selectedToaNhaIds}
@@ -168,7 +171,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 					/>
 				</div>
 			) : null}
-			{loaiDot === 'Theo danh sách' ? (
+			{loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH ? (
 				<SinhVienDangKySection
 					form={form}
 					dotId={record?._id}

@@ -8,7 +8,7 @@ import { DeleteOutlined, EditOutlined, ExportOutlined, ImportOutlined } from '@a
 import { Popconfirm, message } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import * as XLSX from 'xlsx';
 import FormSinhVien from './FormSinhVien';
 import { StudentSelectModal } from './StudentSelectModal';
@@ -19,6 +19,8 @@ interface DanhSachSinhVienPanelProps {
 }
 
 export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ activeSemester, selectedSemesterMa }) => {
+	const intl = useIntl();
+	const t = (id: string, values?: Record<string, any>) => intl.formatMessage({ id }, values);
 	const { handleEdit, deleteModel, getModel, danhSach } = useModel('kytucxa.danhsachmiensinhvien');
 	const [visibleSelect, setVisibleSelect] = useState(false);
 
@@ -60,7 +62,7 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 		}[],
 	) => {
 		if (!danhSachId) {
-			message.warning('Vui lòng chọn học kỳ/danh sách trước');
+			message.warning(t('kytucxa.danhsachmien.message.selectSemesterListFirst'));
 			return;
 		}
 
@@ -75,43 +77,43 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 					email: student.email || '',
 				})),
 			});
-			message.success('Import sinh viên thành công');
+			message.success(t('kytucxa.danhsachmien.message.importSuccess'));
 			setVisibleSelect(false);
 			getModel({ danhSachId });
 		} catch (err) {
 			console.error(err);
-			message.error('Có lỗi xảy ra khi import sinh viên');
+			message.error(t('kytucxa.danhsachmien.message.importFailed'));
 		}
 	};
 
 	const handleExportExcel = () => {
 		if (!danhSach?.length) {
-			message.warning('Không có dữ liệu để xuất');
+			message.warning(t('kytucxa.danhsachmien.message.noDataToExport'));
 			return;
 		}
 
 		const dataToExport = danhSach.map((item: any, index: number) => ({
 			TT: index + 1,
-			'Mã sinh viên': item.code || '',
-			'Họ tên': item.fullname || '',
-			'Khoá sinh viên': item.khoaSinhVien || '',
-			'Khóa ngành': getKhoaNganh(item) || '',
-			SĐT: getSoDienThoai(item) || '',
+			[t('kytucxa.danhsachmien.maSinhVien')]: item.code || '',
+			[t('kytucxa.danhsachmien.hoTen')]: item.fullname || '',
+			[t('kytucxa.danhsachmien.khoaSinhVien')]: item.khoaSinhVien || '',
+			[t('kytucxa.danhsachmien.khoaNganh')]: getKhoaNganh(item) || '',
+			[t('kytucxa.danhsachmien.soDienThoai')]: getSoDienThoai(item) || '',
 			Email: getEmail(item) || '',
-			'Trạng thái minh chứng': item.trangThaiMinhChung || 'Chờ duyệt',
+			[t('kytucxa.danhsachmien.trangThaiMinhChung')]: item.trangThaiMinhChung || t('kytucxa.danhsachmien.choDuyet'),
 		}));
 
 		const worksheet = XLSX.utils.json_to_sheet(dataToExport);
 		const workbook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách');
+		XLSX.utils.book_append_sheet(workbook, worksheet, t('kytucxa.danhsachmien.excel.sheetDanhSach'));
 		const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 		const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-		fileDownload(blob, `Danh sách miễn KTX - HK ${selectedSemesterMa || ''}.xlsx`);
+		fileDownload(blob, t('kytucxa.danhsachmien.excel.fileName', { maHocKy: selectedSemesterMa || '' }));
 	};
 
 	const columns: IColumn<any>[] = [
 		{
-			title: 'Mã SV',
+			title: t('kytucxa.danhsachmien.maSV'),
 			dataIndex: 'code',
 			key: 'code',
 			width: 120,
@@ -119,21 +121,21 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 			render: (text: string) => <strong>{text}</strong>,
 		},
 		{
-			title: 'Họ tên',
+			title: t('kytucxa.danhsachmien.hoTen'),
 			dataIndex: 'fullname',
 			key: 'fullname',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Khoá SV',
+			title: t('kytucxa.danhsachmien.khoaSV'),
 			dataIndex: 'khoaSinhVien',
 			key: 'khoaSinhVien',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Khóa ngành',
+			title: t('kytucxa.danhsachmien.khoaNganh'),
 			dataIndex: 'khoaNganh',
 			key: 'khoaNganh',
 			width: 180,
@@ -141,7 +143,7 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 			render: (_value, record) => renderText(getKhoaNganh(record)),
 		},
 		{
-			title: 'SĐT',
+			title: t('kytucxa.danhsachmien.soDienThoai'),
 			dataIndex: 'soDienThoai',
 			key: 'soDienThoai',
 			width: 130,
@@ -157,12 +159,12 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 			render: (_value, record) => renderText(getEmail(record)),
 		},
 		{
-			title: 'Minh chứng',
+			title: t('kytucxa.danhsachmien.minhChung'),
 			dataIndex: 'urlMinhChung',
 			key: 'urlMinhChung',
 			width: 180,
 			render: (val: string) => {
-				if (!val) return <span style={{ color: '#bfbfbf' }}>Chưa nộp</span>;
+				if (!val) return <span style={{ color: '#bfbfbf' }}>{t('kytucxa.danhsachmien.chuaNop')}</span>;
 
 				const filename = val.substring(val.lastIndexOf('/') + 1) || 'minh-chung.pdf';
 				return (
@@ -178,20 +180,25 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 			},
 		},
 		{
-			title: 'Thao tác',
+			title: t('kytucxa.danhsachmien.thaoTac'),
 			key: 'action',
 			width: 100,
 			align: 'center',
 			fixed: 'right',
 			render: (_value, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={t('global.button.chinhsua')}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id, () => getModel({ danhSachId }))}
-						title='Bạn có chắc chắn muốn xóa sinh viên này khỏi danh sách miễn?'
+						title={t('kytucxa.danhsachmien.confirmDeleteStudent')}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend tooltip={t('global.button.xoa')} danger type='link' icon={<DeleteOutlined />} />
 					</Popconfirm>
 				</>
 			),
@@ -203,7 +210,7 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 			<TableBase
 				columns={columns}
 				modelName='kytucxa.danhsachmiensinhvien'
-				title={`Sinh viên miễn KTX - HK ${selectedSemesterMa || ''}`}
+				title={t('kytucxa.danhsachmien.panelTitle', { maHocKy: selectedSemesterMa || '' })}
 				Form={FormSinhVien}
 				buttons={{
 					import: false,
@@ -211,10 +218,10 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 				}}
 				otherButtons={[
 					<ButtonExtend key='btn-import-student' icon={<ImportOutlined />} onClick={() => setVisibleSelect(true)}>
-						Nhập dữ liệu
+						{t('global.button.nhapdulieu')}
 					</ButtonExtend>,
 					<ButtonExtend key='btn-export-student' icon={<ExportOutlined />} onClick={handleExportExcel}>
-						Xuất dữ liệu
+						{t('global.button.xuatdulieu')}
 					</ButtonExtend>,
 				]}
 				params={{ danhSachId }}

@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import React, { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const SelectToaNha = (props: {
 	value?: string | string[];
@@ -13,6 +13,7 @@ const SelectToaNha = (props: {
 	selectMa?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, disabled, selectMa } = props;
+	const intl = useIntl();
 	const { danhSach, getAllModel, visibleForm, loading } = useModel('theodoitaisanvattu.toanha');
 
 	useEffect(() => {
@@ -32,7 +33,7 @@ const SelectToaNha = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn tòa nhà'
+			placeholder={intl.formatMessage({ id: 'kytucxa.dotdangky.chonToaNha' })}
 			allowClear={allowClear ?? false}
 			style={{ width: '100%', ...style }}
 			loading={loading}

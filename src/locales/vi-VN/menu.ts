@@ -175,5 +175,5 @@ export default {
 	'menu.KyTucXa.DanhMucChung': 'Danh mục chung',
 	'menu.KyTucXa.NhanPhong': 'Nhận phòng',
 	'menu.KyTucXa.DanhSachMienKyTucXa': 'Danh sách miễn KTX',
-	'menu.KyTucXa.DanhSachUuTien': 'Danh sách ưu tiên',
+	'menu.KyTucXa.DanhSachUuTien': 'Danh sách ưu tiên KTX',
 };

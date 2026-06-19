@@ -116,7 +116,12 @@ const FormThemMoi = (props: any) => {
 
 				<Col span={24}>
 					<Form.Item name='anh' label={intl.formatMessage({ id: 'kytucxa.danhmucchung.anhicon' })}>
-						<UploadFile disabled={isView} maxCount={1} isAvatarSmall buttonDescription='Chọn Icon' />
+						<UploadFile
+							disabled={isView}
+							maxCount={1}
+							isAvatarSmall
+							buttonDescription={intl.formatMessage({ id: 'kytucxa.danhmucchung.chonicon' })}
+						/>
 					</Form.Item>
 				</Col>
 			</Row>

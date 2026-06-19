@@ -53,19 +53,19 @@ const PhongKTXPage = () => {
 			sorter: true,
 		},
 		{
-			title: 'Dành cho sinh viên',
+			title: intl.formatMessage({ id: 'kytucxa.phong.danhChoSinhVien' }),
 			dataIndex: ['dangKyKyTucXaRule', 'quocTichPhong'],
 			width: 160,
 			align: 'center',
 		},
 		{
-			title: 'Giới tính cho phép',
+			title: intl.formatMessage({ id: 'kytucxa.phong.gioiTinhChoPhep' }),
 			dataIndex: ['dangKyKyTucXaRule', 'gioiTinh'],
 			width: 160,
 			align: 'center',
 		},
 		{
-			title: 'Loại phòng',
+			title: intl.formatMessage({ id: 'kytucxa.phong.loaiPhong' }),
 			dataIndex: 'maLoaiPhongKtx',
 			width: 160,
 			align: 'center',
