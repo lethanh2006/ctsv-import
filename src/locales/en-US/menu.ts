@@ -32,8 +32,6 @@ export default {
 	'menu.DanhMuc.LoaiPhongBan': 'Department Types',
 	'menu.DanhMuc.ThamGiaCongTacXaHoi': 'Social Work Participation',
 	'menu.DanhMuc.CapDatGiai': 'Award Levels',
-	'menu.DanhMuc.KyTucXa': 'Dormitories',
-	'menu.DanhMuc.PhongKyTucXa': 'Dormitory Rooms',
 	'menu.DanhMuc.CapKyLuat': 'Disciplinary Levels',
 	'menu.DanhMuc.HinhThucKyLuat': 'Disciplinary Forms',
 	'menu.DanhMuc.LoaiKyLuat': 'Disciplinary Types',
@@ -169,4 +167,10 @@ export default {
 	'menu.DichVuChung.TheChat.DanhMuc': 'Evaluation Criteria',
 	'menu.DichVuChung.TheChat.DotDangKy': 'Registration Period',
 	'menu.DichVuChung.TheChat.DanhSachSinhVien': 'Evaluation Results',
+
+	'menu.KyTucXa': 'Dormitories',
+	'menu.KyTucXa.Phong': 'Rooms',
+	'menu.KyTucXa.DotDangKy': 'Registration Periods',
+	'menu.KyTucXa.DanhMucChung': 'Categories',
+	'menu.KyTucXa.NhanPhong': 'Check-in',
 };

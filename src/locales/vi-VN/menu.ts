@@ -32,8 +32,6 @@ export default {
 	'menu.DanhMuc.LoaiPhongBan': 'Loại phòng ban',
 	'menu.DanhMuc.ThamGiaCongTacXaHoi': 'Tham gia công tác xã hội',
 	'menu.DanhMuc.CapDatGiai': 'Cấp đạt giải',
-	'menu.DanhMuc.KyTucXa': 'Ký túc xá',
-	'menu.DanhMuc.PhongKyTucXa': 'Phòng ký túc xá',
 	'menu.DanhMuc.CapKyLuat': 'Cấp kỷ luật',
 	'menu.DanhMuc.HinhThucKyLuat': 'Hình thức kỷ luật',
 	'menu.DanhMuc.LoaiKyLuat': 'Loại kỷ luật',
@@ -170,4 +168,12 @@ export default {
 	'menu.DichVuChung.TheChat.DanhMuc': 'Tiêu chuẩn đánh giá',
 	'menu.DichVuChung.TheChat.DotDangKy': 'Đợt đánh giá',
 	'menu.DichVuChung.TheChat.DanhSachSinhVien': 'Kết quả đánh giá',
+
+	'menu.KyTucXa': 'Ký túc xá',
+	'menu.KyTucXa.Phong': 'Phòng',
+	'menu.KyTucXa.DotDangKy': 'Đợt đăng ký',
+	'menu.KyTucXa.DanhMucChung': 'Danh mục chung',
+	'menu.KyTucXa.NhanPhong': 'Nhận phòng',
+	'menu.KyTucXa.DanhSachMienKyTucXa': 'Danh sách miễn KTX',
+	'menu.KyTucXa.DanhSachUuTien': 'Danh sách ưu tiên',
 };

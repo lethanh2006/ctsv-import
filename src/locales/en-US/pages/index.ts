@@ -3,6 +3,7 @@ import danhmuc from './danhmuc';
 import login from './login';
 import sinhvien from './sinhvien';
 import thongtinnguoihoc from './thongtinnguoihoc';
+import kytucxa from './kytucxa';
 
 export default {
 	...login,
@@ -10,6 +11,7 @@ export default {
 	...CCT,
 	...thongtinnguoihoc,
 	...sinhvien,
+	...kytucxa,
 
 	'pages.trangchu.title': 'STUDENT AFFAIRS MANAGEMENT',
 	'pages.trangchu.subtitle': 'DIGITAL UNIVERSITY SYSTEM',

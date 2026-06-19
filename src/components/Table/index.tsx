@@ -8,7 +8,8 @@ const TableBase = (props: TableBaseProps) => {
 	const model = useModel(props.modelName) as any;
 	const filters: TFilter<any>[] = model?.filters;
 	const getData = props.getData ?? model?.getModel;
-	const hasFilter = props.columns?.filter((item) => item.filterType)?.length;
+	const hasFilter = false;
+	// props.columns?.filter((item) => item.filterType)?.length;
 	const {
 		visibleForm,
 		setVisibleForm,

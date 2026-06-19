@@ -160,6 +160,7 @@ export const buildUpLoadMultiFile = async (
 	values: any,
 	fieldName: string,
 	scope: EFileScope = EFileScope.PUBLIC,
+	ip?: string,
 ): Promise<string[] | null> => {
 	// File upload chưa onChange => value vẫn là sring[]
 	if (Array.isArray(values?.[fieldName])) return values[fieldName];
@@ -169,7 +170,7 @@ export const buildUpLoadMultiFile = async (
 		values?.[fieldName]?.fileList?.length
 	) {
 		// Upload từng file lên
-		return Promise.all(values?.[fieldName]?.fileList.map((file: any) => handleSingleFile(file, scope)));
+		return Promise.all(values?.[fieldName]?.fileList.map((file: any) => handleSingleFile(file, scope, undefined, ip)));
 	}
 	return null;
 };

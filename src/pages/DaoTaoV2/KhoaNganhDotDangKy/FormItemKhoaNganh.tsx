@@ -5,10 +5,10 @@ import { Col, Form, Row } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import SelectTrinhDo from '../DanhMucHeThong/CoSo/TrinhDo/components/Select';
 import SelectHinhThuc from '../DanhMucHeThong/CoSo/HinhThuc/components/Select';
-import SelectKhoaSinhVien from '../NamHoc/KhoaSinhVien/components/Select';
 import SelectNganhCoSo from '../DanhMucHeThong/CoSo/Nganh/components/SelectNganh';
+import SelectTrinhDo from '../DanhMucHeThong/CoSo/TrinhDo/components/Select';
+import SelectKhoaSinhVien from '../NamHoc/KhoaSinhVien/components/Select';
 
 /** Form Item chọn khóa ngành theo Trình độ, hình thức, khóa, ngành */
 const FormItemKhoaNganh = (props: {
@@ -187,7 +187,7 @@ const FormItemKhoaNganh = (props: {
 							preserveSelectedRowKeys: true,
 							columnWidth: 40,
 						},
-						scroll: { y: 380 },
+						scroll: { y: 450 },
 						pagination: false,
 					}}
 					otherButtons={
@@ -199,7 +199,7 @@ const FormItemKhoaNganh = (props: {
 											(Bỏ chọn tất cả)
 										</a>
 									</div>,
-							  ]
+								]
 							: undefined
 					}
 				/>

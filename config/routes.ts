@@ -855,6 +855,44 @@
 		],
 	},
 
+	{
+		name: 'KyTucXa',
+		path: 'ky-tuc-xa',
+		icon: 'copy',
+		routes: [
+			{
+				name: 'DanhMucChung',
+				path: 'danh-muc-chung',
+				component: 'KyTucXa/DanhMucChung',
+			},
+			{
+				name: 'Phong',
+				path: 'phong',
+				component: 'KyTucXa/Phong',
+			},
+			{
+				name: 'DotDangKy',
+				path: 'dot-dang-ky',
+				component: 'KyTucXa/DotDangKy',
+			},
+			{
+				name: 'NhanPhong',
+				path: 'nhan-phong',
+				component: 'KyTucXa/NhanPhong',
+			},
+			{
+				name: 'DanhSachMienKyTucXa',
+				path: 'danh-sach-mien-ky-tuc-xa',
+				component: 'KyTucXa/DanhSachMienKyTucXa',
+			},
+			{
+				name: 'DanhSachUuTien',
+				path: 'danh-sach-uu-tien',
+				component: 'KyTucXa/DanhSachMienKyTucXa',
+			},
+		],
+	},
+
 	// THONG KE BAO CAO
 	// {
 	// 	name: 'ThongKe',

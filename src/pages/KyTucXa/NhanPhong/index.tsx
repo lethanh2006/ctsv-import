@@ -1,0 +1,268 @@
+import TableBase from '@/components/Table';
+import { type IColumn } from '@/components/Table/typing';
+import type { KyTucXa } from '@/services/KyTucXa/typing';
+import axios from '@/utils/axios';
+import dayjs from '@/utils/dayjs';
+import { ipCsvc } from '@/utils/ip';
+import { Tag, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { useIntl, useModel } from 'umi';
+
+const NhanPhongKTXPage = () => {
+	const intl = useIntl();
+	const { page, limit, selectedIds, setSelectedIds, getModel } = useModel('kytucxa.checkinsinhvien');
+	const { danhSach: danhSachPhong, getModel: getPhong } = useModel('kytucxa.phong');
+	const { danhSach: danhSachToa, getAllModel: getAllToa } = useModel('kytucxa.toa');
+	const { danhSach: danhSachDanhMuc, getAllModel: getAllDanhMuc } = useModel('kytucxa.danhmucchung');
+	const [submitting, setSubmitting] = useState(false);
+
+	useEffect(() => {
+		getPhong();
+		getAllToa();
+		getAllDanhMuc();
+	}, []);
+
+	const getValueByPath = (record: any, paths: string[]) => {
+		for (const path of paths) {
+			const value = path.split('.').reduce((obj, key) => obj?.[key], record);
+			if (value !== undefined && value !== null && value !== '') return value;
+		}
+
+		return undefined;
+	};
+
+	const renderText = (value?: string | number | null) => value ?? '-';
+
+	const renderDate = (value?: string | null, format = 'DD/MM/YYYY') => (value ? dayjs(value).format(format) : '--');
+
+	const getPhongInfo = (record: KyTucXa.ICheckInSinhVien) =>
+		record?.phong || danhSachPhong?.find((item: KyTucXa.IPhong) => item?.ma === record?.maPhong);
+
+	const getLoaiPhong = (record: KyTucXa.ICheckInSinhVien) => {
+		const phong = getPhongInfo(record);
+		const maLoaiPhong =
+			record?.loaiPhongKtx?.ma || record?.maLoaiPhongKtx || phong?.loaiPhongKtx?.ma || phong?.maLoaiPhongKtx;
+		const tenLoaiPhong =
+			record?.loaiPhongKtx?.ten ||
+			phong?.loaiPhongKtx?.ten ||
+			danhSachDanhMuc?.find((item: KyTucXa.IDanhMucChung) => item?.ma === maLoaiPhong)?.ten;
+
+		return tenLoaiPhong || maLoaiPhong || '-';
+	};
+
+	const getTenPhong = (record: KyTucXa.ICheckInSinhVien) => {
+		const phong = getPhongInfo(record);
+
+		return record?.tenPhong || phong?.ten || record?.maPhong || '-';
+	};
+
+	const getTang = (record: KyTucXa.ICheckInSinhVien) => {
+		const phong = getPhongInfo(record);
+
+		return record?.tang ?? record?.tangThu ?? phong?.tangThu ?? '-';
+	};
+
+	const getTenToaNha = (record: KyTucXa.ICheckInSinhVien) => {
+		const tenToaNha =
+			record?.tenToaNha ||
+			record?.toaNha?.ten ||
+			danhSachToa?.find((item: KyTucXa.IToa) => item?.ma === record?.maToaNha)?.ten;
+
+		return tenToaNha || record?.maToaNha || '-';
+	};
+
+	const renderTrangThaiThanhToan = (val?: string) => {
+		const status = val?.toString()?.trim()?.toLowerCase();
+		const statusMap: Record<string, { color: string; label: string }> = {
+			unpaid: { color: 'red', label: 'Unpaid' },
+			underpaid: { color: 'orange', label: 'Underpaid' },
+			paid: { color: 'green', label: 'Paid' },
+		};
+		const config = status ? statusMap[status] : undefined;
+
+		if (!config) return <Tag>{val || '-'}</Tag>;
+
+		return <Tag color={config.color}>{config.label}</Tag>;
+	};
+
+	const handleBulkCheckin = async () => {
+		if (!selectedIds?.length) return;
+		setSubmitting(true);
+		try {
+			await Promise.all(selectedIds.map((id) => axios.post(`${ipCsvc}/dang-ky-ky-tuc-xa/nhan-phong/${id}`)));
+			message.success(intl.formatMessage({ id: 'kytucxa.nhanphong.checkinSuccess' }));
+			setSelectedIds(undefined);
+			getModel();
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const columns: IColumn<KyTucXa.ICheckInSinhVien>[] = [
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.maSinhVien' }),
+			dataIndex: 'maSinhVien',
+			width: 120,
+			filterType: 'string',
+			render: (val, record) => renderText(val || record?.sinhVien?.maSinhVien || record?.sinhVien?.ma),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.hoTen' }),
+			width: 150,
+			align: 'center',
+			dataIndex: 'hoTen',
+			filterType: 'string',
+			render: (val, record) => renderText(val || record?.sinhVien?.hoTen),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.khoaSinhVien' }),
+			dataIndex: 'maKhoaSinhVien',
+			width: 130,
+			render: (val, record) =>
+				renderText(
+					val ||
+						record?.khoaSinhVien?.ten ||
+						record?.khoaSinhVien?.ma ||
+						record?.sinhVien?.khoaSinhVien?.ten ||
+						record?.sinhVien?.khoaSinhVien?.ma ||
+						record?.sinhVien?.maKhoaSinhVien,
+				),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.nganh' }),
+			dataIndex: 'tenNganh',
+			width: 180,
+			render: (val, record) =>
+				renderText(
+					val ||
+						record?.nganh?.ten ||
+						record?.maNganh ||
+						record?.sinhVien?.tenNganh ||
+						record?.sinhVien?.nganh?.ten ||
+						record?.sinhVien?.maNganh,
+				),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.soDienThoai' }),
+			dataIndex: 'soDienThoai',
+			width: 130,
+			filterType: 'string',
+			render: (val, record) => renderText(val || record?.sinhVien?.soDienThoai),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.email' }),
+			dataIndex: 'email',
+			width: 200,
+			filterType: 'string',
+			render: (val, record) => renderText(val || record?.sinhVien?.email),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.thoiGianDangKy' }),
+			dataIndex: 'thoiGianDangKy',
+			width: 150,
+			align: 'center',
+			sortable: true,
+			render: (val, record) => renderDate(val || record?.ngayDangKy || record?.createdAt, 'DD/MM/YYYY HH:mm'),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.loaiPhong' }),
+			dataIndex: 'maLoaiPhongKtx',
+			width: 140,
+			filterType: 'string',
+			render: (_, record) => getLoaiPhong(record),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.maPhong' }),
+			dataIndex: 'maPhong',
+			width: 120,
+			filterType: 'string',
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.tenPhong' }),
+			dataIndex: 'maPhong',
+			width: 120,
+			filterType: 'string',
+			render: (_, record) => getTenPhong(record),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.tang' }),
+			dataIndex: 'tangThu',
+			width: 90,
+			align: 'center',
+			render: (_, record) => getTang(record),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.tenToaNha' }),
+			dataIndex: 'maToaNha',
+			width: 140,
+			filterType: 'string',
+			render: (_, record) => getTenToaNha(record),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayNhanPhong' }),
+			dataIndex: 'ngayBatDau',
+			width: 120,
+			align: 'center',
+			sortable: true,
+			render: (value, record) => renderDate(record?.ngayNhanPhong || value),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayTraPhong' }),
+			dataIndex: 'ngayKetThuc',
+			width: 120,
+			align: 'center',
+			sortable: true,
+			render: (value, record) => renderDate(record?.ngayTraPhong || value),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.trangThaiThanhToan' }),
+			dataIndex: 'trangThaiThanhToan',
+			width: 150,
+			align: 'center',
+			filterType: 'select',
+			filterData: ['Unpaid', 'Underpaid', 'Paid'],
+			render: (val, record) =>
+				renderTrangThaiThanhToan(
+					val ||
+						getValueByPath(record, [
+							'hoaDon.trangThaiThanhToan',
+							'bill.trangThaiThanhToan',
+							'thanhToan.trangThaiThanhToan',
+						]),
+				),
+		},
+	];
+
+	return (
+		<TableBase
+			columns={columns}
+			dependencies={[page, limit]}
+			modelName='kytucxa.checkinsinhvien'
+			title={intl.formatMessage({ id: 'kytucxa.nhanphong.title' })}
+			// rowSelection
+			buttons={{ create: false }}
+			scroll={{ x: 2200 }}
+			// otherButtons={[
+			// 	<Popconfirm
+			// 		key='bulk-checkin'
+			// 		title={intl.formatMessage(
+			// 			{ id: 'kytucxa.nhanphong.confirmCheckinNhieu' },
+			// 			{ count: selectedIds?.length ?? 0 },
+			// 		)}
+			// 		onConfirm={handleBulkCheckin}
+			// 		okText={intl.formatMessage({ id: 'kytucxa.nhanphong.xacNhan' })}
+			// 		cancelText={intl.formatMessage({ id: 'kytucxa.nhanphong.huy' })}
+			// 		disabled={!selectedIds?.length}
+			// 	>
+			// 		<Button type='primary' icon={<CheckCircleOutlined />} loading={submitting} disabled={!selectedIds?.length}>
+			// 			{intl.formatMessage({ id: 'kytucxa.nhanphong.btnCheckinNhieu' }, { count: selectedIds?.length ?? 0 })}
+			// 		</Button>
+			// 	</Popconfirm>,
+			// ]}
+		/>
+	);
+};
+
+export default NhanPhongKTXPage;

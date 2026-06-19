@@ -4,7 +4,6 @@ import AvatarDropdown from './AvatarDropdown';
 import styles from './index.less';
 import LocaleSwitch from './LocaleSwitch';
 import ModuleSwitch from './ModuleSwitch';
-import NoticeIconView from './NoticeIcon';
 
 const GlobalHeaderRight: React.FC = () => {
 	const { initialState } = useModel('@@initialState');
@@ -19,7 +18,7 @@ const GlobalHeaderRight: React.FC = () => {
 				<div className={styles.menu_right}>
 					<ModuleSwitch />
 
-					<NoticeIconView />
+					{/* <NoticeIconView /> */}
 
 					{/* <Tooltip
 						title={intl.formatMessage({ id: 'app.header.introduce', defaultMessage: 'Giới thiệu chung' })}
