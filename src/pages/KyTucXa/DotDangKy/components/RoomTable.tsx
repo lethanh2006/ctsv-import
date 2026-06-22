@@ -34,12 +34,14 @@ const RoomTable: React.FC<{
 			dataIndex: 'ten',
 			key: 'ten',
 			width: 180,
+			filterType: 'string',
 		},
 		{
 			title: t('kytucxa.dotdangky.toaNha'),
 			dataIndex: ['toaNha', 'ten'],
 			key: 'toaNha',
 			width: 180,
+			filterType: 'string',
 			render: (_: any, rec: any) => rec?.toaNha?.ten || rec?.maToaNha || '-',
 		},
 		{
@@ -47,6 +49,7 @@ const RoomTable: React.FC<{
 			dataIndex: 'tangThu',
 			key: 'tangThu',
 			width: 100,
+			sortable: true,
 			render: (val: any) => val ?? '-',
 		},
 		{
@@ -54,6 +57,7 @@ const RoomTable: React.FC<{
 			dataIndex: 'dienTich',
 			key: 'dienTich',
 			width: 110,
+			sortable: true,
 			render: (val: any) => val ?? '-',
 		},
 		{
@@ -61,6 +65,7 @@ const RoomTable: React.FC<{
 			dataIndex: 'soLuongToiDa',
 			key: 'soLuongToiDa',
 			width: 120,
+			sortable: true,
 			render: (val: any) => val ?? '-',
 		},
 	];

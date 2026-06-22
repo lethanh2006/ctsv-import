@@ -133,7 +133,7 @@ const DotDangKy = () => {
 			showModalTitle
 		>
 			<div style={{ marginBottom: 12 }}>
-				<FilterHocKy isSetHocKy width={300} />
+				<FilterHocKy isSetHocKy width={300} hideExpand />
 			</div>
 		</TableBase>
 	);

@@ -885,11 +885,7 @@
 				path: 'danh-sach-mien-ky-tuc-xa',
 				component: 'KyTucXa/DanhSachMienKyTucXa',
 			},
-			{
-				name: 'DanhSachUuTien',
-				path: 'danh-sach-uu-tien',
-				component: 'KyTucXa/DanhSachMienKyTucXa',
-			},
+			
 		],
 	},
 
