@@ -1,27 +1,38 @@
-import { exportLyLich } from '@/services/DaoTaoV2/SinhVien';
-import type { ETrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
-import { colorTrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
+import { exportLyLich, exportTheSinhVien } from '@/services/DaoTaoV2/SinhVien';
+import { colorTrangThaiHocSv, localeTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
+import { formatDate } from '@/utils/formatDate';
 import { formatPhoneNumber } from '@/utils/utils';
-import { MenuOutlined, PrinterOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Empty, Image, Row, Spin, Tag } from 'antd';
-import dayjs from 'dayjs';
+import { ContactsOutlined, DownOutlined, IdcardOutlined, MenuOutlined, PrinterOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Dropdown, Empty, Image, Menu, Row, Spin, Tag } from 'antd';
 import fileDownload from 'js-file-download';
-import { JSX } from 'react';
-import { useIntl, useModel } from 'umi';
-import KetQuaToanKhoaSinhVien from '../../KetQuaHocTap/KetQuaToanKhoa/KetQuaToanKhoaSinhVien';
+import React from 'react';
+import { useAccess, useIntl, useModel } from 'umi';
+import TabTongQuanKqhtToanKhoa from '../../KetQuaHocTap/KetQuaToanKhoa/components/TabTongQuan';
+import SelectSongNganh from '../../NamHoc/KhoaNganh/components/SelectSongNganh';
 import ChartCongNoSinhVien from '../CongNoSinhVien/ChartCongNo';
+import './style.less';
 
 type DescriptionItem = {
 	label?: string;
-	content?: JSX.Element | string | number;
+	content?: React.JSX.Element | string | number;
 	md?: 6 | 8 | 12 | 16 | 18 | 24;
 	children?: DescriptionItem[];
 };
 
-const PreviewHoSo = (props: any) => {
+const PreviewHoSo = (props: { hasEdit?: boolean; hasHocBa?: boolean; [key: string]: any }) => {
 	const intl = useIntl();
-	const { record, loading, handleEdit, setVisibleForm, formSubmiting, setFormSubmiting } =
-		useModel('daotaov2.sinhvien.sinhvien');
+	const {
+		record,
+		loading,
+		handleEdit,
+		setVisibleForm,
+		formSubmiting,
+		setFormSubmiting,
+		khoaNganhSelected,
+		setKhoaNganhSelected,
+		setVisibleHocBa,
+	} = useModel('daotaov2.sinhvien.sinhvien');
+	const { minorAccessFilter } = useAccess();
 
 	const onExport = () => {
 		if (record?.ssoId) {
@@ -32,11 +43,18 @@ const PreviewHoSo = (props: any) => {
 				.then((res) =>
 					fileDownload(
 						res.data,
-						`${intl.formatMessage({ id: 'hosonguoihoc.previewhoso.filename' }, { ten: record?.ten })}`,
+						`${intl.formatMessage({ id: 'sinhvien.preview.hoso.filename' }, { ten: record.ten })}.pdf`,
 					),
 				)
 				.finally(() => setFormSubmiting(false));
 		}
+	};
+
+	const onExportThe = () => {
+		if (!record?.ssoId) return;
+		exportTheSinhVien({ listSsoIds: [record.ssoId] })
+			.then((res) => fileDownload(res.data, `Thẻ sinh viên - ${record.ten}.pdf`))
+			.catch((er) => console.log(er));
 	};
 
 	const renderDescription = (data: DescriptionItem) => (
@@ -57,35 +75,49 @@ const PreviewHoSo = (props: any) => {
 	);
 
 	const dataChung: DescriptionItem[] = [
-		{ label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.masinhvien' }), content: record?.ma, md: 8 },
-		{ label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.hoten' }), content: record?.ten, md: 16 },
-		{ label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.gioitinh' }), content: record?.gioiTinh, md: 8 },
+		{ label: intl.formatMessage({ id: 'sinhvien.column.masv' }), content: record?.ma, md: 8 },
 		{
-			label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.ngaysinh' }),
-			content: record?.ngaySinh ? dayjs(record.ngaySinh).format('DD/MM/YYYY') : '',
+			label: intl.formatMessage({ id: 'sinhvien.column.hoten' }),
+			content: minorAccessFilter?.()
+				? (record?.ten ?? [record?.lastName, record?.firstName].filter(Boolean).join(' '))
+				: record?.ten,
+			md: 16,
+		},
+		{ label: intl.formatMessage({ id: 'sinhvien.form.gioitinh' }), content: record?.gioiTinh, md: 8 },
+		{
+			label: intl.formatMessage({ id: 'sinhvien.form.ngaysinh' }),
+			content: record?.ngaySinh ? formatDate(record?.ngaySinh) : '',
 			md: 8,
 		},
 		{
-			label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.cccd' }),
-			content: `${record?.cccd ?? ''}, ${intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.ngaycap' })} ${
-				record?.ngayCapCccd ? dayjs(record.ngayCapCccd).format('DD/MM/YYYY') : '--'
-			}, ${intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.noicap' })} ${record?.noiCapCccd ?? ''}`,
+			label: intl.formatMessage({ id: 'sinhvien.column.cccd' }),
+			content: `${record?.cccd ?? '--'}, ${intl.formatMessage({ id: 'sinhvien.preview.cccd.ngaycap' })}: ${
+				record?.ngayCapCccd ? formatDate(record?.ngayCapCccd) : ''
+			}, ${intl.formatMessage({ id: 'sinhvien.preview.cccd.noicap' })}: ${record?.noiCapCccd ?? '--'}`,
 			md: 24,
 		},
 		{
-			label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.sodienthoai' }),
+			label: intl.formatMessage({ id: 'sinhvien.column.sdt' }),
 			content: !!record?.soDienThoai && formatPhoneNumber(record.soDienThoai),
 			md: 8,
 		},
-		{ label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.email' }), content: record?.email, md: 16 },
+		{ label: intl.formatMessage({ id: 'sinhvien.column.email' }), content: record?.email, md: 16 },
 		{
-			label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.trangthaihoc' }),
-			content: <Tag color={colorTrangThaiHocSv[record?.trangThaiHoc as ETrangThaiHocSv]}>{record?.trangThaiHoc}</Tag>,
+			label: intl.formatMessage({ id: 'sinhvien.column.trangthaihoc' }),
+			content: (() => {
+				const trangThaiHoc = record?.trangThaiHoc as ETrangThaiHocSv | undefined;
+				const localeId = trangThaiHoc ? localeTrangThaiHocSv[trangThaiHoc] : undefined;
+				if (!localeId) return record?.trangThaiHoc ?? '';
+
+				return (
+					<Tag color={colorTrangThaiHocSv[trangThaiHoc as ETrangThaiHocSv]}>{intl.formatMessage({ id: localeId })}</Tag>
+				);
+			})(),
 			md: 8,
 		},
 		{
-			label: intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.khoanganh' }),
-			content: record?.khoaNganh?.ten ?? '',
+			label: intl.formatMessage({ id: 'sinhvien.column.khoanganh' }),
+			content: [record?.khoaNganh?.ten, record?.khoaNganh2?.ten].filter(Boolean).join(', '),
 			md: 16,
 		},
 	];
@@ -120,7 +152,7 @@ const PreviewHoSo = (props: any) => {
 	// 		children: [
 	// 			{ label: 'Tỉnh/Thành phố', content: record?.tinhTpThuongTru },
 	// 			{ label: 'Quận/Huyện', content: record?.quanHuyenThuongTru },
-	// 			{ label: 'Phường/Xã', content: record?.xaPhuongThuongTru },
+	// 			{ label: 'Xã/Phường/Đặc khu', content: record?.xaPhuongThuongTru },
 	// 			{ label: 'Địa chỉ cụ thể', content: record?.soNhaTenDuongThuongTru },
 	// 		],
 	// 	},
@@ -130,17 +162,17 @@ const PreviewHoSo = (props: any) => {
 	// 		children: [
 	// 			{
 	// 				label: 'Ngày vào Đoàn',
-	// 				content: record?.ngayVaoDoan ? dayjs(record.ngayVaoDoan).format('DD/MM/YYYY') : '',
+	// 				content: record?.ngayVaoDoan ? formatDate(record?.ngayVaoDoan) : '',
 	// 				md: 8,
 	// 			},
 	// 			{
 	// 				label: 'Ngày vào Đảng',
-	// 				content: record?.ngayVaoDang ? dayjs(record.ngayVaoDang).format('DD/MM/YYYY') : '',
+	// 				content: record?.ngayVaoDang ? formatDate(record?.ngayVaoDang) : '',
 	// 				md: 8,
 	// 			},
 	// 			{
 	// 				label: 'Ngày vào Đảng chính thức',
-	// 				content: record?.ngayVaoDangChinhThuc ? dayjs(record.ngayVaoDangChinhThuc).format('DD/MM/YYYY') : '',
+	// 				content: record?.ngayVaoDangChinhThuc ? formatDate(record?.ngayVaoDangChinhThuc) : '',
 	// 				md: 8,
 	// 			},
 	// 		],
@@ -158,20 +190,14 @@ const PreviewHoSo = (props: any) => {
 	// ];
 
 	return (
-		<Card title={intl.formatMessage({ id: 'hosonguoihoc.previewhoso.title' })}>
+		<Card title={intl.formatMessage({ id: 'sinhvien.thongtinchung.hososinhvien' })}>
 			<Spin spinning={loading}>
 				{record?.ssoId ? (
 					<>
 						{/* <h2 style={{ textAlign: 'center', marginBottom: 32 }}>SƠ YẾU LÝ LỊCH</h2> */}
 						<Row gutter={[18, 18]} style={{ maxWidth: 1200, margin: 'auto' }}>
-							<Col span={24}>
-								<Button icon={<PrinterOutlined />} onClick={onExport} loading={formSubmiting}>
-									{intl.formatMessage({ id: 'hosonguoihoc.previewhoso.button.inlylich' })}
-								</Button>
-							</Col>
-
-							<Col span={24} sm={6} style={{ display: 'flex', justifyContent: 'center', padding: 12 }}>
-								<div style={{ width: 140, height: 180 }}>
+							<Col span={24} sm={6} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+								<div className='avatar-container'>
 									<Image src={record?.anhDaiDienUrl ?? '/metadata.png'} />
 								</div>
 							</Col>
@@ -195,12 +221,31 @@ const PreviewHoSo = (props: any) => {
 
 						<Row gutter={[12, 12]} style={{ marginTop: 24 }}>
 							<Col span={24} md={16}>
-								<Card title={intl.formatMessage({ id: 'sinhvien.lichsucanhbao.ketqua' })}>
-									<KetQuaToanKhoaSinhVien sinhVienSsoId={record?.ssoId} hideDetail />
+								<Card
+									title={intl.formatMessage({ id: 'sinhvien.lichsucanhbao.ketqua' })}
+									extra={
+										<SelectSongNganh
+											size='small'
+											ssoId={record.ssoId}
+											style={{ width: 200 }}
+											value={khoaNganhSelected}
+											onChange={(val) => setKhoaNganhSelected(val)}
+										/>
+									}
+									// variant='borderless'
+									// className='card-borderless'
+									// styles={{ body: { padding: '8px 0 0' }, header: { padding: 0 } }}
+								>
+									<TabTongQuanKqhtToanKhoa
+										sinhVienSsoId={record?.ssoId}
+										hideDetail
+										maKhoaNganh={khoaNganhSelected}
+										fixedSize
+									/>
 								</Card>
 							</Col>
 							<Col span={24} md={8}>
-								<Card title={intl.formatMessage({ id: 'hosonguoihoc.previewhoso.congno' })}>
+								<Card title={intl.formatMessage({ id: 'sinhvien.tab6' })}>
 									<ChartCongNoSinhVien />
 								</Card>
 							</Col>
@@ -208,11 +253,7 @@ const PreviewHoSo = (props: any) => {
 					</>
 				) : (
 					<Empty
-						description={
-							<i style={{ color: '#999' }}>
-								{intl.formatMessage({ id: 'hosonguoihoc.previewhoso.label.khongthaysv' })}
-							</i>
-						}
+						description={<i style={{ color: '#999' }}>{intl.formatMessage({ id: 'sinhvien.preview.khongtimthay' })}</i>}
 						style={{ marginTop: 32, marginBottom: 32 }}
 					/>
 				)}
@@ -221,10 +262,37 @@ const PreviewHoSo = (props: any) => {
 			<div className='form-footer' style={{ marginTop: 18 }}>
 				{props.hasEdit && record?.ssoId ? (
 					<Button type='primary' icon={<MenuOutlined />} onClick={() => handleEdit()}>
-						{intl.formatMessage({ id: 'hosonguoihoc.previewhoso.xemchitiet' })}
+						{intl.formatMessage({ id: 'sinhvien.preview.xemchitiet' })}
 					</Button>
 				) : null}
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+				<Dropdown
+					overlay={
+						<Menu>
+							<Menu.Item key='hoso' icon={<PrinterOutlined />} onClick={onExport}>
+								{intl.formatMessage({ id: 'sinhvien.button.inhoso' })}
+							</Menu.Item>
+							<Menu.Item key='the' icon={<IdcardOutlined />} onClick={onExportThe}>
+								{intl.formatMessage({ id: 'sinhvien.button.inthe' })}
+							</Menu.Item>
+						</Menu>
+					}
+				>
+					<Button icon={<PrinterOutlined />} loading={formSubmiting}>
+						{intl.formatMessage({ id: 'sinhvien.button.inhoso' })} <DownOutlined />
+					</Button>
+				</Dropdown>
+				{props.hasHocBa ? (
+					<Button
+						icon={<ContactsOutlined />}
+						onClick={() => {
+							setVisibleForm(false);
+							setVisibleHocBa(true);
+						}}
+					>
+						{intl.formatMessage({ id: 'sinhvien.hocba.title' })}
+					</Button>
+				) : null}
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'sinhvien.button.dong' })}</Button>
 			</div>
 		</Card>
 	);

@@ -1,7 +1,7 @@
-import { EOperatorType } from '@/components/Table/constant';
+import { ELoaiNganhChuyenNganh } from '@/services/DaoTaoV2/DanhMucHeThong/constant';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -12,23 +12,20 @@ const SelectChuyenNganh = (props: {
 	multiple?: boolean;
 	allowClear?: boolean;
 	disabled?: boolean;
-	nganh?: string;
+	maNganh?: string;
 	selectMa?: boolean;
+	loai?: ELoaiNganhChuyenNganh;
 }) => {
-	const { value, multiple, allowClear, disabled, nganh, selectMa } = props;
-	const { danhSach, getAllModel, visibleForm } = useModel('daotaov2.danhmuc.nganhdaotao');
+	const intl = useIntl();
+	const { value, multiple, allowClear, disabled, maNganh, selectMa, loai } = props;
+	const { danhSach, getAllModel } = useModel('daotaov2.danhmuc.nganhdaotao');
 
 	useEffect(() => {
-		if (!visibleForm)
-			getAllModel(false, undefined, undefined, [
-				{
-					field: 'maNganhGoc',
-					operator: !!nganh ? EOperatorType.INCLUDE : EOperatorType.NOT_NULL,
-					values: [nganh ?? ''],
-					active: true,
-				},
-			]);
-	}, [visibleForm]);
+		getAllModel(false, undefined, {
+			loai: loai ?? ELoaiNganhChuyenNganh.CHUYEN_NGANH,
+			maNganhGoc: maNganh ?? undefined,
+		});
+	}, [maNganh]);
 
 	const onChange = (val: string) => {
 		if (props.onChange)
@@ -45,11 +42,14 @@ const SelectChuyenNganh = (props: {
 			options={danhSach.map((item) => ({
 				key: item._id,
 				value: selectMa ? item.ma : item._id,
-				label: `${item.ten} - ${item.nganhGoc?.ten ?? ''}`,
+				label: `${item.ten} (${item.ma})`,
 			}))}
+			style={{ width: '100%' }}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn chuyên ngành đào tạo'
+			placeholder={intl.formatMessage({
+				id: loai === ELoaiNganhChuyenNganh.CHUYEN_NGANH_PHU ? 'Thuộc chuyên ngành phụ' : 'Thuộc chuyên ngành',
+			})}
 			allowClear={allowClear ?? false}
 		/>
 	);

@@ -1,30 +1,34 @@
 import TableBase from '@/components/Table';
+import { EOperatorType } from '@/components/Table/constant';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import { type IColumn } from '@/components/Table/typing';
 import { type ELoaiLogDiem } from '@/services/DaoTaoV2/HocKy/constant';
 import { type LichSuNhapDiem } from '@/services/DaoTaoV2/KetQuaHocTap/LichSuNhapDiem/typing';
-import { Modal } from 'antd';
-import dayjs from 'dayjs';
-import { useIntl, useModel } from 'umi';
+import { formatDateTime } from '@/utils/formatDate';
 import { useEffect } from 'react';
-import { EOperatorType } from '@/components/Table/constant';
+import { useIntl, useModel } from 'umi';
 
 const ModalLichSuNhapDiem = (props: {
 	visible: boolean;
 	setVisible: (val: boolean) => void;
-	loaiLogDiems: ELoaiLogDiem[];
+	loaiLogDiems?: ELoaiLogDiem[];
 	lopHocPhanId?: string;
 	maHocPhan?: string;
+	sinhVienSsoId?: string;
 }) => {
 	const intl = useIntl();
 	const { page, limit, getModel } = useModel('daotaov2.ketquahoctap.lichsunhapdiem');
-	const { visible, setVisible, loaiLogDiems, lopHocPhanId, maHocPhan } = props;
+	const { visible, setVisible, loaiLogDiems, lopHocPhanId, maHocPhan, sinhVienSsoId } = props;
 
 	const getData = () =>
 		visible &&
-		(lopHocPhanId || maHocPhan) &&
-		getModel({ lopHocPhanId, maHocPhan }, [
-			{ active: true, field: 'loaiLogDiem', values: loaiLogDiems, operator: EOperatorType.INCLUDE },
-		]);
+		(lopHocPhanId || maHocPhan || sinhVienSsoId) &&
+		getModel(
+			{ lopHocPhanId, maHocPhan, sinhVienSsoId },
+			loaiLogDiems?.length
+				? [{ active: true, field: 'loaiLogDiem', values: loaiLogDiems, operator: EOperatorType.INCLUDE }]
+				: undefined,
+		);
 
 	useEffect(() => {
 		// Reload khi Mở modal
@@ -34,17 +38,26 @@ const ModalLichSuNhapDiem = (props: {
 
 	const columns: IColumn<LichSuNhapDiem.IRecord>[] = [
 		{
-			title: 'Mã sinh viên',
+			title: 'Mã SV',
 			dataIndex: 'maSinhVien',
 			align: 'center',
-			width: 100,
+			width: 120,
 			filterType: 'string',
+			hide: !!sinhVienSsoId,
 		},
 		{
 			title: 'Họ tên',
 			dataIndex: 'tenSinhVien',
-			width: 150,
+			width: 160,
 			filterType: 'string',
+			hide: !!sinhVienSsoId,
+		},
+		{
+			title: 'Mã HP',
+			dataIndex: 'maHocPhan',
+			width: 100,
+			filterType: 'string',
+			hide: !!maHocPhan || !!lopHocPhanId,
 		},
 		{
 			title: 'Hoạt động',
@@ -57,7 +70,7 @@ const ModalLichSuNhapDiem = (props: {
 			dataIndex: 'editedByFullname',
 			filterType: 'string',
 			render: (val, rec) => val ?? rec.editedByUsername,
-			width: 120,
+			width: 150,
 		},
 		{
 			title: 'Thời gian',
@@ -65,13 +78,13 @@ const ModalLichSuNhapDiem = (props: {
 			align: 'center',
 			filterType: 'datetime',
 			sortable: true,
-			render: (val) => val && dayjs(val).format('HH:mm DD/MM/YYYY'),
+			render: (val) => val && formatDateTime(val),
 			width: 120,
 		},
 	];
 
 	return (
-		<Modal
+		<ModalExpandable
 			title={intl.formatMessage({ id: 'ketquahoctap.lichsunhapdiem.title' })}
 			open={visible}
 			onCancel={() => setVisible(false)}
@@ -87,7 +100,7 @@ const ModalLichSuNhapDiem = (props: {
 				modelName='daotaov2.ketquahoctap.lichsunhapdiem'
 				buttons={{ create: false }}
 			/>
-		</Modal>
+		</ModalExpandable>
 	);
 };
 

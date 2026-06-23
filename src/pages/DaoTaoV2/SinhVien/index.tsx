@@ -1,13 +1,16 @@
 import TableBase from '@/components/Table';
-import { type IColumn } from '@/components/Table/typing';
+import { EOperatorType } from '@/components/Table/constant';
+import { TExternalConditionItem, TFilter, type IColumn } from '@/components/Table/typing';
 import { handleLockHoSo, handleUnLockHoSo } from '@/services/DaoTaoV2/SinhVien';
-import { ETrangThaiHocSv, colorTrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
+import { colorTrangThaiHocSv, ETrangThaiHocSv, localeTrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
 import { type SinhVien } from '@/services/DaoTaoV2/SinhVien/typings';
+import dayjs from '@/utils/dayjs';
+import { formatDate } from '@/utils/formatDate';
 import { formatPhoneNumber } from '@/utils/utils';
 import { EyeOutlined, FileImageOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
-import { Button, Modal, Popconfirm, Tag, Tooltip, message } from 'antd';
-import dayjs from 'dayjs';
-import { useIntl, useModel } from 'umi';
+import { Button, message, Modal, Popconfirm, Tag, Tooltip } from 'antd';
+import { useMemo, useState } from 'react';
+import { useAccess, useIntl, useModel } from 'umi';
 import SelectKhoaNganh from '../NamHoc/KhoaNganh/components/Select';
 import FilterKhoaSinhVien from '../NamHoc/KhoaSinhVien/components/FilterKhoaSinhVien';
 import ModalSinhVien from './component/ModalSinhVien';
@@ -17,19 +20,31 @@ import KetQuaCapNhatAnhSV from './components/KetQuaCapNhatAnhSV';
 
 const ViewSinhVien = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, isView, handleView, visibleFormCapNhatAnh, setvisibleFormCapNhatAnh } =
-		useModel('daotaov2.sinhvien.sinhvien');
+	const {
+		page,
+		limit,
+		isView,
+		handleView,
+		setKhoaNganhSelected,
+		record,
+		visibleFormCapNhatAnh,
+		setvisibleFormCapNhatAnh,
+	} = useModel('daotaov2.sinhvien.sinhvien');
 	const { record: recKhoa } = useModel('daotaov2.namhoc.khoasinhvien');
 	const { record: recNganh } = useModel('daotaov2.danhmuc.nganhdaotao');
+	const { record: recTrinhDo } = useModel('daotaov2.danhmuc.trinhdo');
+	const { record: recHinhThuc } = useModel('daotaov2.danhmuc.hinhthucdaotao');
+	const { minorAccessFilter } = useAccess();
 
-	const getData = () => getModel({ maKhoaSinhVien: recKhoa?.ma, maNganh: recNganh?.ma });
+	const [refreshKey, setRefreshKey] = useState(0);
+	const refreshData = () => setRefreshKey((prev) => prev + 1);
 
 	const handleLockHoSoModel = async (id: string) => {
 		try {
 			const res = await handleLockHoSo(id);
 			if (res) {
 				message.success(intl.formatMessage({ id: 'hosonguoihoc.message.khoathanhcong' }));
-				getData();
+				refreshData();
 			}
 		} catch (e) {
 			console.log(e);
@@ -41,7 +56,7 @@ const ViewSinhVien = () => {
 			const res = await handleUnLockHoSo(id);
 			if (res) {
 				message.success(intl.formatMessage({ id: 'hosonguoihoc.message.mokhoathanhcong' }));
-				getData();
+				refreshData();
 			}
 		} catch (e) {
 			console.log(e);
@@ -49,46 +64,51 @@ const ViewSinhVien = () => {
 	};
 
 	const onCell = (rec: SinhVien.IRecord) => ({
-		onClick: () => handleView(rec),
+		onClick: () => {
+			if (record?.ssoId !== rec.ssoId) setKhoaNganhSelected(undefined);
+			handleView(rec);
+		},
 		style: { cursor: 'pointer' },
 	});
 
 	const columns: IColumn<SinhVien.IRecord>[] = [
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.masinhvien' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.masv' }),
 			dataIndex: 'ma',
-			width: 140,
+			width: 120,
 			sortable: true,
 			filterType: 'string',
 			align: 'center',
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.hoten' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.hoten' }),
 			dataIndex: 'ten',
-			width: 150,
+			width: 170,
 			filterType: 'string',
-			sortable: true,
+			render: (val, rec) =>
+				minorAccessFilter?.() ? (val ?? [rec?.firstName, rec?.lastName].filter(Boolean).join(' ')) : val,
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.ngaysinh' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.ngaysinh' }),
 			dataIndex: 'ngaySinh',
 			width: 100,
+			align: 'center',
 			filterType: 'date',
 			sortable: true,
-			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
+			render: (val) => val && formatDate(val),
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.cccd' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.cccd' }),
 			dataIndex: 'cccd',
 			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.sdt' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.sdt' }),
 			dataIndex: 'soDienThoai',
 			width: 120,
 			filterType: 'string',
@@ -96,29 +116,34 @@ const ViewSinhVien = () => {
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.email' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.email' }),
 			dataIndex: 'email',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.khoanganh' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.khoanganh' }),
 			dataIndex: 'maKhoaNganh',
-			width: 150,
+			width: 180,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectKhoaNganh multiple />,
-			render: (val, rec) => rec.khoaNganh?.ten ?? val,
+			filterCustomSelect: <SelectKhoaNganh multiple allowClear />,
+			render: (val, rec) =>
+				[rec.khoaNganh?.ten ?? val, rec.khoaNganh2?.ten ?? rec?.maKhoaNganh2].filter(Boolean).join(', '),
 			onCell,
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.trangthaihoc' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.trangthaihoc' }),
 			dataIndex: 'trangThaiHoc',
 			align: 'center',
-			width: 140,
+			width: 120,
 			filterType: 'select',
 			filterData: Object.values(ETrangThaiHocSv),
-			render: (val, rec) => <Tag color={colorTrangThaiHocSv[val as ETrangThaiHocSv]}>{val}</Tag>,
+			render: (val) => (
+				<Tag color={colorTrangThaiHocSv[val as ETrangThaiHocSv]}>
+					{intl.formatMessage({ id: localeTrangThaiHocSv[val as ETrangThaiHocSv] })}
+				</Tag>
+			),
 			onCell,
 		},
 		{
@@ -147,31 +172,29 @@ const ViewSinhVien = () => {
 			],
 		},
 		{
-			title: intl.formatMessage({ id: 'hosonguoihoc.column.thaotac' }),
+			title: intl.formatMessage({ id: 'sinhvien.column.thaotac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
-			render: (record: SinhVien.IRecord) => (
+			render: (rec: SinhVien.IRecord) => (
 				<>
 					<Tooltip title={intl.formatMessage({ id: 'hosonguoihoc.column.xemchitiet' })}>
-						<Button onClick={() => handleView(record)} type='link' icon={<EyeOutlined />} />
+						<Button onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
 					</Tooltip>
 					<Tooltip
 						title={intl.formatMessage({
-							id: record?.choPhepSua ? 'hosonguoihoc.column.khoahoso' : 'hosonguoihoc.column.mokhoahoso',
+							id: rec?.choPhepSua ? 'hosonguoihoc.column.khoahoso' : 'hosonguoihoc.column.mokhoahoso',
 						})}
 					>
 						<Popconfirm
 							title={intl.formatMessage({
-								id: record?.choPhepSua
-									? 'hosonguoihoc.column.xacnhankhoahoso'
-									: 'hosonguoihoc.column.xacnhanmokhoahoso',
+								id: rec?.choPhepSua ? 'hosonguoihoc.column.xacnhankhoahoso' : 'hosonguoihoc.column.xacnhanmokhoahoso',
 							})}
 							onConfirm={() => {
-								if (record?.choPhepSua) {
-									handleLockHoSoModel(record?._id);
+								if (rec?.choPhepSua) {
+									handleLockHoSoModel(rec?._id);
 								} else {
-									handleUnLockHoSoModel(record?._id);
+									handleUnLockHoSoModel(rec?._id);
 								}
 							}}
 						>
@@ -184,7 +207,7 @@ const ViewSinhVien = () => {
 								// 	}
 								// }}
 								type='link'
-								icon={record?.choPhepSua ? <LockOutlined /> : <UnlockOutlined />}
+								icon={rec?.choPhepSua ? <LockOutlined /> : <UnlockOutlined />}
 							/>
 						</Popconfirm>
 					</Tooltip>
@@ -202,22 +225,61 @@ const ViewSinhVien = () => {
 		},
 	];
 
+	const externalConditions = useMemo<TExternalConditionItem<SinhVien.IRecord>[]>(() => {
+		return [
+			{
+				field: 'maKhoaSinhVien',
+				value: recKhoa?.ma,
+				label: intl.formatMessage({ id: 'sinhvien.filter.khoaSinhVien' }),
+				valueLabel: recKhoa?.ten,
+			},
+			{
+				field: 'maNganh',
+				value: recNganh?.ma,
+				label: intl.formatMessage({ id: 'sinhvien.filter.nganh' }),
+				valueLabel: recNganh?.ten,
+			},
+			{
+				field: 'maTrinhDo',
+				value: recTrinhDo?.ma,
+				label: intl.formatMessage({ id: 'sinhvien.filter.trinhDo' }),
+				valueLabel: recTrinhDo?.ten,
+			},
+			{
+				field: 'maHinhThuc',
+				value: recHinhThuc?.ma,
+				label: intl.formatMessage({ id: 'sinhvien.filter.hinhThuc' }),
+				valueLabel: recHinhThuc?.ten,
+			},
+		];
+	}, [recKhoa?.ma, recNganh?.ma, recTrinhDo?.ma, recHinhThuc?.ma]);
+
+	const externalFilters = useMemo<TFilter<SinhVien.IRecord>[]>(() => {
+		return externalConditions
+			.filter((item) => item.value)
+			.map((item) => ({
+				field: item.field as keyof SinhVien.IRecord,
+				operator: EOperatorType.EQUAL,
+				values: [item.value],
+			}));
+	}, [externalConditions]);
+
 	return (
 		<>
 			<TableBase
 				columns={columns}
-				getData={getData}
-				dependencies={[page, limit, recKhoa?.ma, recNganh?.ma]}
+				externalConditions={externalConditions}
+				externalFilters={externalFilters}
+				dependencies={[page, limit, recKhoa?.ma, recNganh?.ma, recTrinhDo?.ma, recHinhThuc?.ma, refreshKey]}
 				modelName='daotaov2.sinhvien.sinhvien'
-				title={intl.formatMessage({ id: 'hosonguoihoc.title' })}
+				title={intl.formatMessage({ id: 'sinhvien.title' })}
 				Form={isView ? PreviewHoSo : ModalSinhVien}
 				formProps={{ hasEdit: true }}
 				widthDrawer={1200}
 				rowSelection
 				deleteMany
-				buttons={{ import: false, export: true, create: false }}
+				buttons={{ create: false, export: true }}
 				otherButtons={[
-					<FilterKhoaSinhVien key={'filter'} hasSelectNganh allowClear />,
 					<Button
 						onClick={() => {
 							setvisibleFormCapNhatAnh(true);
@@ -229,14 +291,18 @@ const ViewSinhVien = () => {
 						{intl.formatMessage({ id: 'hosonguoihoc.button.capnhatanhthesv' })}
 					</Button>,
 				]}
-			/>
+			>
+				<div style={{ marginBottom: 12 }}>
+					<FilterKhoaSinhVien hasSelectNganh allowClear />
+				</div>
+			</TableBase>
 			<Modal
 				open={visibleFormCapNhatAnh}
 				onCancel={() => setvisibleFormCapNhatAnh(false)}
 				styles={{ body: { padding: 0 } }}
 				footer={null}
 			>
-				<FormCapNhatAnhSV getData={getData} />
+				<FormCapNhatAnhSV getData={refreshData} />
 			</Modal>
 			<KetQuaCapNhatAnhSV />
 		</>
