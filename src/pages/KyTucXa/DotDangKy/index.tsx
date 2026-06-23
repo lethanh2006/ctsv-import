@@ -1,13 +1,15 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
 import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
-import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
+import { ELoaiDotDangKyKTX, ETrangThaiPhatHanh } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
-import { Button, Card, Modal, Popconfirm, Statistic, Tag, Tooltip } from 'antd';
+import { Button, Modal, Popconfirm, Tag, Tooltip, Switch } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import StatisticsCard from '@/components/StatisticsCard';
+import type { StatisticsItem } from '@/components/StatisticsCard/typing';
 import ViewDetail from './components/ChiTietDotDangKy/ViewDetail';
 import Form from './components/Form';
 
@@ -28,19 +30,23 @@ const getTrangThaiDot = (record: KyTucXa.IDotDangKyKTX, t: (id: string) => strin
 const DotDangKy = () => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
-	const { page, limit, handleEdit, deleteModel, getModel, record, setRecord } = useModel('kytucxa.dotdangkyktx');
+	const { page, limit, handleEdit, deleteModel, getModel, setRecord, postPhatHanhKTX, putModel } = useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 	const { getThongKeDotTongQuan } = useModel('kytucxa.thongkektx');
 
 	const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
 	const [dataThongKe, setDataThongKe] = useState<any>(null);
+	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 
 	const fetchThongKe = (maHocKy: string) => {
+		setLoadingThongKe(true);
 		getThongKeDotTongQuan({ maHocKy })
 			.then((res: any) => {
 				setDataThongKe(res?.data?.data || res?.data || res);
 			})
-			.catch((err: any) => {
+			.catch((err: any) => {})
+			.finally(() => {
+				setLoadingThongKe(false);
 			});
 	};
 
@@ -114,6 +120,33 @@ const DotDangKy = () => {
 			onCell,
 		},
 		{
+			title: 'Kích hoạt',
+			width: 120,
+			align: 'center',
+			render: (_value, record) => {
+				const isEnded = record?.thoiGianKetThuc ? dayjs().isAfter(dayjs(record.thoiGianKetThuc)) : false;
+				const isPublished = record?.trangThaiPhatHanh === ETrangThaiPhatHanh.DA_PHAT_HANH;
+				return (
+					<Switch
+						checked={isPublished}
+						disabled={isEnded}
+						onChange={async (checked) => {
+							try {
+								if (checked) {
+									await postPhatHanhKTX(record._id);
+								} else {
+									await putModel(record._id, { trangThaiPhatHanh: ETrangThaiPhatHanh.CHUA_PHAT_HANH }, getData, true);
+								}
+								getData();
+							} catch (error) {
+								console.error(error);
+							}
+						}}
+					/>
+				);
+			},
+		},
+		{
 			title: t('kytucxa.dotdangky.ghiChu'),
 			dataIndex: 'ghiChu',
 			width: 220,
@@ -155,6 +188,38 @@ const DotDangKy = () => {
 		},
 	];
 
+	const statisticsData: StatisticsItem[] = [
+		{
+			title: 'Tổng số đợt',
+			value: dataThongKe?.tongSoDot ?? 0,
+			valueColor: '#1890ff',
+			status: 'info',
+		},
+		{
+			title: 'Đã ban hành',
+			value: dataThongKe?.soLuongDaPhatHanh ?? 0,
+			valueColor: '#52c41a',
+			status: 'success',
+		},
+		{
+			title: 'Chưa ban hành',
+			value: dataThongKe?.soLuongChuaPhatHanh ?? 0,
+			valueColor: '#faad14',
+			status: 'warning',
+		},
+		{
+			title: 'Đang diễn ra',
+			value: dataThongKe?.soLuongDangDienRa ?? 0,
+			valueColor: '#13c2c2',
+		},
+		{
+			title: 'Đã kết thúc',
+			value: dataThongKe?.soLuongDaKetThuc ?? 0,
+			valueColor: '#8c8c8c',
+			status: 'gray',
+		},
+	];
+
 	return (
 		<>
 			<TableBase
@@ -173,58 +238,17 @@ const DotDangKy = () => {
 					<FilterHocKy isSetHocKy width={300} hideExpand />
 				</div>
 
-				<div style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
-					<Card
-						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
-						styles={{ body: { padding: '12px 16px' } }}
-					>
-						<Statistic
-							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Tổng số đợt</span>}
-							value={dataThongKe?.tongSoDot ?? 0}
-							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-						/>
-					</Card>
-					<Card
-						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
-						styles={{ body: { padding: '12px 16px' } }}
-					>
-						<Statistic
-							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Đã ban hành</span>}
-							value={dataThongKe?.soLuongDaPhatHanh ?? 0}
-							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-						/>
-					</Card>
-					<Card
-						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
-						styles={{ body: { padding: '12px 16px' } }}
-					>
-						<Statistic
-							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Chưa ban hành</span>}
-							value={dataThongKe?.soLuongChuaPhatHanh ?? 0}
-							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-						/>
-					</Card>
-					<Card
-						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
-						styles={{ body: { padding: '12px 16px' } }}
-					>
-						<Statistic
-							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Đang diễn ra</span>}
-							value={dataThongKe?.soLuongDangDienRa ?? 0}
-							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-						/>
-					</Card>
-					<Card
-						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
-						styles={{ body: { padding: '12px 16px' } }}
-					>
-						<Statistic
-							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Đã kết thúc</span>}
-							value={dataThongKe?.soLuongDaKetThuc ?? 0}
-							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-						/>
-					</Card>
-				</div>
+				<StatisticsCard
+					title=""
+					hideCard
+					rowGutter={16}
+					colSpan={{ flex: '1 1 180px' } as any}
+					borderleft={false}
+					statShadow
+					containerStyle={{ marginBottom: 16 }}
+					data={statisticsData}
+					loading={loadingThongKe}
+				/>
 			</TableBase>
 
 			<Modal
@@ -241,13 +265,17 @@ const DotDangKy = () => {
 					</Button>
 				}
 				title={
-					<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '97%', paddingRight: 8 }}>
+					<div
+						style={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+							width: '97%',
+							paddingRight: 8,
+						}}
+					>
 						<span>{t('kytucxa.dotdangky.chitiet') || 'Chi tiết đợt đăng ký'}</span>
-						<Button
-							icon={<ArrowLeftOutlined />}
-							onClick={() => setVisibleDetail(false)}
-							size='small'
-						>
+						<Button icon={<ArrowLeftOutlined />} onClick={() => setVisibleDetail(false)} size='small'>
 							{t('kytucxa.dotdangky.quayLai') || 'Quay lại'}
 						</Button>
 					</div>

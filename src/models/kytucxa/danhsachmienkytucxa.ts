@@ -30,6 +30,10 @@ export default () => {
         return axios.put(`${ipCsvc}/danh-sach-mien-ky-tuc-xa/don/${id}`, body, { headers });
     };
 
+    const getImportDanhSachMienKTX = (danhSachId?: string, headers?: any) => {
+        if (!danhSachId) return Promise.resolve(null);
+        return axios.get(`${ipCsvc}/danh-sach-mien-ky-tuc-xa/${danhSachId}/sinh-vien/import/definition`, { headers });
+    }
 
     return {
         ...objInit,
@@ -39,5 +43,6 @@ export default () => {
         deleteSinhVien,
         getSinhVien,
         putDonMienKTX,
+        getImportDanhSachMienKTX
     };
 };

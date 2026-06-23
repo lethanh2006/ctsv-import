@@ -18,6 +18,7 @@ const ipFile = ipRoot + 'file';
 const ipCsvc = ipRoot + 'csvc';
 const ipKhaoThi = ipRoot + 'khao-thi';
 
+
 const currentRole = EModuleKey.CTSV;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.CONG_CAN_BO;

@@ -52,7 +52,7 @@ const ThongKePhongKTX = () => {
                 data={statData} 
                 loading={loading}
                 hideCard={true}
-                colSpan={{ xs: 24, sm: 12, md: 8, lg: 4 }}
+                colSpan={{ flex: '1 1 180px' } as any}
                 rowGutter={16}
             />
 		</div>

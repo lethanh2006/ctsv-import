@@ -1,6 +1,8 @@
 import DonutChart from '@/components/Chart/DonutChart';
+import StatisticsCard from '@/components/StatisticsCard';
+import type { StatisticsItem } from '@/components/StatisticsCard/typing';
 import { useModel } from '@umijs/max';
-import { Card, Col, Row, Statistic, Spin } from 'antd';
+import { Card, Col, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 
 const ThongKe = () => {
@@ -45,63 +47,40 @@ const ThongKe = () => {
 	const totalDangKy = dataThongKe.daDangKy + dataThongKe.chuaDangKy;
 	const tyLeDangKy = totalDangKy > 0 ? ((dataThongKe.daDangKy / totalDangKy) * 100).toFixed(1) : '0';
 
+	const phongStatData: StatisticsItem[] = [
+		{
+			title: 'Phòng cho thuê',
+			value: dataThongKe.phongChoThue,
+			valueColor: '#52c41a',
+			status: 'success',
+		},
+		{
+			title: 'Tổng sức chứa',
+			value: dataThongKe.tongSucChua,
+			valueColor: '#1890ff',
+			status: 'info',
+		},
+		{
+			title: 'Còn trống',
+			value: dataThongKe.conTrong,
+			valueColor: '#faad14',
+			status: 'warning',
+		},
+	];
+
 	return (
 		<Spin spinning={loading}>
 			<Row gutter={[16, 16]}>
 				<Col xs={24} md={8}>
-					<Row gutter={[0, 16]}>
-						<Col span={24}>
-							<Card
-								bordered={false}
-								style={{
-									borderRadius: 8,
-									border: '1px solid #f0f0f0',
-									boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
-								}}
-								bodyStyle={{ padding: '16px 20px' }}
-							>
-								<Statistic
-									title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Phòng cho thuê</span>}
-									value={dataThongKe.phongChoThue}
-									valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-								/>
-							</Card>
-						</Col>
-						<Col span={24}>
-							<Card
-								bordered={false}
-								style={{
-									borderRadius: 8,
-									border: '1px solid #f0f0f0',
-									boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
-								}}
-								bodyStyle={{ padding: '16px 20px' }}
-							>
-								<Statistic
-									title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Tổng sức chứa</span>}
-									value={dataThongKe.tongSucChua}
-									valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-								/>
-							</Card>
-						</Col>
-						<Col span={24}>
-							<Card
-								bordered={false}
-								style={{
-									borderRadius: 8,
-									border: '1px solid #f0f0f0',
-									boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
-								}}
-								bodyStyle={{ padding: '16px 20px' }}
-							>
-								<Statistic
-									title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Còn trống</span>}
-									value={dataThongKe.conTrong}
-									valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
-								/>
-							</Card>
-						</Col>
-					</Row>
+					<StatisticsCard
+						title=""
+						hideCard
+						rowGutter={12}
+						colSpan={{ xs: 24 }}
+						borderleft={false}
+						statShadow
+						data={phongStatData}
+					/>
 				</Col>
 
 				<Col xs={24} md={16}>
@@ -115,23 +94,17 @@ const ThongKe = () => {
 						}}
 						bodyStyle={{ padding: '24px 24px', height: '100%' }}
 					>
-						<h3 style={{ fontSize: 16, fontWeight: 600, color: '#1f1f1f', marginBottom: 24 }}>
-							Tỷ lệ đăng ký
-						</h3>
-						<Row align="middle" style={{ height: 'calc(100% - 48px)' }}>
+						<h3 style={{ fontSize: 16, fontWeight: 600, color: '#1f1f1f', marginBottom: 24 }}>Tỷ lệ đăng ký</h3>
+						<Row align='middle' style={{ height: 'calc(100% - 48px)' }}>
 							<Col xs={24} sm={10}>
 								<div style={{ marginBottom: 24 }}>
-									<div style={{ fontSize: 14, color: '#1890ff', fontWeight: 500, marginBottom: 8 }}>
-										Đã đăng ký
-									</div>
+									<div style={{ fontSize: 14, color: '#1890ff', fontWeight: 500, marginBottom: 8 }}>Đã đăng ký</div>
 									<div style={{ fontSize: 28, color: '#1890ff', fontWeight: 700 }}>
 										{dataThongKe.daDangKy.toLocaleString()}
 									</div>
 								</div>
 								<div>
-									<div style={{ fontSize: 14, color: '#fa8c16', fontWeight: 500, marginBottom: 8 }}>
-										Chưa đăng ký
-									</div>
+									<div style={{ fontSize: 14, color: '#fa8c16', fontWeight: 500, marginBottom: 8 }}>Chưa đăng ký</div>
 									<div style={{ fontSize: 28, color: '#fa8c16', fontWeight: 700 }}>
 										{dataThongKe.chuaDangKy.toLocaleString()}
 									</div>
@@ -141,7 +114,11 @@ const ThongKe = () => {
 								<div style={{ width: '100%', maxWidth: 280, position: 'relative' }}>
 									<DonutChart
 										xAxis={['Đã đăng ký', 'Chưa đăng ký']}
-										yAxis={dataThongKe.daDangKy === 0 && dataThongKe.chuaDangKy === 0 ? [[0, 1]] : [[dataThongKe.daDangKy, dataThongKe.chuaDangKy]]}
+										yAxis={
+											dataThongKe.daDangKy === 0 && dataThongKe.chuaDangKy === 0
+												? [[0, 1]]
+												: [[dataThongKe.daDangKy, dataThongKe.chuaDangKy]]
+										}
 										yLabel={['Số lượng']}
 										height={240}
 										colors={['#1890ff', '#e6f7ff']}
@@ -155,8 +132,8 @@ const ThongKe = () => {
 															return '0';
 														}
 														return val !== undefined && val !== null ? val.toLocaleString() : '0';
-													}
-												}
+													},
+												},
 											},
 											plotOptions: {
 												pie: {

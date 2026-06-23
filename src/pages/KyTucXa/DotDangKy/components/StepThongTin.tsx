@@ -1,8 +1,8 @@
 import MyDatePicker from '@/components/MyDatePicker';
-import { ELoaiDotDangKyKTX, ETrangThaiPhatHanh } from '@/services/KyTucXa/constant';
+import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
-import { Col, Form, Input, Row, Select, Switch } from 'antd';
+import { Col, Form, Input, Row, Select } from 'antd';
 import { useIntl, useModel } from 'umi';
 
 const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
@@ -32,7 +32,7 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 					<Input />
 				</Form.Item>
 				<Form.Item label={t('kytucxa.dotdangky.hocKy')}>
-					<Input disabled value={recHocKy?.ten ? `${recHocKy.ten} - ${recHocKy.ma}` : recHocKy?.ma} />
+					<Input disabled value={recHocKy?.ten} />
 				</Form.Item>
 			</Col>
 			<Col span={24} md={12}>
@@ -144,19 +144,6 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 							{ label: t('kytucxa.dotdangky.loaiDot.theoDanhSach'), value: ELoaiDotDangKyKTX.THEO_DANH_SACH },
 						]}
 						placeholder={t('kytucxa.dotdangky.chonLoaiDot')}
-					/>
-				</Form.Item>
-			</Col>
-			<Col span={24} md={12}>
-				<Form.Item
-					name='phatHanh'
-					label={t('kytucxa.dotdangky.trangThaiPhatHanh')}
-					valuePropName='checked'
-				>
-					<Switch
-						disabled={record?.trangThaiPhatHanh === ETrangThaiPhatHanh.DA_PHAT_HANH || isEnded}
-						checkedChildren={t('kytucxa.dotdangky.trangThaiPhatHanh.phatHanh')}
-						unCheckedChildren={t('kytucxa.dotdangky.trangThaiPhatHanh.chuaPhatHanh')}
 					/>
 				</Form.Item>
 			</Col>

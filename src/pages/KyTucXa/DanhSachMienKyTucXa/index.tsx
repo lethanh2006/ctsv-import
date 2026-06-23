@@ -5,7 +5,7 @@ import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, message } from 'antd';
 import fileDownload from 'js-file-download';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import * as XLSX from 'xlsx';
 import FormSinhVien from './components/FormSinhVien';
@@ -15,8 +15,15 @@ const DanhSachMienKyTucXa = () => {
 	const t = (id: string, values?: Record<string, any>) => intl.formatMessage({ id }, values);
 	const { page, limit, handleEdit, deleteModel, getModel, postManyByMaHocKy, danhSach, currentDanhSachMien } =
 		useModel('kytucxa.danhsachmiensinhvien');
+	const { getImportDanhSachMienKTX } = useModel('kytucxa.danhsachmienkytucxa');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 	const [visibleSelect, setVisibleSelect] = useState(false);
+
+	useEffect(() => {
+		if (currentDanhSachMien?._id) {
+			getImportDanhSachMienKTX(currentDanhSachMien._id);
+		}
+	}, [currentDanhSachMien?._id]);
 
 	const getData = () => {
 		if (recHocKy?.ma) getModel({ maHocKy: recHocKy?.ma });
@@ -200,8 +207,8 @@ const DanhSachMienKyTucXa = () => {
 				formProps={{ danhSachId: currentDanhSachMien?._id, maHocKy: recHocKy?.ma, getData }}
 				scroll={{ x: 1300 }}
 				buttons={{
-					import: false,
-					export: false,
+					import: true,
+					export: true,
 					create: !!currentDanhSachMien?._id,
 				}}
 				// otherButtons={[

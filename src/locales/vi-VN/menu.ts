@@ -173,7 +173,7 @@ export default {
 	'menu.KyTucXa.Phong': 'Phòng',
 	'menu.KyTucXa.DotDangKy': 'Đợt đăng ký',
 	'menu.KyTucXa.DanhMucChung': 'Danh mục chung',
-	'menu.KyTucXa.NhanPhong': 'Nhận phòng',
+	'menu.KyTucXa.NhanPhong': 'Danh sách đăng ký phòng',
 	'menu.KyTucXa.DanhSachMienKyTucXa': 'Danh sách miễn KTX',
 	'menu.KyTucXa.DanhSachUuTien': 'Danh sách ưu tiên KTX',
 };
