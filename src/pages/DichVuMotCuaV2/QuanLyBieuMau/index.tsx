@@ -169,7 +169,7 @@ const QuanLyBieuMau = () => {
 				getData={() => getBieuMauAdminModel('DVMC')}
 				Form={Form}
 				destroyModal
-				onCreate={() => {
+				onCreateClick={() => {
 					setCurrent(0);
 				}}
 			/>

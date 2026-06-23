@@ -65,6 +65,7 @@
     "bizcharts": "^4.1.23",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
+		"diff": "^8.0.4",
     "fs-extra": "^11.3.0",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",

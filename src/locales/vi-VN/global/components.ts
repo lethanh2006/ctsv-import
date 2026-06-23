@@ -137,6 +137,7 @@ export default {
 	'global.table.index.button.tongso': 'Tổng số',
 	'global.table.index.button.tongso.tooltip': 'Tổng số dữ liệu',
 	'global.table.index.search.placeholder': 'Tìm theo: {fields}',
+	'global.table.index.search.placeholder.short': 'Tìm {field}',
 	'global.table.index.search.placeholder.default': 'Tìm kiếm',
 	'global.table.index.search.tooltip': 'Đang tìm kiếm theo: {fields}',
 	'global.table.index.import.titleTemplate': 'Biểu mẫu {title}.xlsx',
@@ -176,6 +177,7 @@ export default {
 	'global.table.customfilter.label.nhomdieukien': 'Nhóm điều kiện:',
 	'global.table.customfilter.placeholder.chondieukien': 'Chọn điều kiện',
 	'global.table.customfilter.placeholder.chongiatri': 'Chọn giá trị',
+	'global.table.customfilter.tim': 'Tìm',
 	'global.table.import.match.cot': 'Cột {colName}: {title}',
 	'global.table.import.preview.invalidRows':
 		'Có ô chứa dữ liệu không hợp lệ tại các dòng {rows} (đã được đánh dấu trong bảng), vui lòng kiểm tra lại!',
@@ -196,6 +198,7 @@ export default {
 	'global.table.operator.not_between': 'Ngoài khoảng',
 	'global.table.operator.in': 'Thuộc',
 	'global.table.operator.not_in': 'Không thuộc',
+	'global.table.operator.null': 'Trống',
 	'global.table.operator.not_null': 'Không trống',
 	'global.table.operator.or': 'Hoặc',
 	'global.table.operator.and': 'Và',
@@ -209,8 +212,8 @@ export default {
 
 	'global.tablestatic.button.themmoi': 'Thêm mới',
 	'global.tablestatic.button.themmoi.tooltip': 'Thêm mới dữ liệu',
-	'global.tablestatic.button.xoa': 'Tải lại',
-	'global.tablestatic.button.xoa.tooltip': 'Tải lại dữ liệu',
+	'global.tablestatic.button.tailai': 'Tải lại',
+	'global.tablestatic.button.tailai.tooltip': 'Tải lại dữ liệu',
 	'global.tablestatic.button.tongso': 'Tổng số',
 	'global.tablestatic.button.tongso.tooltip': 'Tổng số dữ liệu',
 
@@ -235,10 +238,15 @@ export default {
 	'global.placeholder.ngay': 'Chọn ngày',
 	'global.uploadfile.tepdinhkem': 'Tệp đính kèm',
 
+	'app.copyright.produced': 'CopyRight',
+	'app.locale.image': 'vi-VN.svg',
+
 	// PDFViewer
 	'global.pdfviewer.dangtai': 'Đang tải...',
 	'global.pdfviewer.dangtaitailieu': 'Đang tải tài liệu. Vui lòng chờ trong giây lát...',
 	'global.pdfviewer.truoc': 'Trước',
 	'global.pdfviewer.sau': 'Sau',
 	'global.pdfviewer.trang': 'Trang {pageNumber} trên tổng số {numPages}',
+
+	'global.noticeion.all': 'Đã đọc tất cả thông báo',
 };
