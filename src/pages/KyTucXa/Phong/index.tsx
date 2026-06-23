@@ -6,10 +6,20 @@ import { EditOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from 'umi';
 import SelectToaNha from '../DotDangKy/components/SelectToaNha';
 import Form from './components/Form';
+import ThongKePhongKTX from './components/ThongKe';
+import { useEffect } from 'react';
 
 const PhongKTXPage = () => {
 	const intl = useIntl();
 	const { getModel, page, limit, handleEdit } = useModel('kytucxa.phong');
+	const { danhSach: danhSachToaNha, getAllModel: getAllToaNha } = useModel('kytucxa.toa');
+	const { danhSach: danhSachLoaiPhong, getAllModel: getAllLoaiPhong } = useModel('kytucxa.loaiphong');
+
+	useEffect(() => {
+		getAllToaNha();
+		getAllLoaiPhong();
+	}, []);
+
 
 	const getData = () => {
 		getModel(undefined, undefined, undefined, undefined, undefined, undefined, {
@@ -36,6 +46,7 @@ const PhongKTXPage = () => {
 			width: 150,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectToaNha selectMa multiple />,
+			render: (val) => danhSachToaNha?.find((item: KyTucXa.IToa) => item?.ma === val)?.ten || '-',
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.sucChua' }),
@@ -69,7 +80,7 @@ const PhongKTXPage = () => {
 			dataIndex: 'maLoaiPhongKtx',
 			width: 160,
 			align: 'center',
-			// render: (val, record) => record?.loaiPhongKtx?.ten ?? val ?? '--',
+			render: (val) => danhSachLoaiPhong?.find((item: KyTucXa.IDanhMucChung) => item?.ma === val)?.ten || '-',
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.thaoTac' }),
@@ -99,7 +110,9 @@ const PhongKTXPage = () => {
 			buttons={{ create: false, export: true }}
 			widthDrawer={800}
 			showModalTitle
-		/>
+		>
+			<ThongKePhongKTX />
+		</TableBase>
 	);
 };
 

@@ -77,4 +77,10 @@ export default {
 	'kytucxa.phong.tapTin': 'Tập tin',
 	'kytucxa.phong.xemTruocAnh': 'Xem trước ảnh',
 	'kytucxa.phong.keoThaAnh': 'Kéo thả để sắp xếp thứ tự ảnh.',
+
+	'kytucxa.phong.thongke.tongSoPhong': 'Tổng số phòng',
+	'kytucxa.phong.thongke.soPhongChoThue': 'Số phòng cho thuê',
+	'kytucxa.phong.thongke.tongSucChua': 'Tổng sức chứa',
+	'kytucxa.phong.thongke.svDaDangKy': 'Sinh viên đã đăng ký',
+	'kytucxa.phong.thongke.choConTrong': 'Chỗ còn trống',
 };
