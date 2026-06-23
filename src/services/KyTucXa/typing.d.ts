@@ -192,4 +192,22 @@ declare module KyTucXa {
 		nguoiDuyet: string;
 		ghiChuDuyet: string;
 	}
+
+	export interface IThongKePhong {
+		maHocKy: string;
+		tongQuan: {
+			soLuongPhongChoThue: number;
+			tongSoPhong: number;         
+			tongSucChua: number;       
+			soLuongSinhVienDaDangKy: number;
+			soLuongChoConTrong: number;
+		};
+		bieuDoLapDayToaNha: {
+			maToaNha: string;
+			tenToaNha: string;
+			sinhVienDaDangKy: number; 
+			tongSucChua: number;    
+			tiLeLapDay: number;   
+		}[];
+	}
 }

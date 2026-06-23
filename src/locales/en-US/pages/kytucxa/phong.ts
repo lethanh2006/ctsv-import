@@ -77,4 +77,10 @@ export default {
     'kytucxa.phong.tapTin': 'File',
     'kytucxa.phong.xemTruocAnh': 'Preview Image',
     'kytucxa.phong.keoThaAnh': 'Drag to reorder images.',
+
+    'kytucxa.phong.thongke.tongSoPhong': 'Total Rooms',
+    'kytucxa.phong.thongke.soPhongChoThue': 'Rooms for Rent',
+    'kytucxa.phong.thongke.tongSucChua': 'Total Capacity',
+    'kytucxa.phong.thongke.svDaDangKy': 'Registered Students',
+    'kytucxa.phong.thongke.choConTrong': 'Available Slots',
 };
