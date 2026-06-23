@@ -2,14 +2,13 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
-import { DeleteOutlined, EditOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, message } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import * as XLSX from 'xlsx';
 import FormSinhVien from './components/FormSinhVien';
-import { StudentSelectModal } from './components/StudentSelectModal';
 
 const DanhSachMienKyTucXa = () => {
 	const intl = useIntl();
@@ -205,19 +204,19 @@ const DanhSachMienKyTucXa = () => {
 					export: false,
 					create: !!currentDanhSachMien?._id,
 				}}
-				otherButtons={[
-					<ButtonExtend
-						key='btn-import-student'
-						icon={<ImportOutlined />}
-						disabled={!currentDanhSachMien?._id}
-						onClick={() => setVisibleSelect(true)}
-					>
-						{t('global.button.nhapdulieu')}
-					</ButtonExtend>,
-					<ButtonExtend key='btn-export-student' icon={<ExportOutlined />} onClick={handleExportExcel}>
-						{t('global.button.xuatdulieu')}
-					</ButtonExtend>,
-				]}
+				// otherButtons={[
+				// 	<ButtonExtend
+				// 		key='btn-import-student'
+				// 		icon={<ImportOutlined />}
+				// 		disabled={!currentDanhSachMien?._id}
+				// 		onClick={() => setVisibleSelect(true)}
+				// 	>
+				// 		{t('global.button.nhapdulieu')}
+				// 	</ButtonExtend>,
+				// 	<ButtonExtend key='btn-export-student' icon={<ExportOutlined />} onClick={handleExportExcel}>
+				// 		{t('global.button.xuatdulieu')}
+				// 	</ButtonExtend>,
+				// ]}
 				showModalTitle
 			>
 				<div style={{ marginBottom: 12 }}>
@@ -225,14 +224,14 @@ const DanhSachMienKyTucXa = () => {
 				</div>
 			</TableBase>
 
-			<StudentSelectModal
+			{/* <StudentSelectModal
 				open={visibleSelect}
 				onCancel={() => setVisibleSelect(false)}
 				activeSemester={currentDanhSachMien as any}
 				selectedSemesterMa={recHocKy?.ma}
 				existingStudents={danhSach || []}
 				onOk={handleAddStudentsDone}
-			/>
+			/> */}
 		</>
 	);
 };

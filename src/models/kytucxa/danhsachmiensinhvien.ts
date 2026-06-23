@@ -5,7 +5,7 @@ import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
-	const objInit = useInitModel<any>('danh-sach-mien-ky-tuc-xa/sinh-vien', undefined, undefined, ipCsvc);
+	const objInit = useInitModel<any>('danh-sach-mien-ky-tuc-xa', undefined, undefined, ipCsvc);
 	const [currentDanhSachMien, setCurrentDanhSachMien] = useState<any>();
 
 	const getDanhSachMienByMaHocKy = async (maHocKy?: string) => {
