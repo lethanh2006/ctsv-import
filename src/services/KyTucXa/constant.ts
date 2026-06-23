@@ -86,3 +86,8 @@ export enum ETrangThaiCheckIn {
 	DANG_O = 'Đang ở',
 	DA_RA = 'Đã ra',
 }
+
+export enum ETrangThaiPhatHanh {
+	CHUA_PHAT_HANH = 'Chưa phát hành',
+	DA_PHAT_HANH = 'Phát hành',
+}

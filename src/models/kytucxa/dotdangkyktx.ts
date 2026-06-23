@@ -28,10 +28,15 @@ export default () => {
 	const deleteSinhVienDangKy = (dotId: string, id: string, headers?: any) => {
 		return axios.delete(`${ipCsvc}/dot-dang-ky-ky-tuc-xa/${dotId}/sinh-vien-dang-ky/${id}`, { headers });
 	};
+
+	const postPhatHanhKTX = (dotId: string, headers?: any) => {
+		return axios.post(`${ipCsvc}/dot-dang-ky-ky-tuc-xa/${dotId}/phat-hanh`, { headers });
+	}
 	return {
 		...objInit,
 		postSinhVienDangKy,
 		getSinhVienDangKy,
 		deleteSinhVienDangKy,
+		postPhatHanhKTX
 	};
 };

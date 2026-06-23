@@ -1,6 +1,6 @@
 import StepChonDoiTuong from '@/pages/KyTucXa/DotDangKy/components/StepChonDoiTuong';
 import StepThongTin from '@/pages/KyTucXa/DotDangKy/components/StepThongTin';
-import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
+import { ELoaiDotDangKyKTX, ETrangThaiPhatHanh } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Form, Steps, message } from 'antd';
@@ -13,7 +13,7 @@ const FormDotDangKyKTX = (props: any) => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
 	const [form] = Form.useForm();
-	const { record, visibleForm, edit, setVisibleForm, putModel, postModel, formSubmiting } =
+	const { record, visibleForm, edit, setVisibleForm, putModel, postModel, formSubmiting, postPhatHanhKTX } =
 		useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 	const { postSinhVienDangKy } = useModel('kytucxa.dotdangkyktx');
@@ -113,6 +113,7 @@ const FormDotDangKyKTX = (props: any) => {
 				ngayChuyenVao: getDateValue(record?.ngayChuyenVao),
 				ngayChuyenRa: getDateValue(record?.ngayChuyenRa),
 				hanDuyetMien: getDateValue(record?.hanDuyetMien),
+				phatHanh: record?.trangThaiPhatHanh === ETrangThaiPhatHanh.DA_PHAT_HANH,
 			});
 			setSelectedKhoaNganh(khoaNganh);
 			setInitialKhoaNganh(khoaNganh);
@@ -129,6 +130,7 @@ const FormDotDangKyKTX = (props: any) => {
 				maKhoaNganh: [],
 				danhSachToaNha: [],
 				hanDuyetMien: null,
+				phatHanh: false,
 			});
 			setSelectedToaNhaIds([]);
 			setInitialToaNhaIds([]);
@@ -232,7 +234,7 @@ const FormDotDangKyKTX = (props: any) => {
 			}
 		}
 
-		const { danhSachToaNha, danhSach, ...restValues } = values as any;
+		const { danhSachToaNha, danhSach, phatHanh, ...restValues } = values as any;
 		const startDate = values?.thoiGianBatDau ? dayjs(values.thoiGianBatDau).startOf('day').toISOString() : undefined;
 		const endDate = values?.thoiGianKetThuc ? dayjs(values.thoiGianKetThuc).endOf('day').toISOString() : undefined;
 		const payload: Partial<KyTucXa.IDotDangKyKTX> = {
@@ -255,6 +257,9 @@ const FormDotDangKyKTX = (props: any) => {
 			hanDuyetMien: values?.hanDuyetMien ? dayjs(values.hanDuyetMien).toISOString() : null,
 			danhSachToaNha: loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH ? selectedToaNhaIds : [],
 			danhSachPhong: loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH ? selectedPhongIds : [],
+			trangThaiPhatHanh: edit
+				? (phatHanh ? ETrangThaiPhatHanh.DA_PHAT_HANH : ETrangThaiPhatHanh.CHUA_PHAT_HANH)
+				: ETrangThaiPhatHanh.CHUA_PHAT_HANH,
 		};
 
 		if (edit) {
@@ -263,11 +268,19 @@ const FormDotDangKyKTX = (props: any) => {
 			if (danhSach?.length) {
 				await postSinhVienDangKy?.(dotId, danhSach).catch((er) => console.log(er));
 			}
+			if (phatHanh && record?.trangThaiPhatHanh !== ETrangThaiPhatHanh.DA_PHAT_HANH) {
+				await postPhatHanhKTX(dotId).catch((er) => console.log(er));
+				if (getData) getData();
+			}
 		} else {
 			const res = await postModel(payload, getData).catch((er) => console.log(er));
 			const newDotId = res?._id;
 			if (newDotId && danhSach?.length) {
 				await postSinhVienDangKy?.(newDotId, danhSach).catch((er) => console.log(er));
+			}
+			if (newDotId && phatHanh) {
+				await postPhatHanhKTX(newDotId).catch((er) => console.log(er));
+				if (getData) getData();
 			}
 		}
 	};

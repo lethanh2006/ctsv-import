@@ -69,4 +69,7 @@ export default {
 		'This registration period has ended and the student list cannot be edited',
 	'kytucxa.dotdangky.message.studentAlreadyExists': 'Student already exists in the list',
 	'kytucxa.dotdangky.message.addStudentSuccess': 'Student added successfully',
+	'kytucxa.dotdangky.trangThaiPhatHanh': 'Publishing Status',
+	'kytucxa.dotdangky.trangThaiPhatHanh.phatHanh': 'Published',
+	'kytucxa.dotdangky.trangThaiPhatHanh.chuaPhatHanh': 'Unpublished',
 };

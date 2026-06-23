@@ -3,7 +3,7 @@ import { type IColumn } from '@/components/Table/typing';
 import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
 import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
 import { Button, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
@@ -150,7 +150,7 @@ const DotDangKy = () => {
 				showModalTitle
 			>
 				<div style={{ marginBottom: 12 }}>
-					<FilterHocKy isSetHocKy width={300} />
+					<FilterHocKy isSetHocKy width={300} hideExpand />
 				</div>
 			</TableBase>
 
@@ -167,7 +167,18 @@ const DotDangKy = () => {
 						{t('global.button.dong')}
 					</Button>
 				}
-				title={record?.tenDot}
+				title={
+					<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '97%', paddingRight: 8 }}>
+						<span>{t('kytucxa.dotdangky.chitiet') || 'Chi tiết đợt đăng ký'}</span>
+						<Button
+							icon={<ArrowLeftOutlined />}
+							onClick={() => setVisibleDetail(false)}
+							size='small'
+						>
+							{t('kytucxa.dotdangky.quayLai') || 'Quay lại'}
+						</Button>
+					</div>
+				}
 				open={visibleDetail}
 				onCancel={() => setVisibleDetail(false)}
 			>

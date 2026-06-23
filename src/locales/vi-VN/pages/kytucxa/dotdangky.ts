@@ -68,4 +68,12 @@ export default {
 		'Đợt đăng ký đã kết thúc, không được chỉnh sửa danh sách sinh viên',
 	'kytucxa.dotdangky.message.studentAlreadyExists': 'Sinh viên đã có trong danh sách',
 	'kytucxa.dotdangky.message.addStudentSuccess': 'Thêm sinh viên thành công',
+	'kytucxa.dotdangky.doiTuongApDung': 'Đối tượng áp dụng',
+	'kytucxa.dotdangky.trangThaiDot': 'Trạng thái đợt',
+	'kytucxa.dotdangky.tab.thongKe': 'Thống kê',
+	'kytucxa.dotdangky.tab.danhSachSinhVien': 'Danh sách sinh viên',
+	'kytucxa.dotdangky.chitiet': 'Chi tiết đợt đăng ký',
+	'kytucxa.dotdangky.trangThaiPhatHanh': 'Trạng thái phát hành',
+	'kytucxa.dotdangky.trangThaiPhatHanh.phatHanh': 'Phát hành',
+	'kytucxa.dotdangky.trangThaiPhatHanh.chuaPhatHanh': 'Chưa phát hành',
 };

@@ -1,4 +1,4 @@
-import type { EGioiTinh, ETrangThaiCheckIn } from './constant';
+import type { EGioiTinh, ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
 
 declare module KyTucXa {
 	export interface IToa {
@@ -91,6 +91,7 @@ declare module KyTucXa {
 		danhSachPhong?: string[];
 		ghiChu: string;
 		soLuongDon: number;
+		trangThaiPhatHanh: ETrangThaiPhatHanh;
 	}
 
 	export interface ILoaiDanhMucChung {
