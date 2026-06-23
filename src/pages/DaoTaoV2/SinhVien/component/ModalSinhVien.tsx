@@ -33,7 +33,11 @@ const ModalSinhVien = (props: any) => {
 
 	return (
 		<Card
-			title={`${intl.formatMessage({ id: edit ? 'global.title.chinhsua' : 'global.title.themmoi' })} ${intl.formatMessage({ id: 'sinhvien.modal.title' })}`}
+			title={
+				!edit
+					? intl.formatMessage({ id: 'sinhvien.modal.themmoihooso.title' })
+					: intl.formatMessage({ id: 'sinhvien.modal.hoso.title' }, { ten: record?.ten ?? '', ma: record?.ma ?? '' })
+			}
 		>
 			<Tabs
 				destroyInactiveTabPane
@@ -114,8 +118,10 @@ const ModalSinhVien = (props: any) => {
 			</Tabs>
 
 			<div className='form-footer'>
-				<Button onClick={() => handleView()}>{intl.formatMessage({ id: 'sinhvien.xemrutgon' })}</Button>
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+				{record?._id ? (
+					<Button onClick={() => handleView()}>{intl.formatMessage({ id: 'sinhvien.button.xemrutgon' })}</Button>
+				) : null}
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'sinhvien.button.dong' })}</Button>
 			</div>
 		</Card>
 	);

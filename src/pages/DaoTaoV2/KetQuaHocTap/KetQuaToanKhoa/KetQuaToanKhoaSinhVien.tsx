@@ -1,84 +1,70 @@
-import { Carousel, Empty, Segmented, Spin } from 'antd';
-import { useEffect, useState } from 'react';
-import { useIntl, useModel } from 'umi';
-import SelectSongNganh from '../../NamHoc/KhoaNganh/components/SelectSongNganh';
+import access from '@/access';
+import { Segmented, Tabs } from 'antd';
+import { useState } from 'react';
+import { useIntl } from 'umi';
+// import TienTrinhHocTapSinhVien from '../../DanhMucHeThong/CoSo/ChuongTrinhDaoTao/TienTrinhSinhVien';
 import DiemHocPhanSvTable from '../DiemHocPhan';
-import TableDiemHocPhan from '../KetQuaHocKy/components/TableDiemHocPhan';
 import '../KetQuaHocKy/components/style.less';
-import ChartDiemTrungBinh from './components/ChartDiemTrungBinh';
-import ChartSoTinChi from './components/ChartSoTinChi';
+import TableDiemHocPhan from '../KetQuaHocKy/components/TableDiemHocPhan';
+// import ChuanDauRaSinhVien from './components/ChuanDauRa';
+import TienTrinhHocTapSinhVien from '../TienTrinhSinhVien';
+import ChuanDauRaSinhVien from './components/ChuanDauRa';
 import './components/style.less';
+import TabTongQuanKqhtToanKhoa from './components/TabTongQuan';
 
-const KetQuaToanKhoaSinhVien = (props: { sinhVienSsoId?: string; hideDetail?: boolean; maKhoaNganh?: string }) => {
+const KetQuaToanKhoaSinhVien = (props: {
+	sinhVienSsoId?: string;
+	maKhoaNganh?: string;
+	/** Legend của charts luôn ở bottom? */
+	fixedSize?: boolean;
+}) => {
 	const intl = useIntl();
-	const { getAllModel: getKetQuaHocKy, danhSach, loading } = useModel('daotaov2.ketquahoctap.ketquahocky');
 	const [tabActive, setTabActive] = useState<string>('1');
-	const [selectKhoaNganh, setSelectKhoaNganh] = useState<string>();
-	const { sinhVienSsoId, hideDetail } = props;
-	const maKhoaNganh = props.maKhoaNganh || selectKhoaNganh;
+	const [tabActive1, setTabActive1] = useState('1');
+	const { sinhVienSsoId, maKhoaNganh } = props;
 
-	const getData = () => sinhVienSsoId && getKetQuaHocKy(false, { maHocKy: 1 }, { sinhVienSsoId, maKhoaNganh });
-
-	useEffect(() => {
-		getData();
-	}, [sinhVienSsoId, maKhoaNganh]);
+	const { cloPloAccessFilter } = access({});
+	const hasCloPloAccess = cloPloAccessFilter();
 
 	return (
 		<>
-			{!props.maKhoaNganh ? (
-				<div style={{ marginBottom: 12 }}>
-					<SelectSongNganh
-						ssoId={sinhVienSsoId ?? ''}
-						style={{ width: 250 }}
-						value={selectKhoaNganh}
-						onChange={(val) => setSelectKhoaNganh(val)}
-					/>
-				</div>
-			) : null}
+			<Tabs activeKey={tabActive1} onChange={(tab) => setTabActive1(tab)}>
+				<Tabs.TabPane key='1' tab={intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.tab1' })} />
+				<Tabs.TabPane key='2' tab={intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.tab2' })} />
+				<Tabs.TabPane key='3' tab={intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.tab3' })} />
 
-			<Spin spinning={loading}>
-				{danhSach.length ? (
-					<>
-						<Carousel autoplay pauseOnDotsHover>
-							<div>
-								<div style={{ marginBottom: 8 }}>
-									<ChartSoTinChi />
-								</div>
-							</div>
-							<div>
-								<div style={{ marginBottom: 8 }}>
-									<ChartDiemTrungBinh />
-								</div>
-							</div>
-						</Carousel>
-
-						{sinhVienSsoId && !hideDetail ? (
-							<>
-								<Segmented
-									value={tabActive}
-									onChange={(tab) => setTabActive(tab.toString())}
-									options={[
-										{ value: '1', label: intl.formatMessage({ id: 'sinhvienhocvu.ketqua.danhsach.label' }) },
-										{ value: '2', label: intl.formatMessage({ id: 'sinhvienhocvu.ketqua.bangdiemhocphan.label' }) },
-									]}
-									style={{ margin: '12px 8px 8px 0' }}
-								/>
-
-								{tabActive === '1' ? (
-									<TableDiemHocPhan sinhVienSsoId={sinhVienSsoId} maKhoaNganh={maKhoaNganh} hideTitle />
-								) : (
-									<DiemHocPhanSvTable sinhVienSsoId={sinhVienSsoId} maKhoaNganh={maKhoaNganh} />
-								)}
-							</>
-						) : null}
-					</>
-				) : (
-					<Empty
-						description={intl.formatMessage({ id: 'sinhvienhocvu.ketqua.khongcodulieu' })}
-						style={{ marginTop: 50, marginBottom: 32 }}
-					/>
+				{hasCloPloAccess && (
+					<Tabs.TabPane key='4' tab={intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.tab4' })} />
 				)}
-			</Spin>
+			</Tabs>
+
+			{tabActive1 === '1' ? (
+				<TabTongQuanKqhtToanKhoa {...props} />
+			) : tabActive1 === '3' ? (
+				<TienTrinhHocTapSinhVien sinhVienSsoId={sinhVienSsoId ?? ''} maKhoaNganh={maKhoaNganh ?? ''} />
+			) : tabActive1 === '4' ? (
+				<ChuanDauRaSinhVien sinhVienSsoId={sinhVienSsoId ?? ''} maKhoaNganh={maKhoaNganh ?? ''} />
+			) : sinhVienSsoId ? (
+				<>
+					<div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
+						<Segmented
+							value={tabActive}
+							onChange={(tab) => setTabActive(tab.toString())}
+							options={[
+								{ value: '1', label: intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.tientrinhhoctap' }) },
+								{ value: '2', label: intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.bangdiemhocphan' }) },
+							]}
+						/>
+						<i>{intl.formatMessage({ id: 'ketquahoctap.ketquatoankhoa.ghichu_tientrinh' })}</i>
+					</div>
+
+					{tabActive === '1' ? (
+						<TableDiemHocPhan sinhVienSsoId={sinhVienSsoId} maKhoaNganh={maKhoaNganh ?? ''} hideTitle />
+					) : (
+						<DiemHocPhanSvTable sinhVienSsoId={sinhVienSsoId} maKhoaNganh={maKhoaNganh} />
+					)}
+				</>
+			) : null}
 		</>
 	);
 };

@@ -5,6 +5,11 @@ export enum EGioiTinh {
 	Nu = 'Nữ',
 }
 
+export const localeGioiTinh: Record<EGioiTinh, string> = {
+	[EGioiTinh.Nam]: 'sinhvien.gioitinh.nam',
+	[EGioiTinh.Nu]: 'sinhvien.gioitinh.nu',
+};
+
 export enum ETrangThaiHocSv {
 	CHUA_PHAN_LOP = 'Chưa phân lớp',
 	DANG_HOC = 'Đang học',
@@ -12,6 +17,7 @@ export enum ETrangThaiHocSv {
 	BUOC_THOI_HOC = 'Buộc thôi học',
 	BAO_LUU = 'Bảo lưu',
 	DA_TOT_NGHIEP = 'Đã tốt nghiệp',
+	CHUYEN_TRUONG = 'Chuyển trường',
 }
 
 export const colorTrangThaiHocSv: Record<ETrangThaiHocSv, string> = {
@@ -21,6 +27,17 @@ export const colorTrangThaiHocSv: Record<ETrangThaiHocSv, string> = {
 	[ETrangThaiHocSv.BUOC_THOI_HOC]: 'violet',
 	[ETrangThaiHocSv.BAO_LUU]: 'orange',
 	[ETrangThaiHocSv.DA_TOT_NGHIEP]: 'green',
+	[ETrangThaiHocSv.CHUYEN_TRUONG]: 'volcano',
+};
+
+export const localeTrangThaiHocSv: Record<ETrangThaiHocSv, string> = {
+	[ETrangThaiHocSv.CHUA_PHAN_LOP]: 'sinhvien.trangthaihoc.chuaphanlop',
+	[ETrangThaiHocSv.DANG_HOC]: 'sinhvien.trangthaihoc.danghoc',
+	[ETrangThaiHocSv.BAO_LUU]: 'sinhvien.trangthaihoc.baoluu',
+	[ETrangThaiHocSv.DA_TOT_NGHIEP]: 'sinhvien.trangthaihoc.datotnghiep',
+	[ETrangThaiHocSv.THOI_HOC]: 'sinhvien.trangthaihoc.thoihoc',
+	[ETrangThaiHocSv.BUOC_THOI_HOC]: 'sinhvien.trangthaihoc.buocthoihoc',
+	[ETrangThaiHocSv.CHUYEN_TRUONG]: 'sinhvien.trangthaihoc.chuyentruong',
 };
 
 export enum EHinhThucTuyenDung {
@@ -113,3 +130,14 @@ export const vaiTroSvLhc: Record<EVaiTroSvLhc, string> = {
 	[EVaiTroSvLhc.LOP_PHO_DOI_SONG]: 'Lớp phó đời sống',
 	[EVaiTroSvLhc.LOP_PHO_HOC_TAP]: 'Lớp phó học tập',
 };
+
+export enum ELoaiChuyenTruong {
+	CHUYEN_DEN = 'CHUYEN_DEN',
+	CHUYEN_DI = 'CHUYEN_DI',
+}
+
+export enum ETrangThaiChuyenNganh {
+	CHO_DUYET = 'cho_duyet',
+	DA_DUYET = 'da_duyet',
+	HUY = 'huy',
+}

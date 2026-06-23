@@ -132,3 +132,9 @@ export enum ELoaiQuyetDinh {
 	SONG_NGANH = 'Song ngành',
 	KHAC = 'Khác',
 }
+
+export enum ELoaiNganhChuyenNganh {
+	NGANH = 'nganh',
+	CHUYEN_NGANH = 'chuyen_nganh',
+	CHUYEN_NGANH_PHU = 'chuyen_nganh_phu',
+}

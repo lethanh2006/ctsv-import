@@ -19,6 +19,8 @@ export default () => {
 	const [thongKeTrangThai, setThongKeTrangThai] = useState<SinhVien.TThongKeTrangThai>();
 	const { setLoading, getModel, getService, setDanhSach } = objInit;
 	const [khoaNganhSv, setKhoaNganhSv] = useState<KhoaNganh.TKhoaNganhSv>();
+	const [khoaNganhSelected, setKhoaNganhSelected] = useState<string>();
+	const [visibleHocBa, setVisibleHocBa] = useState<boolean>(false);
 	const [visibleFormCapNhatAnh, setvisibleFormCapNhatAnh] = useState<boolean>(false);
 	const [listImageError, setListImageError] = useState<{ filename: string; reason: string }[]>([]);
 	const [listImageSuccess, setListImageSuccess] = useState<{ filename: string; reason: string }[]>([]);
@@ -134,6 +136,10 @@ export default () => {
 		getKhoaNganhSvModel,
 		khoaNganhSv,
 		setKhoaNganhSv,
+		khoaNganhSelected,
+		setKhoaNganhSelected,
+		visibleHocBa,
+		setVisibleHocBa,
 		visibleFormCapNhatAnh,
 		setvisibleFormCapNhatAnh,
 	};
