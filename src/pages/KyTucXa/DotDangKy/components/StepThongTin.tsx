@@ -71,11 +71,26 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 				<Form.Item
 					name='ngayChuyenVao'
 					label={t('kytucxa.dotdangky.ngayChuyenVao')}
-					rules={[...rules.required, ...rules.sauNgay(thoiGianBatDau, t('kytucxa.dotdangky.thoiGianBatDauLower'))]}
+					rules={[
+						...rules.required,
+						{
+							validator: async (_, value) => {
+								if (thoiGianBatDau && value && dayjs(value).isBefore(dayjs(thoiGianBatDau).startOf('month'))) {
+									throw new Error(
+										intl.formatMessage(
+											{ id: 'global.validation.sauNgay.before' },
+											{ label: t('kytucxa.dotdangky.thoiGianBatDauLower') },
+										),
+									);
+								}
+							},
+						},
+					]}
 				>
 					<MyDatePicker
-						format='DD/MM/YYYY'
-						disabledDate={thoiGianBatDau ? (cur) => dayjs(cur).isBefore(thoiGianBatDau, 'day') : undefined}
+						pickerStyle='month'
+						format='MM/YYYY'
+						disabledDate={thoiGianBatDau ? (cur) => dayjs(cur).isBefore(thoiGianBatDau, 'month') : undefined}
 					/>
 				</Form.Item>
 			</Col>
@@ -83,18 +98,37 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 				<Form.Item
 					name='ngayChuyenRa'
 					label={t('kytucxa.dotdangky.ngayChuyenRa')}
-					dependencies={['thoiGianBatDau', 'ngayChuyenVao']}
+					dependencies={['ngayChuyenVao']}
 					rules={[
 						...rules.required,
-						...rules.sauNgay(thoiGianBatDau, t('kytucxa.dotdangky.thoiGianBatDauLower')),
-						...rules.sauNgay(ngayChuyenVao, t('kytucxa.dotdangky.ngayChuyenVaoLower')),
+						{
+							validator: async (_, value) => {
+								if (thoiGianBatDau && value && dayjs(value).isBefore(dayjs(thoiGianBatDau).startOf('month'))) {
+									throw new Error(
+										intl.formatMessage(
+											{ id: 'global.validation.sauNgay.before' },
+											{ label: t('kytucxa.dotdangky.thoiGianBatDauLower') },
+										),
+									);
+								}
+								if (ngayChuyenVao && value && dayjs(value).isBefore(dayjs(ngayChuyenVao).startOf('month'))) {
+									throw new Error(
+										intl.formatMessage(
+											{ id: 'global.validation.sauNgay.before' },
+											{ label: t('kytucxa.dotdangky.ngayChuyenVaoLower') },
+										),
+									);
+								}
+							},
+						},
 					]}
 				>
 					<MyDatePicker
-						format='DD/MM/YYYY'
+						pickerStyle='month'
+						format='MM/YYYY'
 						disabledDate={(cur) => {
-							if (thoiGianBatDau && dayjs(cur).isBefore(thoiGianBatDau, 'day')) return true;
-							if (ngayChuyenVao && dayjs(cur).isBefore(ngayChuyenVao, 'day')) return true;
+							if (thoiGianBatDau && dayjs(cur).isBefore(thoiGianBatDau, 'month')) return true;
+							if (ngayChuyenVao && dayjs(cur).isBefore(ngayChuyenVao, 'month')) return true;
 							return false;
 						}}
 					/>
