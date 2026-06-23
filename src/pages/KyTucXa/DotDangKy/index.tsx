@@ -5,9 +5,9 @@ import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
-import { Button, Modal, Popconfirm, Tag, Tooltip } from 'antd';
+import { Button, Card, Modal, Popconfirm, Statistic, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ViewDetail from './components/ChiTietDotDangKy/ViewDetail';
 import Form from './components/Form';
 
@@ -30,8 +30,25 @@ const DotDangKy = () => {
 	const t = (id: string) => intl.formatMessage({ id });
 	const { page, limit, handleEdit, deleteModel, getModel, record, setRecord } = useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
+	const { getThongKeDotTongQuan } = useModel('kytucxa.thongkektx');
 
 	const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
+	const [dataThongKe, setDataThongKe] = useState<any>(null);
+
+	const fetchThongKe = (maHocKy: string) => {
+		getThongKeDotTongQuan({ maHocKy })
+			.then((res: any) => {
+				setDataThongKe(res?.data?.data || res?.data || res);
+			})
+			.catch((err: any) => {
+			});
+	};
+
+	useEffect(() => {
+		if (recHocKy?.ma) {
+			fetchThongKe(recHocKy.ma);
+		}
+	}, [recHocKy?.ma]);
 
 	const onCell = (rec: KyTucXa.IDotDangKyKTX) => ({
 		onClick: () => {
@@ -42,7 +59,10 @@ const DotDangKy = () => {
 	});
 
 	const getData = () => {
-		if (recHocKy?.ma) getModel({ maHocKy: recHocKy?.ma });
+		if (recHocKy?.ma) {
+			getModel({ maHocKy: recHocKy?.ma });
+			fetchThongKe(recHocKy.ma);
+		}
 	};
 
 	const columns: IColumn<KyTucXa.IDotDangKyKTX>[] = [
@@ -151,6 +171,59 @@ const DotDangKy = () => {
 			>
 				<div style={{ marginBottom: 12 }}>
 					<FilterHocKy isSetHocKy width={300} hideExpand />
+				</div>
+
+				<div style={{ display: 'flex', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
+					<Card
+						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
+						styles={{ body: { padding: '12px 16px' } }}
+					>
+						<Statistic
+							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Tổng số đợt</span>}
+							value={dataThongKe?.tongSoDot ?? 0}
+							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
+						/>
+					</Card>
+					<Card
+						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
+						styles={{ body: { padding: '12px 16px' } }}
+					>
+						<Statistic
+							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Đã ban hành</span>}
+							value={dataThongKe?.soLuongDaPhatHanh ?? 0}
+							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
+						/>
+					</Card>
+					<Card
+						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
+						styles={{ body: { padding: '12px 16px' } }}
+					>
+						<Statistic
+							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Chưa ban hành</span>}
+							value={dataThongKe?.soLuongChuaPhatHanh ?? 0}
+							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
+						/>
+					</Card>
+					<Card
+						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
+						styles={{ body: { padding: '12px 16px' } }}
+					>
+						<Statistic
+							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Đang diễn ra</span>}
+							value={dataThongKe?.soLuongDangDienRa ?? 0}
+							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
+						/>
+					</Card>
+					<Card
+						style={{ flex: 1, minWidth: 160, borderRadius: 8, boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', border: '1px solid #f0f0f0' }}
+						styles={{ body: { padding: '12px 16px' } }}
+					>
+						<Statistic
+							title={<span style={{ fontSize: 14, color: '#595959', fontWeight: 500 }}>Đã kết thúc</span>}
+							value={dataThongKe?.soLuongDaKetThuc ?? 0}
+							valueStyle={{ fontSize: 24, color: '#1f1f1f', fontWeight: 600 }}
+						/>
+					</Card>
 				</div>
 			</TableBase>
 
