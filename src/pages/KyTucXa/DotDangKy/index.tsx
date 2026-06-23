@@ -28,7 +28,7 @@ const getTrangThaiDot = (record: KyTucXa.IDotDangKyKTX, t: (id: string) => strin
 const DotDangKy = () => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
-	const { page, limit, handleEdit, deleteModel, getModel, record, setRecord } = useModel('kytucxa.dotdangky');
+	const { page, limit, handleEdit, deleteModel, getModel, record, setRecord } = useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 
 	const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
@@ -141,7 +141,7 @@ const DotDangKy = () => {
 				getData={getData}
 				columns={columns}
 				dependencies={[page, limit, recHocKy?.ma]}
-				modelName='kytucxa.dotdangky'
+				modelName='kytucxa.dotdangkyktx'
 				title={t('kytucxa.dotdangky.title')}
 				Form={Form}
 				formProps={{ getData }}

@@ -53,7 +53,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 }) => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
-	const { record, visibleForm, edit } = useModel('kytucxa.dotdangky');
+	const { record, visibleForm, edit } = useModel('kytucxa.dotdangkyktx');
 	const { danhSach: allPhong } = useModel('theodoitaisanvattu.phong');
 
 	const selectedPhongRowKeys = allPhong

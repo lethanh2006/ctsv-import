@@ -4,7 +4,7 @@ import axios from '@/utils/axios';
 import { ipCsvc } from '@/utils/ip';
 
 export default () => {
-	const objInit = useInitModel<KyTucXa.IDotDangKyKTX>('dot-dang-ky-ky-tuc-xa');
+	const objInit = useInitModel<KyTucXa.IDotDangKyKTX>('dot-dang-ky-ky-tuc-xa', undefined, undefined, ipCsvc);
 
 	const postSinhVienDangKy = (
 		dotId: string,

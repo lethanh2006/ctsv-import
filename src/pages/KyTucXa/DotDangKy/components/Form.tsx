@@ -14,7 +14,7 @@ const FormDotDangKyKTX = (props: any) => {
 	const t = (id: string) => intl.formatMessage({ id });
 	const [form] = Form.useForm();
 	const { record, visibleForm, edit, setVisibleForm, putModel, postModel, formSubmiting } =
-		useModel('kytucxa.dotdangky');
+		useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 	const { postSinhVienDangKy } = useModel('kytucxa.dotdangkyktx');
 	const loaiDot = Form.useWatch('loaiDot', form) ?? ELoaiDotDangKyKTX.THEO_KHOA;
