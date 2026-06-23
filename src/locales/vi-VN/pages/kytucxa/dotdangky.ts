@@ -76,4 +76,6 @@ export default {
 	'kytucxa.dotdangky.trangThaiPhatHanh': 'Trạng thái phát hành',
 	'kytucxa.dotdangky.trangThaiPhatHanh.phatHanh': 'Phát hành',
 	'kytucxa.dotdangky.trangThaiPhatHanh.chuaPhatHanh': 'Chưa phát hành',
+	'kytucxa.dotdangky.message.publishedCannotEdit': 'Đợt đăng ký đã phát hành, không thể chỉnh sửa thông tin!',
+	'error-message.error-dot-giao-khoang-thoi-gian-dot-khac': 'Thời gian đợt đăng ký này bị trùng lặp với đợt đăng ký khác.',
 };

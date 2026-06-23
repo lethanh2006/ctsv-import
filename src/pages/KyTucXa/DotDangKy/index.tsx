@@ -44,7 +44,7 @@ const DotDangKy = () => {
 			.then((res: any) => {
 				setDataThongKe(res?.data?.data || res?.data || res);
 			})
-			.catch((err: any) => {})
+			.catch((err: any) => { })
 			.finally(() => {
 				setLoadingThongKe(false);
 			});
@@ -129,15 +129,13 @@ const DotDangKy = () => {
 				return (
 					<Switch
 						checked={isPublished}
-						disabled={isEnded}
+						disabled={isEnded || isPublished}
 						onChange={async (checked) => {
 							try {
 								if (checked) {
 									await postPhatHanhKTX(record._id);
-								} else {
-									await putModel(record._id, { trangThaiPhatHanh: ETrangThaiPhatHanh.CHUA_PHAT_HANH }, getData, true);
+									getData();
 								}
-								getData();
 							} catch (error) {
 								console.error(error);
 							}

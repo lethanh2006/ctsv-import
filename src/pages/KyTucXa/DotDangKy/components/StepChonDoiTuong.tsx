@@ -31,6 +31,7 @@ interface StepChonDoiTuongProps {
 	setSelectedPhongIds: React.Dispatch<React.SetStateAction<string[]>>;
 	isOngoing?: boolean;
 	isEnded?: boolean;
+	isPublished?: boolean;
 }
 
 const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
@@ -50,6 +51,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 	setSelectedPhongIds,
 	isOngoing,
 	isEnded,
+	isPublished,
 }) => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
@@ -78,8 +80,8 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 							<SelectKhoaSinhVien
 								multiple
 								selectMa
-								allowClear={!isOngoing}
-								disabled={isEnded}
+								allowClear={!isOngoing && !isPublished}
+								disabled={isEnded || isPublished}
 								placeholder={t('kytucxa.dotdangky.chonKhoaSinhVien')}
 								onChange={(value) => {
 									const rawNextValue = Array.isArray(value) ? (value as string[]) : [];
@@ -110,8 +112,8 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 								selectedKhoaNganh={selectedKhoaRows}
 								value={khoaToaConfig}
 								initialValue={initialKhoaToaConfig}
-								onlyAllowExpand={isOngoing}
-								disabled={isEnded}
+								onlyAllowExpand={isOngoing && !isPublished}
+								disabled={isEnded || isPublished}
 								onChange={(nextValue) => setKhoaToaConfig(nextValue)}
 							/>
 						)}
@@ -123,8 +125,8 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 							<SelectToaNha
 								multiple
 								selectMa
-								allowClear={!isOngoing}
-								disabled={isEnded}
+								allowClear={!isOngoing && !isPublished}
+								disabled={isEnded || isPublished}
 								onChange={(ids) => {
 									const rawNextValue = Array.isArray(ids) ? ids : ids ? [ids] : [];
 									const nextValue = isOngoing
@@ -160,7 +162,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 					<RoomTable
 						toaNhaIds={selectedToaNhaIds}
 						selectedRowKeys={selectedPhongRowKeys}
-						disabled={isEnded}
+						disabled={isEnded || isPublished}
 						onChangeSelectedKeys={(keys) => {
 							setSelectedPhongIds(
 								keys
@@ -176,7 +178,7 @@ const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 					form={form}
 					dotId={record?._id}
 					visible={visibleForm}
-					isEnded={isEnded}
+					isEnded={isEnded || isPublished}
 					isOngoing={isOngoing}
 				/>
 			) : null}

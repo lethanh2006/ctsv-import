@@ -72,4 +72,6 @@ export default {
 	'kytucxa.dotdangky.trangThaiPhatHanh': 'Publishing Status',
 	'kytucxa.dotdangky.trangThaiPhatHanh.phatHanh': 'Published',
 	'kytucxa.dotdangky.trangThaiPhatHanh.chuaPhatHanh': 'Unpublished',
+	'kytucxa.dotdangky.message.publishedCannotEdit': 'This registration round has been published and cannot be edited!',
+	'error-message.error-dot-giao-khoang-thoi-gian-dot-khac': 'This registration period time range overlaps with another registration period.',
 };

@@ -133,7 +133,7 @@ axios.interceptors.response.use(
 				case 400:
 					notification.error({
 						message: getMessage('error.400.title', { code: '004' }),
-						description: descriptionError,
+						description: getMessage(descriptionError),
 						key: 'error400',
 					});
 					break;
@@ -205,7 +205,7 @@ axios.interceptors.response.use(
 				case 405:
 					notification.error({
 						message: getMessage('error.403.title', { code: '304' }),
-						description: descriptionError,
+						description: getMessage(descriptionError),
 						key: 'error403',
 					});
 					break;
@@ -213,7 +213,7 @@ axios.interceptors.response.use(
 				case 404:
 					notification.error({
 						message: getMessage('error.404.title', { code: '040' }),
-						description: descriptionError,
+						description: getMessage(descriptionError),
 						key: 'error404',
 					});
 					break;
@@ -221,7 +221,7 @@ axios.interceptors.response.use(
 				case 409:
 					notification.error({
 						message: getMessage('error.409.title', { code: '904' }),
-						description: descriptionError,
+						description: getMessage(descriptionError),
 						key: 'error409',
 					});
 					break;

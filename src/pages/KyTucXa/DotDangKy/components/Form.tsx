@@ -50,6 +50,7 @@ const FormDotDangKyKTX = (props: any) => {
 		!now.isBefore(dayjs(record.thoiGianBatDau)) &&
 		!now.isAfter(dayjs(record.thoiGianKetThuc));
 	const isEnded = !!record?._id && !!record?.thoiGianKetThuc && now.isAfter(dayjs(record.thoiGianKetThuc));
+	const isPublished = record?.trangThaiPhatHanh === ETrangThaiPhatHanh.DA_PHAT_HANH;
 
 	useEffect(() => {
 		if (visibleForm) {
@@ -290,7 +291,7 @@ const FormDotDangKyKTX = (props: any) => {
 			</Steps>
 
 			<div style={{ display: currentStep === 0 ? 'block' : 'none' }}>
-				<StepThongTin isOngoing={isOngoing} isEnded={isEnded} />
+				<StepThongTin isOngoing={isOngoing} isEnded={isEnded} isPublished={isPublished} />
 			</div>
 
 			<div style={{ display: currentStep === 1 ? 'block' : 'none' }}>
@@ -311,6 +312,7 @@ const FormDotDangKyKTX = (props: any) => {
 					setSelectedPhongIds={setSelectedPhongIds}
 					isOngoing={isOngoing}
 					isEnded={isEnded}
+					isPublished={isPublished}
 				/>
 			</div>
 
@@ -334,7 +336,7 @@ const FormDotDangKyKTX = (props: any) => {
 					</>
 				) : (
 					<>
-						<Button loading={formSubmiting} disabled={isEnded} htmlType='submit' type='primary'>
+						<Button loading={formSubmiting} disabled={isEnded || isPublished} htmlType='submit' type='primary'>
 							{!edit ? t('global.button.themmoi') : t('global.button.luulai')}
 						</Button>
 						<Button htmlType='button' onClick={() => setCurrentStep(0)}>

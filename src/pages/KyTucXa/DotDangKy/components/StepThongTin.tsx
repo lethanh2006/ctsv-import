@@ -2,11 +2,11 @@ import MyDatePicker from '@/components/MyDatePicker';
 import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
 import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
-import { Col, Form, Input, Row, Select } from 'antd';
+import { Alert, Col, Form, Input, Row, Select } from 'antd';
 import { useIntl, useModel } from 'umi';
 
-const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
-	const { isOngoing, isEnded } = props;
+const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean; isPublished?: boolean }) => {
+	const { isOngoing, isEnded, isPublished } = props;
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
 	const form = Form.useFormInstance();
@@ -14,10 +14,21 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 	const { record } = useModel('kytucxa.dotdangkyktx');
 	const thoiGianBatDau = Form.useWatch('thoiGianBatDau', form);
 	const ngayChuyenVao = Form.useWatch('ngayChuyenVao', form);
-	const lockCoreInfo = isOngoing || isEnded;
+	const disabledAll = isOngoing || isEnded || isPublished;
+	const lockCoreInfo = isOngoing || isEnded || isPublished;
 
 	return (
 		<Row gutter={[12, 0]}>
+			{isPublished && (
+				<Col span={24}>
+					<Alert
+						message={t('kytucxa.dotdangky.message.publishedCannotEdit')}
+						type='warning'
+						showIcon
+						style={{ marginBottom: 12 }}
+					/>
+				</Col>
+			)}
 			<Col span={24} md={12}>
 				<Form.Item
 					name='tenDot'
@@ -58,7 +69,7 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 					]}
 				>
 					<MyDatePicker
-						disabled={isEnded}
+						disabled={disabledAll}
 						format='DD/MM/YYYY'
 						disabledDate={(cur) => {
 							if (thoiGianBatDau && dayjs(cur).isBefore(thoiGianBatDau, 'day')) return true;
@@ -89,6 +100,7 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 					]}
 				>
 					<MyDatePicker
+						disabled={disabledAll}
 						pickerStyle='month'
 						format='MM/YYYY'
 						disabledDate={thoiGianBatDau ? (cur) => dayjs(cur).isBefore(thoiGianBatDau, 'month') : undefined}
@@ -125,6 +137,7 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 					]}
 				>
 					<MyDatePicker
+						disabled={disabledAll}
 						pickerStyle='month'
 						format='MM/YYYY'
 						disabledDate={(cur) => {
@@ -149,7 +162,7 @@ const StepThongTin = (props: { isOngoing?: boolean; isEnded?: boolean }) => {
 			</Col>
 			<Col xs={24}>
 				<Form.Item name='ghiChu' label={t('kytucxa.dotdangky.ghiChu')} rules={[...rules.text, ...rules.length(2000)]}>
-					<Input.TextArea rows={3} placeholder={t('kytucxa.dotdangky.nhapGhiChu')} />
+					<Input.TextArea disabled={disabledAll} rows={3} placeholder={t('kytucxa.dotdangky.nhapGhiChu')} />
 				</Form.Item>
 			</Col>
 		</Row>
