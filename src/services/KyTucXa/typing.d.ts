@@ -27,6 +27,7 @@ declare module KyTucXa {
 		tangThu?: number;
 		soPhongTam?: number;
 		loaiPhongKtx?: IDanhMucChung;
+		isChoThue?: boolean;
 
 		dangKyKyTucXaRule?: {
 			_id?: string;

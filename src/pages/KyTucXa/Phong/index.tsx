@@ -3,6 +3,7 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { KyTucXa } from '@/services/KyTucXa/typing';
 import { EditOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import SelectToaNha from '../DotDangKy/components/SelectToaNha';
 import Form from './components/Form';
@@ -81,6 +82,19 @@ const PhongKTXPage = () => {
 			width: 160,
 			align: 'center',
 			render: (val) => danhSachLoaiPhong?.find((item: KyTucXa.IDanhMucChung) => item?.ma === val)?.ten || '-',
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.phong.trangThaiChoThue' }),
+			dataIndex: 'isChoThue',
+			width: 140,
+			align: 'center',
+			render: (val: boolean) => (
+				<Tag color={val ? 'success' : 'default'}>
+					{val
+						? intl.formatMessage({ id: 'kytucxa.phong.dangChoThue' })
+						: intl.formatMessage({ id: 'kytucxa.phong.chuaChoThue' })}
+				</Tag>
+			),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.thaoTac' }),
