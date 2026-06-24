@@ -925,3 +925,5 @@ export const getPartitionCode = (): string | null => {
 export const kiemTraPhanVung = (dataPartitionCode: string | null) => {
 	return !dataPartitionCode || dataPartitionCode === localStorage.getItem('partitionCode');
 };
+
+export const initTenPhongBan = 'Phòng Đào tạo';

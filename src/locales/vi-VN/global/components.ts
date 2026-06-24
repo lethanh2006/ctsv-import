@@ -132,17 +132,33 @@ export default {
 	'global.table.index.button.xoa.title': 'Xác nhận xóa {count} mục đã chọn?',
 	'global.table.index.button.tailai': 'Tải lại',
 	'global.table.index.button.tailai.tooltip': 'Tải lại dữ liệu',
-	'global.table.index.button.boloc': 'Bộ lọc tùy chỉnh',
+	'global.table.index.button.boloc': 'Bộ lọc',
 	'global.table.index.button.boloc.tooltip': 'Áp dụng bộ lọc tùy chỉnh',
 	'global.table.index.button.tongso': 'Tổng số',
 	'global.table.index.button.tongso.tooltip': 'Tổng số dữ liệu',
+	'global.table.index.search.placeholder': 'Tìm theo: {fields}',
+	'global.table.index.search.placeholder.short': 'Tìm {field}',
+	'global.table.index.search.placeholder.default': 'Tìm kiếm',
+	'global.table.index.search.tooltip': 'Đang tìm kiếm theo: {fields}',
+	'global.table.index.import.titleTemplate': 'Biểu mẫu {title}.xlsx',
+	'global.table.index.export.fileName': 'Danh sách {title}.xlsx',
+	'global.table.index.export.defaultTitle': 'dữ liệu',
+	'global.table.index.search.tooltip.default': 'Tìm kiếm theo các trường dạng chuỗi',
 	'global.table.index.empty': 'Không có dữ liệu',
 	'global.table.index.dachon': 'Đã chọn',
 	'global.table.index.bochon': 'Bỏ chọn tất cả',
 	'global.table.index.tongso': 'Tổng số',
 
-	'global.table.customfilter.title': 'Bộ lọc tùy chỉnh',
-	'global.table.customfilter.dieukien': 'Các điều kiện lọc đang được áp dụng',
+	'global.table.columnSetting.title': 'Cấu hình cột',
+	'global.table.columnSetting.reset': 'Khôi phục',
+	'global.table.columnSetting.reset.confirm':
+		'Bạn có chắc chắn muốn khôi phục lại cấu hình mặc định (vị trí, ẩn hiện và độ rộng) của các cột?',
+	'global.table.columnSetting.apply': 'Áp dụng',
+	'global.table.columnSetting.cancel': 'Hủy',
+	'global.table.columnSetting.tooltip': 'Cấu hình ẩn/hiện và thứ tự cột',
+
+	'global.table.customfilter.title': 'Bộ lọc dữ liệu',
+	'global.table.customfilter.dieukien': 'Các điều kiện lọc hiện tại',
 	'global.table.customfilter.button.them': 'Thêm điều kiện lọc',
 	'global.table.customfilter.button.apdung': 'Áp dụng bộ lọc',
 	'global.table.customfilter.button.xoa': 'Bỏ lọc',
@@ -151,6 +167,9 @@ export default {
 	'global.table.customfilter.button.chuyenthanhnhom': 'Chuyển thành nhóm',
 	'global.table.customfilter.button.xoadieukien': 'Xóa điều kiện',
 	'global.table.customfilter.button.xoanhomdieukien': 'Xóa nhóm điều kiện',
+	'global.table.customfilter.tooltip.applied': 'Các điều kiện lọc hiện tại đang được áp dụng cho bảng',
+	'global.table.customfilter.moreconditions': '+{count} điều kiện khác',
+	'global.table.customfilter.button.xemthem': 'Xem thêm',
 	'global.table.customfilter.label.giatri': 'Giá trị',
 	'global.table.customfilter.label.giatriden': 'Giá trị đến',
 	'global.table.customfilter.label.thuoctinh': 'Thuộc tính',
@@ -158,7 +177,7 @@ export default {
 	'global.table.customfilter.label.nhomdieukien': 'Nhóm điều kiện:',
 	'global.table.customfilter.placeholder.chondieukien': 'Chọn điều kiện',
 	'global.table.customfilter.placeholder.chongiatri': 'Chọn giá trị',
-	'global.table.customfilter.search': 'Tìm',
+	'global.table.customfilter.tim': 'Tìm',
 	'global.table.import.match.cot': 'Cột {colName}: {title}',
 	'global.table.import.preview.invalidRows':
 		'Có ô chứa dữ liệu không hợp lệ tại các dòng {rows} (đã được đánh dấu trong bảng), vui lòng kiểm tra lại!',
@@ -183,14 +202,18 @@ export default {
 	'global.table.operator.not_null': 'Không trống',
 	'global.table.operator.or': 'Hoặc',
 	'global.table.operator.and': 'Và',
+	'global.table.operator.exist': 'Tồn tại',
+	'global.table.operator.not_exist': 'Không tồn tại',
+	'global.table.operator.not': 'Không',
+	'global.table.operator.regex': 'Regex',
 
 	'global.table.filterdropdown.xemthem': 'Xem thêm',
-	'global.table.filterdropdown.boloc': 'Bộ lọc tùy chỉnh',
+	'global.table.filterdropdown.boloc': 'Bộ lọc',
 
 	'global.tablestatic.button.themmoi': 'Thêm mới',
 	'global.tablestatic.button.themmoi.tooltip': 'Thêm mới dữ liệu',
-	'global.tablestatic.button.xoa': 'Tải lại',
-	'global.tablestatic.button.xoa.tooltip': 'Tải lại dữ liệu',
+	'global.tablestatic.button.tailai': 'Tải lại',
+	'global.tablestatic.button.tailai.tooltip': 'Tải lại dữ liệu',
 	'global.tablestatic.button.tongso': 'Tổng số',
 	'global.tablestatic.button.tongso.tooltip': 'Tổng số dữ liệu',
 
@@ -213,6 +236,10 @@ export default {
 	'global.uploadfile.button.chontep': 'Chọn tệp',
 
 	'global.placeholder.ngay': 'Chọn ngày',
+	'global.uploadfile.tepdinhkem': 'Tệp đính kèm',
+
+	'app.copyright.produced': 'CopyRight',
+	'app.locale.image': 'vi-VN.svg',
 
 	// PDFViewer
 	'global.pdfviewer.dangtai': 'Đang tải...',
@@ -220,4 +247,6 @@ export default {
 	'global.pdfviewer.truoc': 'Trước',
 	'global.pdfviewer.sau': 'Sau',
 	'global.pdfviewer.trang': 'Trang {pageNumber} trên tổng số {numPages}',
+
+	'global.noticeion.all': 'Đã đọc tất cả thông báo',
 };

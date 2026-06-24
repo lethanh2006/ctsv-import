@@ -180,16 +180,12 @@ const ConfigBounder = (props: { children?: any }) => {
 						optionSelectedBg: officialColors.official500,
 					},
 					Table: {
-						borderColor: textColors?.text400,
-						headerBg: accentColors?.accent700,
+						borderColor: '#e8e8e8',
+						headerBg: '#f8f8f8',
 						cellPaddingBlock: 8,
-						cellPaddingInline: 16,
-					},
-					Breadcrumb: {
-						lastItemColor: textColors?.text400,
-						itemColor: textColors?.text300,
-						linkColor: textColors?.text300,
-						linkHoverColor: textColors?.text400,
+						cellPaddingInline: 8,
+						cellPaddingBlockSM: 3,
+						cellPaddingInlineSM: 5,
 					},
 				},
 			}}

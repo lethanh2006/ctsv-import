@@ -2,12 +2,12 @@ import { type ChuongTrinhDaoTao } from '../DanhMucHeThong/ChuongTrinhDaoTao/typi
 import { type ELoaiDiemChu } from '../KetQuaHocTap/constant';
 import { type LopHanhChinh } from '../NamHoc/LopHanhChinh/typings';
 import type {
-	ELoaiNoiSinh,
 	EGioiTinh,
 	EHinhThucTuyenDung,
+	ELoaiNoiSinh,
 	ENoiNgoaiTru,
-	EViTriViecLam,
 	ETrangThaiThanhVienGiaDinh,
+	EViTriViecLam,
 } from './constant';
 
 declare module SinhVien {
@@ -185,21 +185,26 @@ declare module SinhVien {
 	}
 
 	export interface IThongTinHocTapHienTai {
+		khoaNganh?: KhoaNganh.IRecord;
+		chuyenNganh?: NganhDaoTao.IRecordCoSo;
+		chuyenNganhPhu?: NganhDaoTao.IRecordCoSo;
+		khoiKienThuc?: KhoiKienThuc.IRecord;
 		chuongTrinhDaoTao: ChuongTrinhDaoTao.IRecord;
+
 		daoTaoTuNam: string; //"2023-04-28T07:06:57.151Z"
 		diemTbtl4: number;
 		diemTbtl10: number;
 		diemTbtlChu: ELoaiDiemChu;
+		sinhVienNamThu: ETrinhDoKqhtHocKy; //"Sinh viên năm nhất"
+
 		hinhThucDaoTao: HinhThucDaoTao.IRecordCoSo;
 		khoaSinhVien: KhoaSinhVien.IRecord;
 		loaiHocVien: string; //"Sinh viên",
 		lopHanhChinh: LopHanhChinh.IRecord;
 		nganhDaoTao: NganhDaoTao.IRecordCoSo;
-		sinhVienNamThu: string; //"Sinh viên năm nhất"
 		soNamDaoTao: number;
-		trangThaiSinhVien: string; //"Đang học"
+		trangThaiSinhVien: ETrangThaiHocSv; //"Đang học"
 	}
-
 	export interface ICongNoSinhVien {
 		_id: string;
 		sinhVienSsoId: string;
@@ -224,5 +229,28 @@ declare module SinhVien {
 		trangThai: ETrangThaiDiemHocPhanSv;
 		maSvHp: string;
 		lopHpSvList?: LopHocPhan.IRecordSinhVienLopHP[];
+	}
+
+	export type TThongTinVisa = {
+		key?: number;
+		_id?: string;
+		sinhVienSsoId?: string;
+		maQuocGia?: string;
+		tenQuocGia?: string;
+		soHieuVisa?: string;
+		loaiVisa?: string;
+		ngayCapPhep?: string;
+		ngayHetHan?: string;
+		soLanNhapCanh?: ESoLanNhapCanhVisa; // single | double | multiple
+		coQuanCap?: string;
+		noiCap?: string;
+		urlMinhChung?: string | null;
+		visaChinh?: boolean;
+	};
+
+	export interface IThongTinDaoTaoSinhVien {
+		loaiHocVien: ELoaiSinhVien;
+		thongTinNganhChinh: IThongTinHocTapHienTai;
+		thongTinNganh2: IThongTinHocTapHienTai;
 	}
 }

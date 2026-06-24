@@ -6,3 +6,7 @@ export const exportSinhVienXetHocBong = (maHocKy: string) => {
 		responseType: 'arraybuffer',
 	});
 };
+
+export const tinhDiemSinhVien = (ssoId: string) => {
+	return axios.post(`${ipDaoTao}/calculate-diem/sinh-vien/${ssoId}`);
+};

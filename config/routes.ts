@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -177,6 +177,25 @@
 		name: 'SubmisstionRound',
 		icon: 'ScheduleOutlined',
 		path: '/activity-submission',
+		routes: [
+			{
+				name: 'Management',
+				path: 'dot',
+				component: 'CCT/SubmisstionRound',
+			},
+			{
+				name: 'DanhSach',
+				path: 'danh-sach',
+				component: 'CCT/SubmisstionRound/DanhSach',
+			},
+		],
+	},
+
+	{
+		name: 'SubmisstionRound',
+		icon: 'ScheduleOutlined',
+		path: '/activity-submission',
+		access: 'cctFilter',
 		routes: [
 			{
 				name: 'Management',

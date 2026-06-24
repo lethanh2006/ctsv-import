@@ -30,8 +30,8 @@ import {
 } from '@ant-design/icons';
 import { Card, Checkbox, Empty, Form, InputNumber, Modal, Popconfirm, Segmented, Space, message } from 'antd';
 import fileDownload from 'js-file-download';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useModel } from 'umi';
 import ViewDiemLopHocPhan from '../../DiemLopHocPhan/components/ViewDiemLopHocPhan';
 import ModalLichSuNhapDiem from '../../LichSuNhapDiem';
@@ -85,12 +85,7 @@ const CardDiemThanhPhan = (getData: () => void) => {
 		getDauDiem(); // Max 10 đầu điểm
 	}, []);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => <ButtonExtend disabled={!danhSach.length || editDiem} icon={<PrinterOutlined />} tooltip='In bảng điểm' />,
-		[danhSach.length, editDiem],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	const onDuyetDiem = () => {
 		if (trangThaiDuyet === ETrangThaiDuyetDiem.QUAN_LY_DUYET) return;
@@ -295,9 +290,8 @@ const CardDiemThanhPhan = (getData: () => void) => {
 		<>
 			<Card
 				title={'Danh sách sinh viên'}
-				styles={{ padding: '8px 0 0' }}
-				headStyle={{ padding: '0' }}
-				bordered={false}
+				styles={{ body: { padding: '8px 0 0' }, header: { padding: '0' } }}
+				variant='borderless'
 			>
 				{recordLopHP?._id ? (
 					<Form form={form} component={false}>
@@ -357,7 +351,6 @@ const CardDiemThanhPhan = (getData: () => void) => {
 										</ButtonExtend>
 									</>
 								)}
-
 								<ButtonExtend
 									icon={<CheckCircleOutlined />}
 									onClick={onDuyetDiem}
@@ -373,7 +366,6 @@ const CardDiemThanhPhan = (getData: () => void) => {
 								>
 									Duyệt điểm
 								</ButtonExtend>
-
 								{recordLopHP.trangThaiDiemLop !== ETrangThaiDiemLop.CHUA_NOP_DIEM ? (
 									<ButtonExtend
 										icon={<UnlockOutlined />}
@@ -384,8 +376,12 @@ const CardDiemThanhPhan = (getData: () => void) => {
 										Hủy nộp điểm
 									</ButtonExtend>
 								) : null}
-
-								<ReactToPrint content={reactToPrintContent} trigger={reactToPrintTrigger} removeAfterPrint />
+								<ButtonExtend
+									disabled={!danhSach.length || editDiem}
+									icon={<PrinterOutlined />}
+									tooltip='In bảng điểm'
+									onClick={() => handlePrint()}
+								/>
 								<ButtonExtend
 									icon={<ExportOutlined />}
 									disabled={!danhSach.length || editDiem}
@@ -442,7 +438,7 @@ const CardDiemThanhPhan = (getData: () => void) => {
 						data={danhSach}
 						size='small'
 						addStt
-						otherProps={{ pagination: false, scroll: false }}
+						otherProps={{ pagination: false, scroll: undefined }}
 					/>
 				</div>
 			</PrintTemplate>

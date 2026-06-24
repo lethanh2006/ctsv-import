@@ -1,10 +1,11 @@
 export default {
-	'global.message.themmoithanhcong': 'Inserted successfully',
-	'global.message.luuthanhcong': 'Saved successfully',
-	'global.message.xoathanhcong': 'Deleted successfully',
-	'global.message.validated': 'Data validated',
-	'global.message.imported': 'Data imported',
-	'global.message.formsubmiting': 'Submitting data',
+	'global.message.themmoithanhcong': 'Inserted Successfully',
+	'global.message.luuthanhcong': 'Saved Successfully',
+	'global.message.xoathanhcong': 'Deleted Successfully',
+	'global.message.deletedcount': 'Successfully deleted {count} items',
+	'global.message.validated': 'Data Validated',
+	'global.message.imported': 'Data Imported',
+	'global.message.formsubmiting': 'Submitting Data',
 
 	'message.confirm.activate': 'Are you sure you want to activate this?',
 	'message.confirm.deactivate': 'Are you sure you want to deactivate this?',

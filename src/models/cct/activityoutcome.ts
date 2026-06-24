@@ -79,7 +79,6 @@ export default () => {
 		dataThongKeApprovers,
 		loadingThongKeApprovers,
 		getAnalyticsApproversModel,
-
 		visibleChangeStatus,
 		setVisibleChangeStatus,
 		visibleXuLy,
