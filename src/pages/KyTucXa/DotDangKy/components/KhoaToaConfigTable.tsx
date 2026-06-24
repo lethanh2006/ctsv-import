@@ -61,11 +61,11 @@ const KhoaToaConfigTable = (props: {
 						gap: '12px',
 					}}
 				>
-					<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '1 1 auto', minWidth: '280px' }}>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '280px' }}>
 						<span style={{ fontWeight: 500, color: '#334155', whiteSpace: 'nowrap' }}>
 							{t('kytucxa.dotdangky.apDungNhanhChoTatCaKhoa')}
 						</span>
-						<div style={{ flex: 1, minWidth: '200px', maxWidth: '400px' }}>
+						<div style={{ flex: 1, minWidth: '200px', maxWidth: '500px' }}>
 							<SelectToaNha
 								multiple
 								selectMa
@@ -76,7 +76,7 @@ const KhoaToaConfigTable = (props: {
 							/>
 						</div>
 					</div>
-					<Space>
+					<Space style={{ flexShrink: 0 }}>
 						<Button type='primary' onClick={applyToAll} disabled={disabled || bulkToaNha.length === 0}>
 							{t('kytucxa.dotdangky.apDungChoTatCa')}
 						</Button>

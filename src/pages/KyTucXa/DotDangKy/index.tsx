@@ -120,7 +120,7 @@ const DotDangKy = () => {
 			onCell,
 		},
 		{
-			title: 'Kích hoạt',
+			title: 'Trạng thái ban hành',
 			width: 120,
 			align: 'center',
 			render: (_value, record) => {

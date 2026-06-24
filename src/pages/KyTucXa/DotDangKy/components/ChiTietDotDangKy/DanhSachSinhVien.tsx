@@ -3,7 +3,6 @@ import { type IColumn } from '@/components/Table/typing';
 import { useModel } from '@umijs/max';
 import { Tag } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
 
 const DanhSachSinhVien = () => {
 	const { record: recordDot } = useModel('kytucxa.dotdangkyktx');

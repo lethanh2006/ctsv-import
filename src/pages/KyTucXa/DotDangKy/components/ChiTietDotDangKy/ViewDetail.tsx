@@ -138,7 +138,7 @@ const ViewDetail = () => {
 									{t('kytucxa.dotdangky.ngayChuyenVao') || 'Ngày chuyển vào'}
 								</div>
 								<div style={{ fontSize: 14, color: '#262626', fontWeight: 500 }}>
-									{record?.ngayChuyenVao ? dayjs(record.ngayChuyenVao).format('DD/MM/YYYY') : '--'}
+									{record?.ngayChuyenVao ? dayjs(record.ngayChuyenVao).format('MM/YYYY') : '--'}
 								</div>
 							</Col>
 							<Col xs={24} sm={12} md={4} style={{ width: '20%', flex: '0 0 20%', maxWidth: '20%' }}>
@@ -146,7 +146,7 @@ const ViewDetail = () => {
 									{t('kytucxa.dotdangky.ngayChuyenRa') || 'Ngày chuyển ra'}
 								</div>
 								<div style={{ fontSize: 14, color: '#262626', fontWeight: 500 }}>
-									{record?.ngayChuyenRa ? dayjs(record.ngayChuyenRa).format('DD/MM/YYYY') : '--'}
+									{record?.ngayChuyenRa ? dayjs(record.ngayChuyenRa).format('MM/YYYY') : '--'}
 								</div>
 							</Col>
 							<Col xs={24} sm={12} md={4} style={{ width: '20%', flex: '0 0 20%', maxWidth: '20%' }}>

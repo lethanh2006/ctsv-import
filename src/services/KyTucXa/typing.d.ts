@@ -197,17 +197,17 @@ declare module KyTucXa {
 		maHocKy: string;
 		tongQuan: {
 			soLuongPhongChoThue: number;
-			tongSoPhong: number;         
-			tongSucChua: number;       
+			tongSoPhong: number;
+			tongSucChua: number;
 			soLuongSinhVienDaDangKy: number;
 			soLuongChoConTrong: number;
 		};
 		bieuDoLapDayToaNha: {
 			maToaNha: string;
 			tenToaNha: string;
-			sinhVienDaDangKy: number; 
-			tongSucChua: number;    
-			tiLeLapDay: number;   
+			sinhVienDaDangKy: number;
+			tongSucChua: number;
+			tiLeLapDay: number;
 		}[];
 	}
 }
