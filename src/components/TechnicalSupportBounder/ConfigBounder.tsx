@@ -54,6 +54,9 @@ const ConfigBounder = (props: { children?: any }) => {
 				hashed: false,
 				cssVar: { prefix: '' },
 				components: {
+					Anchor: {
+						linkPaddingBlock: 12,
+					},
 					Form: {
 						labelRequiredMarkColor: statusColors.status400,
 						fontSizeIcon: 20,
@@ -75,6 +78,7 @@ const ConfigBounder = (props: { children?: any }) => {
 						textTextColor: primaryColor,
 						defaultColor: textColors.text100,
 						borderColorDisabled: 'transparent',
+						paddingInline: 10,
 						borderRadius: 4,
 						fontWeight: 600,
 					},
@@ -107,11 +111,7 @@ const ConfigBounder = (props: { children?: any }) => {
 					Steps: {
 						colorSplit: accentColors.accent700,
 						lineWidth: 2,
-						fontSize: 14,
-						colorTextLightSolid: textColors.text100,
-						finishIconBorderColor: 'transparent',
 						finishIconBgColor: statusColors.status100,
-						iconTop: -1,
 					} as any,
 					Slider: {
 						trackBg: statusColors.status200,
@@ -167,6 +167,7 @@ const ConfigBounder = (props: { children?: any }) => {
 						inkBarColor: highlightColor,
 						cardGutter: 0,
 						horizontalItemPadding: '12px',
+						horizontalItemGutter: 8,
 					},
 					Divider: {
 						colorSplit: accentColors.accent700,
@@ -180,12 +181,19 @@ const ConfigBounder = (props: { children?: any }) => {
 						optionSelectedBg: officialColors.official500,
 					},
 					Table: {
-						borderColor: '#e8e8e8',
-						headerBg: '#f8f8f8',
+						borderColor: textColors?.text400,
+						headerBg: accentColors?.accent700,
 						cellPaddingBlock: 8,
 						cellPaddingInline: 8,
 						cellPaddingBlockSM: 3,
 						cellPaddingInlineSM: 5,
+						headerBorderRadius: 0,
+					},
+					Breadcrumb: {
+						lastItemColor: textColors?.text400,
+						itemColor: textColors?.text300,
+						linkColor: textColors?.text300,
+						linkHoverColor: textColors?.text400,
 					},
 				},
 			}}

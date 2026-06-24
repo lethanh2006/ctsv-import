@@ -1,5 +1,5 @@
 export default {
-	'global.button.themmoi': 'Thêm mới',
+	'global.button.themmoi': 'Lưu lại',
 	'global.button.luulai': 'Lưu lại',
 	'global.button.huy': 'Hủy',
 	'global.button.dong': 'Đóng',

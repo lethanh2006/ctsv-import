@@ -147,7 +147,7 @@ export default {
 	'global.table.index.export.fileName': '{title}.xlsx',
 	'global.table.index.export.defaultTitle': 'data',
 
-	'global.table.columnSetting.title': 'Column Settings',
+	'global.table.columnSetting.title': 'Column settings',
 	'global.table.columnSetting.reset': 'Reset',
 	'global.table.columnSetting.reset.confirm':
 		'Are you sure you want to restore the default column settings (position, visibility, and width)?',
