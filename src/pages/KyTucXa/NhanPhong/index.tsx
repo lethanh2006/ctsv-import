@@ -36,40 +36,37 @@ const NhanPhongKTXPage = () => {
 
 	const renderDate = (value?: string | null, format = 'DD/MM/YYYY') => (value ? dayjs(value).format(format) : '--');
 
-	const getPhongInfo = (record: KyTucXa.ICheckInSinhVien) =>
+	const getPhongInfo = (record: KyTucXa.IThongTinDangKy) =>
 		record?.phong || danhSachPhong?.find((item: KyTucXa.IPhong) => item?.ma === record?.maPhong);
 
-	const getLoaiPhong = (record: KyTucXa.ICheckInSinhVien) => {
+	const getLoaiPhong = (record: KyTucXa.IThongTinDangKy) => {
 		const phong = getPhongInfo(record);
 		const maLoaiPhong =
-			record?.loaiPhongKtx?.ma || record?.maLoaiPhongKtx || phong?.loaiPhongKtx?.ma || phong?.maLoaiPhongKtx;
+			phong?.loaiPhongKtx?.ma || phong?.maLoaiPhongKtx;
 		const tenLoaiPhong =
-			record?.loaiPhongKtx?.ten ||
 			phong?.loaiPhongKtx?.ten ||
 			danhSachDanhMuc?.find((item: KyTucXa.IDanhMucChung) => item?.ma === maLoaiPhong)?.ten;
 
 		return tenLoaiPhong || maLoaiPhong || '-';
 	};
 
-	const getTenPhong = (record: KyTucXa.ICheckInSinhVien) => {
+	const getTenPhong = (record: KyTucXa.IThongTinDangKy) => {
 		const phong = getPhongInfo(record);
 
-		return record?.tenPhong || phong?.ten || record?.maPhong || '-';
+		return phong?.ten || record?.maPhong || '-';
 	};
 
-	const getTang = (record: KyTucXa.ICheckInSinhVien) => {
+	const getTang = (record: KyTucXa.IThongTinDangKy) => {
 		const phong = getPhongInfo(record);
 
-		return record?.tang ?? record?.tangThu ?? phong?.tangThu ?? '-';
+		return phong?.tangThu ?? '-';
 	};
 
-	const getTenToaNha = (record: KyTucXa.ICheckInSinhVien) => {
+	const getTenToaNha = (record: KyTucXa.IThongTinDangKy) => {
 		const tenToaNha =
-			record?.tenToaNha ||
-			record?.toaNha?.ten ||
-			danhSachToa?.find((item: KyTucXa.IToa) => item?.ma === record?.maToaNha)?.ten;
+			danhSachToa?.find((item: KyTucXa.IToa) => item?.ma === record?.phong?.maToaNha)?.ten;
 
-		return tenToaNha || record?.maToaNha || '-';
+		return tenToaNha || record?.phong?.maToaNha || '-';
 	};
 
 	const renderTrangThaiThanhToan = (val?: string) => {
@@ -101,75 +98,53 @@ const NhanPhongKTXPage = () => {
 		}
 	};
 
-	const columns: IColumn<KyTucXa.ICheckInSinhVien>[] = [
+	const columns: IColumn<KyTucXa.IThongTinDangKy>[] = [
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.maSinhVien' }),
-			dataIndex: 'maSinhVien',
+			dataIndex: 'nguoiTaoMa',
 			width: 120,
 			filterType: 'string',
-			render: (val, record) => renderText(val || record?.sinhVien?.maSinhVien || record?.sinhVien?.ma),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.hoTen' }),
 			width: 150,
 			align: 'center',
-			dataIndex: 'hoTen',
+			dataIndex: 'nguoiTaoHoTen',
 			filterType: 'string',
-			render: (val, record) => renderText(val || record?.sinhVien?.hoTen),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.khoaSinhVien' }),
-			dataIndex: 'maKhoaSinhVien',
+			dataIndex: 'khoa',
 			width: 130,
-			render: (val, record) =>
-				renderText(
-					val ||
-						record?.khoaSinhVien?.ten ||
-						record?.khoaSinhVien?.ma ||
-						record?.sinhVien?.khoaSinhVien?.ten ||
-						record?.sinhVien?.khoaSinhVien?.ma ||
-						record?.sinhVien?.maKhoaSinhVien,
-				),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.nganh' }),
-			dataIndex: 'tenNganh',
+			dataIndex: 'nganh',
 			width: 180,
-			render: (val, record) =>
-				renderText(
-					val ||
-						record?.nganh?.ten ||
-						record?.maNganh ||
-						record?.sinhVien?.tenNganh ||
-						record?.sinhVien?.nganh?.ten ||
-						record?.sinhVien?.maNganh,
-				),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.soDienThoai' }),
 			dataIndex: 'soDienThoai',
 			width: 130,
 			filterType: 'string',
-			render: (val, record) => renderText(val || record?.sinhVien?.soDienThoai),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.email' }),
 			dataIndex: 'email',
 			width: 200,
 			filterType: 'string',
-			render: (val, record) => renderText(val || record?.sinhVien?.email),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.thoiGianDangKy' }),
-			dataIndex: 'thoiGianDangKy',
+			dataIndex: 'createdAt',
 			width: 150,
 			align: 'center',
 			sortable: true,
-			render: (val, record) => renderDate(val || record?.ngayDangKy || record?.createdAt, 'DD/MM/YYYY HH:mm'),
+			render: (val) => renderDate(val, 'DD/MM/YYYY HH:mm'),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.loaiPhong' }),
-			dataIndex: 'maLoaiPhongKtx',
+			dataIndex: ['phong','maLoaiPhongKtx'],
 			width: 140,
 			filterType: 'string',
 			render: (_, record) => getLoaiPhong(record),
@@ -189,37 +164,37 @@ const NhanPhongKTXPage = () => {
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.tang' }),
-			dataIndex: 'tangThu',
+			dataIndex: ['phong','tangThu'],
 			width: 90,
 			align: 'center',
 			render: (_, record) => getTang(record),
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.tenToaNha' }),
-			dataIndex: 'maToaNha',
+			dataIndex: ['phong','maToaNha'],
 			width: 140,
 			filterType: 'string',
 			render: (_, record) => getTenToaNha(record),
 		},
-		{
-			title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayNhanPhong' }),
-			dataIndex: 'ngayBatDau',
-			width: 120,
-			align: 'center',
-			sortable: true,
-			render: (value, record) => renderDate(record?.ngayNhanPhong || value),
-		},
-		{
-			title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayTraPhong' }),
-			dataIndex: 'ngayKetThuc',
-			width: 120,
-			align: 'center',
-			sortable: true,
-			render: (value, record) => renderDate(record?.ngayTraPhong || value),
-		},
+		// {
+		// 	title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayNhanPhong' }),
+		// 	dataIndex: 'ngayBatDau',
+		// 	width: 120,
+		// 	align: 'center',
+		// 	sortable: true,
+		// 	render: (value, record) => renderDate(record?.ngayNhanPhong || value),
+		// },
+		// {
+		// 	title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayTraPhong' }),
+		// 	dataIndex: 'ngayKetThuc',
+		// 	width: 120,
+		// 	align: 'center',
+		// 	sortable: true,
+		// 	render: (value, record) => renderDate(record?.ngayTraPhong || value),
+		// },
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.trangThaiThanhToan' }),
-			dataIndex: 'trangThaiThanhToan',
+			dataIndex: 'trangThaiDuyet',
 			width: 150,
 			align: 'center',
 			filterType: 'select',

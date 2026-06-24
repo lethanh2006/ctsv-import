@@ -108,64 +108,27 @@ declare module KyTucXa {
 		updatedAt?: string;
 	}
 
-	export interface ICheckInSinhVien {
-		_id: string;
-		ssoId: string;
-		maSinhVien: string;
-		hoTen: string;
-		maKhoaSinhVien?: string;
-		khoaSinhVien?: {
-			ma?: string;
-			ten?: string;
-		};
-		maNganh?: string;
-		tenNganh?: string;
-		nganh?: {
-			ma?: string;
-			ten?: string;
-		};
-		soDienThoai?: string;
+	export interface IThongTinDangKy {
+        _id: string;
+        maDotId?: string;
+        maPhong?: string;
+        nguoiTaoMa?: string;
+        nguoiTaoHoTen?: string;
+		khoa?: string;
+		nganh?: string;
+		soDienThoai?: number;
 		email?: string;
-		thoiGianDangKy?: string;
-		ngayDangKy?: string;
-		createdAt?: string;
-		maPhong: string;
-		tenPhong?: string;
+        nguoiTaoSsoId?: string;
+        identityCode?: string;
+        thoiHanThanhToan?: string;
+        urlMinhChung?: string;
+        trangThaiMinhChung?: ETrangThaiMinhChung;
+        trangThaiDuyet?: ETrangThaiDuyet;
+        createdAt?: string;
+        updatedAt?: string;
+        formDon?: IFormDangKy;
 		phong?: IPhong;
-		maLoaiPhongKtx?: string;
-		loaiPhongKtx?: IDanhMucChung;
-		tangThu?: number;
-		tang?: number;
-		maToaNha: string;
-		tenToaNha?: string;
-		toaNha?: IToa;
-		ngayBatDau: string;
-		ngayKetThuc: string;
-		ngayNhanPhong?: string;
-		ngayTraPhong?: string;
-		trangThai: ETrangThaiCheckIn;
-		trangThaiThanhToan?: 'Unpaid' | 'Underpaid' | 'Paid' | string;
-		dangKyId: string;
-		ghiChu: string;
-		sinhVien?: {
-			ma?: string;
-			maSinhVien?: string;
-			hoTen?: string;
-			maKhoaSinhVien?: string;
-			khoaSinhVien?: {
-				ma?: string;
-				ten?: string;
-			};
-			maNganh?: string;
-			tenNganh?: string;
-			nganh?: {
-				ma?: string;
-				ten?: string;
-			};
-			soDienThoai?: string;
-			email?: string;
-		};
-	}
+    }
 
 	export interface IDanhSachMienKTX {
 		_id: string;
