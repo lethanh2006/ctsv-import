@@ -861,29 +861,67 @@ export default [
 		icon: 'copy',
 		routes: [
 			{
-				name: 'DanhMucChung',
-				path: 'danh-muc-chung',
-				component: 'KyTucXa/DanhMucChung',
+				name: 'QuanLyVanHanh',
+				path: 'quan-ly-van-hanh',
+				routes: [
+					{
+						name: 'DanhSachMienKyTucXa',
+						path: 'danh-sach-mien-ky-tuc-xa',
+						component: 'KyTucXa/MienKyTucXa',
+					},
+					// {
+					// 	name: 'DanhSachOKyTucXa',
+					// 	path: 'danh-sach-o-ky-tuc-xa',
+					// 	disabled: true,
+					// },
+					{
+						name: 'DanhSachPhong',
+						path: 'danh-sach-phong',
+						component: 'KyTucXa/Phong/DanhSach.tsx',
+					},
+				],
 			},
 			{
-				name: 'Phong',
-				path: 'phong',
-				component: 'KyTucXa/Phong',
+				name: 'QuanLyDangKy',
+				path: 'quan-ly-dang-ky',
+				routes: [
+					{
+						name: 'DotDangKy',
+						path: 'dot-dang-ky',
+						component: 'KyTucXa/DotDangKy',
+					},
+					{
+						name: 'DanhSachDangKy',
+						path: 'danh-sach-dang-ky',
+						component: 'KyTucXa/NhanPhong',
+					},
+				],
 			},
+			// {
+			// 	name: 'ThongKeBaoCao',
+			// 	path: 'thong-ke-bao-cao',
+			// 	disabled: true,
+			// },
 			{
-				name: 'DotDangKy',
-				path: 'dot-dang-ky',
-				component: 'KyTucXa/DotDangKy',
-			},
-			{
-				name: 'NhanPhong',
-				path: 'nhan-phong',
-				component: 'KyTucXa/NhanPhong',
-			},
-			{
-				name: 'DanhSachMienKyTucXa',
-				path: 'danh-sach-mien-ky-tuc-xa',
-				component: 'KyTucXa/DanhSachMienKyTucXa',
+				name: 'DanhMuc',
+				path: 'danh-muc',
+				routes: [
+					{
+						name: 'LoaiPhong',
+						path: 'loai-phong',
+						component: 'KyTucXa/DanhMucChung/LoaiPhong',
+					},
+					{
+						name: 'TienIch',
+						path: 'tien-ich',
+						component: 'KyTucXa/DanhMucChung/TienIch',
+					},
+					{
+						name: 'Phong',
+						path: 'phong',
+						component: 'KyTucXa/Phong',
+					},
+				],
 			},
 		],
 	},

@@ -39,7 +39,7 @@ const FormPhongKTX = (props: any) => {
 	const danhSachTienIchPhong =
 		danhSachTienIchModel?.filter((item: KyTucXa.IDanhMucChung) => item.maLoai === 'TIEN_ICH_PHONG') || [];
 
-	const onFinish = async (values: KyTucXa.IPhong) => {
+	const onFinish = async (values: PhongKTX.IRecord) => {
 		try {
 			const danhSachAnh = await buildUpLoadMultiFile(values, 'danhSachAnh', undefined, ipCsvc);
 			const { dangKyKyTucXaRule, danhSachTienIch, tienIchIds, ...restValues } = values as any;

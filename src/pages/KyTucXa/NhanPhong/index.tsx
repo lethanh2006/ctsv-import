@@ -36,7 +36,7 @@ const NhanPhongKTXPage = () => {
 	const renderDate = (value?: string | null, format = 'DD/MM/YYYY') => (value ? dayjs(value).format(format) : '--');
 
 	const getPhongInfo = (record: KyTucXa.ICheckInSinhVien) =>
-		record?.phong || danhSachPhong?.find((item: KyTucXa.IPhong) => item?.ma === record?.maPhong);
+		record?.phong || danhSachPhong?.find((item: PhongKTX.IRecord) => item?.ma === record?.maPhong);
 
 	const getLoaiPhong = (record: KyTucXa.ICheckInSinhVien) => {
 		const phong = getPhongInfo(record);
@@ -240,7 +240,7 @@ const NhanPhongKTXPage = () => {
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='kytucxa.checkinsinhvien'
-			title={intl.formatMessage({ id: 'kytucxa.nhanphong.title' })}
+			title='Danh sách đăng ký'
 			// rowSelection
 			buttons={{ create: false }}
 			scroll={{ x: 2200 }}

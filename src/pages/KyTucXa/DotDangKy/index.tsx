@@ -1,15 +1,15 @@
+import StatisticsCard from '@/components/StatisticsCard';
+import type { StatisticsItem } from '@/components/StatisticsCard/typing';
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
 import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
 import { ELoaiDotDangKyKTX, ETrangThaiPhatHanh } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
-import { Button, Modal, Popconfirm, Tag, Tooltip, Switch } from 'antd';
+import { Button, Modal, Popconfirm, Switch, Tag, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import StatisticsCard from '@/components/StatisticsCard';
-import type { StatisticsItem } from '@/components/StatisticsCard/typing';
 import ViewDetail from './components/ChiTietDotDangKy/ViewDetail';
 import Form from './components/Form';
 
@@ -30,7 +30,8 @@ const getTrangThaiDot = (record: KyTucXa.IDotDangKyKTX, t: (id: string) => strin
 const DotDangKy = () => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
-	const { page, limit, handleEdit, deleteModel, getModel, setRecord, postPhatHanhKTX, putModel } = useModel('kytucxa.dotdangkyktx');
+	const { page, limit, handleEdit, deleteModel, getModel, setRecord, postPhatHanhKTX, putModel } =
+		useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
 	const { getThongKeDotTongQuan } = useModel('kytucxa.thongkektx');
 
@@ -44,7 +45,7 @@ const DotDangKy = () => {
 			.then((res: any) => {
 				setDataThongKe(res?.data?.data || res?.data || res);
 			})
-			.catch((err: any) => { })
+			.catch((err: any) => {})
 			.finally(() => {
 				setLoadingThongKe(false);
 			});
@@ -237,7 +238,7 @@ const DotDangKy = () => {
 				</div>
 
 				<StatisticsCard
-					title=""
+					title=''
 					hideCard
 					rowGutter={16}
 					colSpan={{ flex: '1 1 180px' } as any}
@@ -262,22 +263,7 @@ const DotDangKy = () => {
 						{t('global.button.dong')}
 					</Button>
 				}
-				title={
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-							width: '97%',
-							paddingRight: 8,
-						}}
-					>
-						<span>{t('kytucxa.dotdangky.chitiet') || 'Chi tiết đợt đăng ký'}</span>
-						<Button icon={<ArrowLeftOutlined />} onClick={() => setVisibleDetail(false)} size='small'>
-							{t('kytucxa.dotdangky.quayLai') || 'Quay lại'}
-						</Button>
-					</div>
-				}
+				title={t('kytucxa.dotdangky.chitiet') || 'Chi tiết đợt đăng ký'}
 				open={visibleDetail}
 				onCancel={() => setVisibleDetail(false)}
 			>

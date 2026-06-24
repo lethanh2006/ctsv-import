@@ -1,4 +1,4 @@
-import type { EGioiTinh, ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
+import type { ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
 
 declare module KyTucXa {
 	export interface IToa {
@@ -6,36 +6,6 @@ declare module KyTucXa {
 		ma: string;
 		ten: string;
 		diaChi: string;
-	}
-
-	export interface IPhong {
-		_id: string;
-		ma: string;
-		ten?: string;
-
-		maLoaiPhongKtx?: string;
-		maGioiTinh?: EGioiTinh | string;
-		soLuongToiDa?: number;
-		soLuongHienTai?: number;
-		cachBoTri?: string;
-		maKhoanThuPhong?: string;
-		maKhoanThuCoc?: string;
-		moTa?: string;
-		danhSachAnh?: string[];
-		danhSachTienIch: ITienIch[];
-		maToaNha?: string;
-		tangThu?: number;
-		soPhongTam?: number;
-		loaiPhongKtx?: IDanhMucChung;
-		isChoThue?: boolean;
-
-		dangKyKyTucXaRule?: {
-			_id?: string;
-			phongId?: string;
-			gioiTinh?: EGioiTinh | string;
-			maxPerKhoa?: number | null;
-			quocTichPhong?: string | null;
-		};
 	}
 
 	export interface INamHoc {
@@ -165,50 +135,5 @@ declare module KyTucXa {
 			soDienThoai?: string;
 			email?: string;
 		};
-	}
-
-	export interface IDanhSachMienKTX {
-		_id: string;
-		maHocKy: string;
-		tenHocKy: string;
-		hanNopMinhChung: string;
-		ghiChu: string;
-	}
-
-	export interface IDanhSachMienKTXSinhVien {
-		_id: string;
-		danhSachId: string;
-		maSinhVien: string;
-		ssoId: string;
-		hoTen: string;
-		khoaSinhVien?: string;
-		khoaNganh?: string | { ma?: string; ten?: string };
-		tenKhoaNganh?: string;
-		maKhoaNganh?: string;
-		soDienThoai?: string;
-		email?: string;
-		urlMinhChung: string;
-		trangThaiMinhChung?: ETrangThaiMienDangKyKTX | string;
-		ngayDuyet: string;
-		nguoiDuyet: string;
-		ghiChuDuyet: string;
-	}
-
-	export interface IThongKePhong {
-		maHocKy: string;
-		tongQuan: {
-			soLuongPhongChoThue: number;
-			tongSoPhong: number;
-			tongSucChua: number;
-			soLuongSinhVienDaDangKy: number;
-			soLuongChoConTrong: number;
-		};
-		bieuDoLapDayToaNha: {
-			maToaNha: string;
-			tenToaNha: string;
-			sinhVienDaDangKy: number;
-			tongSucChua: number;
-			tiLeLapDay: number;
-		}[];
 	}
 }

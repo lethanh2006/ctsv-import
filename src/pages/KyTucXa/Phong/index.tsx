@@ -1,34 +1,19 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import { KyTucXa } from '@/services/KyTucXa/typing';
 import { EditOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import SelectToaNha from '../DotDangKy/components/SelectToaNha';
 import Form from './components/Form';
 import ThongKePhongKTX from './components/ThongKe';
-import { useEffect } from 'react';
 
-const PhongKTXPage = () => {
+const PhongKTXPage = (props: { isDanhSach?: boolean }) => {
+	const { isDanhSach } = props;
 	const intl = useIntl();
-	const { getModel, page, limit, handleEdit } = useModel('kytucxa.phong');
-	const { danhSach: danhSachToaNha, getAllModel: getAllToaNha } = useModel('kytucxa.toa');
-	const { danhSach: danhSachLoaiPhong, getAllModel: getAllLoaiPhong } = useModel('kytucxa.loaiphong');
+	const { page, limit, handleEdit } = useModel('kytucxa.phong');
 
-	useEffect(() => {
-		getAllToaNha();
-		getAllLoaiPhong();
-	}, []);
-
-
-	const getData = () => {
-		getModel(undefined, undefined, undefined, undefined, undefined, undefined, {
-			population: [{ path: 'dangKyKyTucXaRule' }],
-		});
-	};
-
-	const columns: IColumn<KyTucXa.IPhong>[] = [
+	const columns: IColumn<PhongKTX.IRecord>[] = [
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.maPhong' }),
 			dataIndex: 'ma',
@@ -47,13 +32,13 @@ const PhongKTXPage = () => {
 			width: 150,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectToaNha selectMa multiple />,
-			render: (val) => danhSachToaNha?.find((item: KyTucXa.IToa) => item?.ma === val)?.ten || '-',
+			render: (val, rec) => rec?.toaNha?.ten,
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.sucChua' }),
 			dataIndex: 'soLuongToiDa',
 			align: 'center',
-			width: 100,
+			width: 120,
 			sorter: true,
 			render: (val) => val || '-',
 		},
@@ -61,8 +46,9 @@ const PhongKTXPage = () => {
 			title: intl.formatMessage({ id: 'kytucxa.phong.dangO' }),
 			dataIndex: 'soLuongHienTai',
 			align: 'center',
-			width: 100,
+			width: 120,
 			sorter: true,
+			hide: !isDanhSach,
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.danhChoSinhVien' }),
@@ -81,7 +67,7 @@ const PhongKTXPage = () => {
 			dataIndex: 'maLoaiPhongKtx',
 			width: 160,
 			align: 'center',
-			render: (val) => danhSachLoaiPhong?.find((item: KyTucXa.IDanhMucChung) => item?.ma === val)?.ten || '-',
+			render: (val, rec) => rec?.loaiPhongKtx?.ten,
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.trangThaiChoThue' }),
@@ -91,10 +77,12 @@ const PhongKTXPage = () => {
 			render: (val: boolean) => (
 				<Tag color={val ? 'success' : 'default'}>
 					{val
-						? intl.formatMessage({ id: 'kytucxa.phong.dangChoThue' })
-						: intl.formatMessage({ id: 'kytucxa.phong.chuaChoThue' })}
+						? intl.formatMessage({ id: 'kytucxa.phong.active' })
+						: intl.formatMessage({ id: 'kytucxa.phong.inactive' })}
 				</Tag>
 			),
+			fixed: 'right',
+			hide: isDanhSach,
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.phong.thaoTac' }),
@@ -109,23 +97,22 @@ const PhongKTXPage = () => {
 					icon={<EditOutlined />}
 				/>
 			),
+			hide: isDanhSach,
 		},
 	];
 
 	return (
 		<TableBase
-			getData={getData}
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='kytucxa.phong'
-			title={intl.formatMessage({ id: 'kytucxa.phong.title' })}
+			title={isDanhSach ? 'Danh sách phòng' : intl.formatMessage({ id: 'kytucxa.phong.title' })}
 			Form={Form}
-			formProps={{ getData }}
 			buttons={{ create: false, export: true }}
 			widthDrawer={800}
 			showModalTitle
 		>
-			<ThongKePhongKTX />
+			<ThongKePhongKTX isDanhSach={isDanhSach} />
 		</TableBase>
 	);
 };

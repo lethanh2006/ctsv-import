@@ -1,5 +1,5 @@
 import UploadFile from '@/components/Upload/UploadFile';
-import SelectLoaiDanhMucChung from '@/pages/KyTucXa/DanhMucChung/components/Select';
+import { KyTucXa } from '@/services/KyTucXa/typing';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { ipCsvc } from '@/utils/ip';
 import rules from '@/utils/rules';
@@ -9,23 +9,18 @@ import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
 const FormThemMoi = (props: any) => {
-	const { getData } = props;
+	const { getData, loai } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, isView, setFormSubmiting } =
 		useModel('kytucxa.danhmucchung');
-	const maLoai = Form.useWatch('maLoai', form);
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
 		else if (record?._id) form.setFieldsValue({ ...record });
-
-		if (!record?._id) {
-			form.setFieldsValue({ maLoai: 'TIEN_ICH_PHONG' });
-		}
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: KyTucXa.IDanhMucChung) => {
 		try {
 			setFormSubmiting(true);
 
@@ -33,7 +28,8 @@ const FormThemMoi = (props: any) => {
 			values.anh = anh;
 			setFormSubmiting(true);
 
-			if (values.maLoai !== 'TIEN_ICH_PHONG') {
+			values.maLoai = loai;
+			if (loai !== 'TIEN_ICH_PHONG') {
 				delete values.cauHinh;
 			} else {
 				values.cauHinh = {
@@ -61,7 +57,7 @@ const FormThemMoi = (props: any) => {
 
 	return (
 		<Form form={form} onFinish={onFinish} layout='vertical'>
-			<Row gutter={16}>
+			<Row gutter={12}>
 				<Col span={12}>
 					<Form.Item
 						name='ma'
@@ -77,15 +73,6 @@ const FormThemMoi = (props: any) => {
 				</Col>
 				<Col span={12}>
 					<Form.Item
-						name='maLoai'
-						label={intl.formatMessage({ id: 'kytucxa.danhmucchung.maloai' })}
-						rules={[...rules.required]}
-					>
-						<SelectLoaiDanhMucChung disabled={edit || isView} selectMa />
-					</Form.Item>
-				</Col>
-				<Col span={12}>
-					<Form.Item
 						name='ten'
 						label={intl.formatMessage({ id: 'kytucxa.danhmucchung.ten' })}
 						rules={[...rules.required]}
@@ -94,12 +81,10 @@ const FormThemMoi = (props: any) => {
 					</Form.Item>
 				</Col>
 
-				{maLoai === 'TIEN_ICH_PHONG' && (
-					<Col span={12}>
-						<Form.Item label=' ' colon={false}>
-							<Form.Item name={['cauHinh', 'tienIchChung']} valuePropName='checked' noStyle>
-								<Checkbox disabled={isView}>{intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichchung' })}</Checkbox>
-							</Form.Item>
+				{loai === 'TIEN_ICH_PHONG' && (
+					<Col span={24}>
+						<Form.Item name={['cauHinh', 'tienIchChung']} valuePropName='checked'>
+							<Checkbox disabled={isView}>{intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichchung' })}</Checkbox>
 						</Form.Item>
 					</Col>
 				)}

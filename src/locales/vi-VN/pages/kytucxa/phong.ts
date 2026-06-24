@@ -18,8 +18,10 @@ export default {
 	'kytucxa.phong.tenKhoanThuPhong': 'Khoản thu phòng',
 	'kytucxa.phong.tenKhoanThuCoc': 'Khoản thu cọc',
 	'kytucxa.phong.dangChoThue': 'Đang cho thuê',
-	'kytucxa.phong.trangThaiChoThue': 'Trạng thái cho thuê',
+	'kytucxa.phong.trangThaiChoThue': 'Trạng thái',
 	'kytucxa.phong.chuaChoThue': 'Chưa cho thuê',
+	'kytucxa.phong.active': 'Active',
+	'kytucxa.phong.inactive': 'Inactive',
 	'kytucxa.phong.gioiTinh': 'Giới tính',
 	'kytucxa.phong.soLuongToiDaMoiKhoa': 'Số lượng tối đa mỗi khoa',
 	'kytucxa.phong.doTuoiToiThieu': 'Độ tuổi tối thiểu',
@@ -81,8 +83,11 @@ export default {
 	'kytucxa.phong.keoThaAnh': 'Kéo thả để sắp xếp thứ tự ảnh.',
 
 	'kytucxa.phong.thongke.tongSoPhong': 'Tổng số phòng',
+	'kytucxa.phong.thongke.phongActive': 'Phòng Active',
+	'kytucxa.phong.thongke.phongInactive': 'Phòng Inactive',
 	'kytucxa.phong.thongke.soPhongChoThue': 'Số phòng cho thuê',
 	'kytucxa.phong.thongke.tongSucChua': 'Tổng sức chứa',
 	'kytucxa.phong.thongke.svDaDangKy': 'Sinh viên đã đăng ký',
+	'kytucxa.phong.thongke.sinhVienDangO': 'Sinh viên đang ở',
 	'kytucxa.phong.thongke.choConTrong': 'Chỗ còn trống',
 };
