@@ -4,7 +4,8 @@ import type { KyTucXa } from '@/services/KyTucXa/typing';
 import axios from '@/utils/axios';
 import dayjs from '@/utils/dayjs';
 import { ipCsvc } from '@/utils/ip';
-import { Tag, message } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Tag, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -241,26 +242,26 @@ const NhanPhongKTXPage = () => {
 			dependencies={[page, limit]}
 			modelName='kytucxa.checkinsinhvien'
 			title={intl.formatMessage({ id: 'kytucxa.nhanphong.title' })}
-			// rowSelection
+			rowSelection
 			buttons={{ create: false }}
 			scroll={{ x: 2200 }}
-			// otherButtons={[
-			// 	<Popconfirm
-			// 		key='bulk-checkin'
-			// 		title={intl.formatMessage(
-			// 			{ id: 'kytucxa.nhanphong.confirmCheckinNhieu' },
-			// 			{ count: selectedIds?.length ?? 0 },
-			// 		)}
-			// 		onConfirm={handleBulkCheckin}
-			// 		okText={intl.formatMessage({ id: 'kytucxa.nhanphong.xacNhan' })}
-			// 		cancelText={intl.formatMessage({ id: 'kytucxa.nhanphong.huy' })}
-			// 		disabled={!selectedIds?.length}
-			// 	>
-			// 		<Button type='primary' icon={<CheckCircleOutlined />} loading={submitting} disabled={!selectedIds?.length}>
-			// 			{intl.formatMessage({ id: 'kytucxa.nhanphong.btnCheckinNhieu' }, { count: selectedIds?.length ?? 0 })}
-			// 		</Button>
-			// 	</Popconfirm>,
-			// ]}
+			otherButtons={[
+				<Popconfirm
+					key='bulk-checkin'
+					title={intl.formatMessage(
+						{ id: 'kytucxa.nhanphong.confirmCheckinNhieu' },
+						{ count: selectedIds?.length ?? 0 },
+					)}
+					onConfirm={handleBulkCheckin}
+					okText={intl.formatMessage({ id: 'kytucxa.nhanphong.xacNhan' })}
+					cancelText={intl.formatMessage({ id: 'kytucxa.nhanphong.huy' })}
+					disabled={!selectedIds?.length}
+				>
+					<Button type='primary' icon={<CheckCircleOutlined />} loading={submitting} disabled={!selectedIds?.length}>
+						{intl.formatMessage({ id: 'kytucxa.nhanphong.btnCheckinNhieu' }, { count: selectedIds?.length ?? 0 })}
+					</Button>
+				</Popconfirm>,
+			]}
 		/>
 	);
 };

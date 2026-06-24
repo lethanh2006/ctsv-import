@@ -60,7 +60,7 @@ const DanhMucChungPage = () => {
 			render: (val, record) =>
 				record?.cauHinh?.tienIchChung
 					? intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichchung' })
-					: intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichrieng' }),
+					: '',
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.ghichu' }),

@@ -114,16 +114,18 @@ const FormThemMoi = (props: any) => {
 					</Form.Item>
 				</Col>
 
-				<Col span={24}>
-					<Form.Item name='anh' label={intl.formatMessage({ id: 'kytucxa.danhmucchung.anhicon' })}>
-						<UploadFile
-							disabled={isView}
-							maxCount={1}
-							isAvatarSmall
-							buttonDescription={intl.formatMessage({ id: 'kytucxa.danhmucchung.chonicon' })}
-						/>
-					</Form.Item>
-				</Col>
+				{maLoai !== 'LOAI_PHONG_KTX' && (
+					<Col span={24}>
+						<Form.Item name='anh' label={intl.formatMessage({ id: 'kytucxa.danhmucchung.anhicon' })}>
+							<UploadFile
+								disabled={isView}
+								maxCount={1}
+								isAvatarSmall
+								buttonDescription={intl.formatMessage({ id: 'kytucxa.danhmucchung.chonicon' })}
+							/>
+						</Form.Item>
+					</Col>
+				)}
 			</Row>
 
 			<div className='form-footer'>
