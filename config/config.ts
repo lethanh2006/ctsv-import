@@ -2,31 +2,6 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import routes from './routes';
-import path from 'path';
-import fs from 'fs';
-// Load .env.vercel when deploying on Vercel
-if (process.env.VERCEL) {
-	const envPath = path.resolve(__dirname, '../.env.vercel');
-	if (fs.existsSync(envPath)) {
-		const envContent = fs.readFileSync(envPath, 'utf-8');
-		envContent.split(/\r?\n/).forEach((line) => {
-			const trimmed = line.trim();
-			if (!trimmed || trimmed.startsWith('#')) return;
-			const index = trimmed.indexOf('=');
-			if (index > 0) {
-				const key = trimmed.substring(0, index).trim();
-				let val = trimmed.substring(index + 1).trim();
-				// Remove single/double quotes from value
-				if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-					val = val.slice(1, -1);
-				}
-				if (key) {
-					process.env[key] = val;
-				}
-			}
-		});
-	}
-}
 
 export default defineConfig({
 	hash: true,

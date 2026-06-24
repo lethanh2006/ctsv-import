@@ -207,11 +207,10 @@ const DanhSachMienKyTucXa = () => {
 				formProps={{ danhSachId: currentDanhSachMien?._id, maHocKy: recHocKy?.ma, getData }}
 				scroll={{ x: 1300 }}
 				buttons={{
-					import: true,
-					export: true,
-					create: !!currentDanhSachMien?._id,
+					import: false,
+					export: false,
 				}}
-				// otherButtons={[
+				// otherButtons={[	
 				// 	<ButtonExtend
 				// 		key='btn-import-student'
 				// 		icon={<ImportOutlined />}

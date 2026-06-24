@@ -213,8 +213,8 @@ export const DanhSachSinhVienPanel: React.FC<DanhSachSinhVienPanelProps> = ({ ac
 				title={t('kytucxa.danhsachmien.panelTitle', { maHocKy: selectedSemesterMa || '' })}
 				Form={FormSinhVien}
 				buttons={{
-					import: false,
-					export: false,
+					import: true,
+					export: true,
 				}}
 				otherButtons={[
 					<ButtonExtend key='btn-import-student' icon={<ImportOutlined />} onClick={() => setVisibleSelect(true)}>
