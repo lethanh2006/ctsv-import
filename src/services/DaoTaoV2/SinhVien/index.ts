@@ -84,3 +84,13 @@ export async function exportSoLuongSinhVienLhc(params?: any) {
 		params,
 	});
 }
+
+export async function exportTheSinhVien(
+	body?: { listSsoIds?: string[] },
+	params?: { condition?: any; filters?: any[] },
+) {
+	return axios.post(`${ipDaoTao}/sinh-vien/mau-the-sinh-vien/export`, body || {}, {
+		responseType: 'arraybuffer',
+		params,
+	});
+}

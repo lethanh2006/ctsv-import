@@ -1,4 +1,4 @@
-import { removeHtmlTags, urlRegex } from '@/utils/utils';
+import { chuanHoaTen, removeHtmlTags, urlRegex } from '@/utils/utils';
 import type { Rule } from 'antd/es/form';
 import _ from 'lodash';
 import React from 'react';
@@ -111,7 +111,7 @@ const createRules = () => {
 			},
 		] as Rule[],
 
-		number: (max: number, min: number = 0, hasDecimal: boolean = true): Rule[] => [
+		number: (max?: number, min: number = 0, hasDecimal: boolean = true): Rule[] => [
 			{
 				pattern: hasDecimal ? new RegExp('^[0-9-.]+$') : new RegExp('^[0-9-]+$'),
 				message: hasDecimal
@@ -120,7 +120,7 @@ const createRules = () => {
 			},
 			{
 				validator: (__, value, callback) => {
-					if (parseFloat(value) > max) callback('');
+					if (max !== undefined && max !== null && parseFloat(value) > max) callback('');
 					callback();
 				},
 				message: getMessage('global.validation.number.max', { max: String(max) }),
@@ -200,9 +200,7 @@ const createRules = () => {
 		sauThoiDiem: (mo: any, label: string): Rule[] => [
 			{
 				validator: (__, value, callback) => {
-					if (mo && value && dayjs(value).isBefore(dayjs(mo), 'minute')) {
-						callback('');
-					}
+					if (mo && value && dayjs(value).isBefore(dayjs(mo))) callback('');
 					callback();
 				},
 				message: getMessage('global.validation.sauThoiDiem.before', { label }),
@@ -363,7 +361,7 @@ const createRules = () => {
 			},
 		],
 
-		floatnumber: (max: number, min: number = 0, sauDauPhay: number = 2): Rule[] => [
+		floatnumber: (max?: number, min: number = 0, sauDauPhay: number = 2): Rule[] => [
 			{
 				pattern: new RegExp(/^-?\d*(\.\d+)?$/),
 				message: getMessage('global.validation.floatnumber.onlyNumbers'),
@@ -378,7 +376,7 @@ const createRules = () => {
 			},
 			{
 				validator: (__, value, callback) => {
-					if (value > max) callback('');
+					if (max !== undefined && max !== null && value > max) callback('');
 					callback();
 				},
 				message: getMessage('global.validation.floatnumber.max', { max: String(max) }),
@@ -392,18 +390,18 @@ const createRules = () => {
 			},
 		],
 
-		float: (max: number, min: number = 0, sauDauPhay: number = 2): Rule[] => [
+		float: (max?: number, min: number = 0, sauDauPhay: number = 2): Rule[] => [
 			{
 				pattern: new RegExp('^[0-9.]+$'),
 				message: getMessage('global.validation.float.onlyNumbersOrDot'),
 			},
 			{
 				validator: (__, value, callback) => {
-					if (!max) {
+					if (max === undefined || max === null) {
 						callback();
 						return;
 					}
-					if (max && parseFloat(value) > max) callback('');
+					if (parseFloat(value) > max) callback('');
 					callback();
 				},
 				message: getMessage('global.validation.float.max', { max: String(max) }),
@@ -434,6 +432,41 @@ const createRules = () => {
 				message: getMessage('global.validation.notEqual', { label: label ?? String(text) }),
 			},
 		],
+
+		maxArray: (max: any): Rule[] => [
+			{
+				validator: (_, value, callback) => {
+					if (Array.isArray(value) && value.length > max) callback('');
+					callback();
+				},
+				message: `Chỉ được chọn tối đa ${max} phần tử`,
+			},
+		],
+
+		nhoHonBangHomNay: [
+			{
+				validator: (_, value, callback) => {
+					if (value && dayjs(value).isAfter(dayjs().set({ hour: 0, minute: 0, second: 0 }).add(1, 'day'))) callback('');
+					callback();
+				},
+				message: 'Không được sau ngày hôm nay',
+			},
+		] as Rule[],
+
+		textEditor: [
+			{
+				validator: (_, value, callback) => {
+					const { text } = value;
+					if (!text || !text.length || !text[0] || !chuanHoaTen(text).length) callback('');
+					callback();
+				},
+				message: 'Hãy nhập nội dung',
+			},
+			{
+				required: true,
+				message: 'Bắt buộc',
+			},
+		] as Rule[],
 	};
 
 	return rules;

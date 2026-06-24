@@ -7,6 +7,7 @@ const FormCapNhatAnhSV = (props: { getData: any }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { setvisibleFormCapNhatAnh, loading, uploadAnhTheSinhVienModel } = useModel('daotaov2.sinhvien.sinhvien');
+
 	const onFinish = async (values: any) => {
 		uploadAnhTheSinhVienModel(
 			{

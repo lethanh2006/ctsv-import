@@ -26,8 +26,8 @@ import {
 } from '@ant-design/icons';
 import { Card, Dropdown, Empty, Form, InputNumber, Menu, Modal, Popconfirm, Segmented, Space, message } from 'antd';
 import _ from 'lodash';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useModel } from 'umi';
 import ViewDiemLopHocPhan from '../../DiemLopHocPhan/components/ViewDiemLopHocPhan';
 import ModalLichSuNhapDiem from '../../LichSuNhapDiem';
@@ -119,14 +119,7 @@ const CardDiemKTHP = (getData: () => void) => {
 		getDataInternal();
 	}, [recHocPhan?.maHocPhan, recHocKy?.ma]);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => (
-			<ButtonExtend icon={<PrinterOutlined />} disabled={!danhSach.length || editDiem >= 0} tooltip='In bảng điểm' />
-		),
-		[danhSach.length, editDiem],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	const onDuyetDiemHP = () => {
 		if (trangThaiDuyet === ETrangThaiDuyetDiem.QUAN_LY_DUYET) return;
@@ -337,9 +330,8 @@ const CardDiemKTHP = (getData: () => void) => {
 		<>
 			<Card
 				title={'Danh sách sinh viên'}
-				styles={{ padding: '8px 0 0' }}
-				headStyle={{ padding: 0 }}
-				bordered={false}
+				styles={{ body: { padding: '8px 0 0' }, header: { padding: 0 } }}
+				variant='borderless'
 			>
 				{recHocPhan?._id ? (
 					<Form form={form} component={false}>
@@ -419,8 +411,12 @@ const CardDiemKTHP = (getData: () => void) => {
 								>
 									Duyệt điểm
 								</ButtonExtend>
-
-								<ReactToPrint content={reactToPrintContent} trigger={reactToPrintTrigger} removeAfterPrint />
+								<ButtonExtend
+									icon={<PrinterOutlined />}
+									disabled={!danhSach.length || editDiem >= 0}
+									tooltip='In bảng điểm'
+									onClick={() => handlePrint()}
+								/>
 								<ButtonExtend
 									icon={<ExportOutlined />}
 									disabled={editDiem > 0 || !danhSach.length}
@@ -473,7 +469,7 @@ const CardDiemKTHP = (getData: () => void) => {
 						data={danhSach}
 						size='small'
 						addStt
-						otherProps={{ pagination: false, scroll: false }}
+						otherProps={{ pagination: false, scroll: undefined }}
 					/>
 				</div>
 			</PrintTemplate>

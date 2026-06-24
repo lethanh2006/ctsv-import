@@ -4,7 +4,7 @@ import { notification } from 'antd';
 import axios1 from 'axios';
 // import { history } from 'umi';
 import qs from 'qs';
-import { getIntl } from 'umi';
+import { getIntl, getLocale } from 'umi';
 import { excludedPaths } from './constants';
 import data from './data';
 
@@ -32,6 +32,9 @@ import data from './data';
 //   });
 //   failedQueue = [];
 // };
+
+/** Chuẩn hóa locale (vi-VN, en-US, …) thành giá trị Accept-Language ở BE. */
+const getAcceptLanguage = (): 'en' | 'vi' => (getLocale().startsWith('vi') ? 'vi' : 'en');
 
 // Hàm trợ giúp để xử lý message từ i18n
 const getMessage = (id: string, values?: Record<string, string | number>): string => {
@@ -82,21 +85,26 @@ axios.interceptors.request.use(
 		// }
 
 		const isExcluded = excludedPaths.some((path) => config.url?.startsWith(path));
-		// if (!isExcluded && !config.url?.includes('wp-json')) {
-		// 	const hasHeader = Object.prototype.hasOwnProperty.call(config.headers, 'x-data-partition-code');
 
-		// 	if (hasHeader) {
-		// 		const value = config.headers['x-data-partition-code'];
-		// 		if (value === null || value === undefined) {
-		// 			delete config.headers['x-data-partition-code'];
-		// 		}
-		// 	} else {
-		// 		const partitionCode = localStorage.getItem('partitionCode');
-		// 		if (partitionCode) {
-		// 			config.headers['x-data-partition-code'] = partitionCode;
-		// 		}
-		// 	}
-		// }
+		if (config.headers && !config.headers.get('Accept-Language')) {
+			config.headers.set('Accept-Language', getAcceptLanguage());
+		}
+
+		if (!isExcluded && !config.url?.includes('wp-json')) {
+			const hasHeader = Object.prototype.hasOwnProperty.call(config.headers, 'x-data-partition-code');
+
+			// 	if (hasHeader) {
+			// 		const value = config.headers['x-data-partition-code'];
+			// 		if (value === null || value === undefined) {
+			// 			delete config.headers['x-data-partition-code'];
+			// 		}
+			// 	} else {
+			// 		const partitionCode = localStorage.getItem('partitionCode');
+			// 		if (partitionCode) {
+			// 			config.headers['x-data-partition-code'] = partitionCode;
+			// 		}
+			// 	}
+		}
 		return config;
 	},
 	(error) => Promise.reject(error),
@@ -133,7 +141,7 @@ axios.interceptors.response.use(
 				case 400:
 					notification.error({
 						message: getMessage('error.400.title', { code: '004' }),
-						description: getMessage(descriptionError),
+						description: descriptionError,
 						key: 'error400',
 					});
 					break;
@@ -205,7 +213,7 @@ axios.interceptors.response.use(
 				case 405:
 					notification.error({
 						message: getMessage('error.403.title', { code: '304' }),
-						description: getMessage(descriptionError),
+						description: descriptionError,
 						key: 'error403',
 					});
 					break;
@@ -213,7 +221,7 @@ axios.interceptors.response.use(
 				case 404:
 					notification.error({
 						message: getMessage('error.404.title', { code: '040' }),
-						description: getMessage(descriptionError),
+						description: descriptionError,
 						key: 'error404',
 					});
 					break;
@@ -221,7 +229,7 @@ axios.interceptors.response.use(
 				case 409:
 					notification.error({
 						message: getMessage('error.409.title', { code: '904' }),
-						description: getMessage(descriptionError),
+						description: descriptionError,
 						key: 'error409',
 					});
 					break;

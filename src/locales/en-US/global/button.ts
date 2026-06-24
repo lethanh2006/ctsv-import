@@ -13,7 +13,7 @@ export default {
 	'global.button.boloctuychinh': 'Custom filters',
 	'global.button.tongso': 'Total',
 	'global.button.chinhsua': 'Edit',
-	'global.button.chitiet': 'Chi tiết',
-	'global.button.teptin': 'Xem tệp tin',
+	'global.button.chitiet': 'Detail',
+	'global.button.teptin': 'View File',
 	'global.button.xoa': 'Delete',
 };

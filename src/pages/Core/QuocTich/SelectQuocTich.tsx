@@ -1,41 +1,44 @@
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
 const SelectQuocTich = (props: {
-  value?: string;
-  onChange?: any;
-  multiple?: boolean;
-  loadData?: boolean;
-  allowClear?: boolean;
-  placeholder?: string;
+	value?: string;
+	onChange?: any;
+	multiple?: boolean;
+	loadData?: boolean;
+	allowClear?: boolean;
+	placeholder?: string;
+	selectTen?: boolean;
 }) => {
-  const { value, onChange, multiple, loadData, allowClear, placeholder } = props;
-  const { danhSach, getAllModel } = useModel('core.quoctich');
+	const intl = useIntl();
+	const { value, onChange, multiple, loadData, allowClear, placeholder, selectTen } = props;
+	const { danhSach, getAllModel, loading } = useModel('core.quoctich');
 
-  useEffect(() => {
-    if (loadData !== false) getAllModel();
-  }, []);
+	useEffect(() => {
+		if (loadData !== false && !danhSach.length) getAllModel();
+	}, []);
 
-  return (
-    <Select
-      mode={multiple ? 'multiple' : undefined}
-      value={value}
-      allowClear={allowClear}
-      onChange={onChange}
-      options={danhSach.map((item) => ({
-        key: item._id,
-        value: item._id,
-        label: `${item.tenQuocTich} - ${item.ma}`,
-      }))}
-      showSearch
-      optionFilterProp="label"
-      placeholder={placeholder ?? 'Chọn quốc tịch'}
-    />
-  );
+	return (
+		<Select
+			mode={multiple ? 'multiple' : undefined}
+			value={value}
+			allowClear={allowClear}
+			onChange={onChange}
+			options={danhSach.map((item) => ({
+				key: item._id,
+				value: selectTen ? item.tenQuocTich : item._id,
+				label: `${item.tenQuocTich} - ${item.ma}`,
+			}))}
+			showSearch
+			optionFilterProp='label'
+			placeholder={placeholder ?? intl.formatMessage({ id: 'sinhvien.select.quoctich.place' })}
+			loading={loading}
+		/>
+	);
 };
 
 export default SelectQuocTich;

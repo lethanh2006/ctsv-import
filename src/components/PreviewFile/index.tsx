@@ -155,6 +155,11 @@ const PreviewFile: React.FC<TPreviewFileProps> = (props) => {
 				frame.data = (await getFileContent(frame.url))?.data;
 			}
 
+			if (isPrivate) {
+				// Nếu là file riêng tư thì phải lấy src có token mới xem được
+				frame.data = (await getFileContent(frame.url))?.data;
+			}
+
 			// Fill other props
 			if (frame.url && !frame.name) frame.name = getNameFile(frame.url);
 			frame.src = getIframeSrc(frame.type, frame.url);

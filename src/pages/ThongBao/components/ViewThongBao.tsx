@@ -1,11 +1,12 @@
 import { EModuleKey } from '@/services/base/constant';
 import { type ESourceTypeNotification, mapModuleKey } from '@/services/ThongBao/constant';
 import { type ThongBao } from '@/services/ThongBao/typing';
-import dayjs from '@/utils/dayjs';
+import { formatDate } from '@/utils/formatDate';
 import { currentRole } from '@/utils/ip';
 import { getNameFile } from '@/utils/utils';
 import { CalendarOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Divider, Row } from 'antd';
+import dayjs from 'dayjs';
 import { history, useIntl } from 'umi';
 import './style.less';
 
@@ -27,6 +28,8 @@ const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () =
 			[EModuleKey.KT]: APP_CONFIG_URL_KHAO_THI,
 			[EModuleKey.CSVC]: APP_CONFIG_URL_CSVC,
 			[EModuleKey.VBCC]: '',
+			[EModuleKey.THU_VIEN]: '',
+			[EModuleKey.QLND]: '',
 		};
 
 		const sourceType = mapModuleKey[record?.metadata?.sourceType as ESourceTypeNotification];
@@ -77,8 +80,7 @@ const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () =
 
 				{record?.thoiGianHieuLuc ? (
 					<Col span={24}>
-						{intl.formatMessage({ id: 'thongbao.view.hieulucthongbao' })}
-						<b style={{ color: 'red' }}>{dayjs(record?.thoiGianHieuLuc).format('DD/MM/YYYY')}</b>{' '}
+						Hiệu lực thông báo: <b style={{ color: 'red' }}>{formatDate(record?.thoiGianHieuLuc)}</b>{' '}
 					</Col>
 				) : null}
 

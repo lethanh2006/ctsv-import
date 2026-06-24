@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -885,7 +885,6 @@
 				path: 'danh-sach-mien-ky-tuc-xa',
 				component: 'KyTucXa/DanhSachMienKyTucXa',
 			},
-			
 		],
 	},
 

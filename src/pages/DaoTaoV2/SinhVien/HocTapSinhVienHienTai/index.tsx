@@ -1,10 +1,17 @@
-import { getHocTapHienTai } from '@/services/DaoTaoV2/SinhVien';
-import type { ETrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
-import { colorTrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
-import type { SinhVien } from '@/services/DaoTaoV2/SinhVien/typings';
+import access from '@/access';
+import {
+	colorLoaiXuLyKQHT,
+	ELoaiXuLyKQHT,
+	ETrinhDoKqhtHocKy,
+	loaiXuLyKQHT,
+	localeTrinhDoKqhtHocKy,
+} from '@/services/DaoTaoV2/KetQuaHocTap/constant';
+import { colorTrangThaiHocSv, localeTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/DaoTaoV2/SinhVien/constant';
+import { getHocTapHienTai } from '@/services/SinhVien';
+import type { SinhVien } from '@/services/SinhVien/typings';
 import { Col, Descriptions, Divider, Form, Row, Spin, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const HocTapSinhVienHienTaiPage = (props: { sinhVienSsoId?: string }) => {
 	const intl = useIntl();
@@ -12,6 +19,8 @@ const HocTapSinhVienHienTaiPage = (props: { sinhVienSsoId?: string }) => {
 	const [form] = Form.useForm();
 	const [thongTinDaoTaoSinhVien, setThongTinDaoTaoSinhVien] = useState<SinhVien.IThongTinDaoTaoSinhVien>();
 	const [loading, setLoading] = useState<boolean>(false);
+	const { record, getByIdModel } = useModel('daotaov2.sinhvien.sinhvien');
+	const { minorAccessFilter } = access({});
 
 	const fetchData = async () => {
 		if (sinhVienSsoId) {
@@ -27,45 +36,69 @@ const HocTapSinhVienHienTaiPage = (props: { sinhVienSsoId?: string }) => {
 	};
 
 	useEffect(() => {
+		if (sinhVienSsoId) getByIdModel(`${sinhVienSsoId}/info`);
+	}, [sinhVienSsoId]);
+
+	useEffect(() => {
 		if (sinhVienSsoId) fetchData();
 	}, [sinhVienSsoId]);
 
 	const CardThongTinDaoTao = (rec?: SinhVien.IThongTinHocTapHienTai) => (
 		<Row gutter={[12, 0]}>
 			<Col span={24}>
-				<Descriptions column={{ xs: 1, sm: 1, md: 2 }}>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.trangthai' })}>
-						{(
-							<Tag color={colorTrangThaiHocSv[rec?.trangThaiSinhVien as ETrangThaiHocSv]}>{rec?.trangThaiSinhVien}</Tag>
-						) ?? '--'}
+				<Descriptions column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.trangthaisv' })}>
+						{rec?.trangThaiSinhVien ? (
+							<Tag color={colorTrangThaiHocSv[rec?.trangThaiSinhVien as ETrangThaiHocSv]}>
+								{intl.formatMessage({ id: localeTrangThaiHocSv[rec?.trangThaiSinhVien as ETrangThaiHocSv] })}
+							</Tag>
+						) : (
+							'--'
+						)}
 					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.hinhthucdaotao' })}>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.trangthaixulyhocvu' })}>
+						{(() => {
+							const trangThaiHocVu = record?.svKhoaNganhList?.find(
+								(i) => i.maKhoaNganh === rec?.khoaNganh?.ma,
+							)?.trangThaiHocVu;
+							if (!trangThaiHocVu) return '--';
+
+							return (
+								<Tag color={colorLoaiXuLyKQHT[trangThaiHocVu as ELoaiXuLyKQHT]}>
+									{intl.formatMessage({ id: loaiXuLyKQHT[trangThaiHocVu as ELoaiXuLyKQHT] })}
+								</Tag>
+							);
+						})()}
+					</Descriptions.Item>
+
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.hinhthuc' })}>
 						{rec?.hinhThucDaoTao?.ten ?? '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.khoa' })}>
-						{'--'}
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.namthu' })}>
+						{rec?.sinhVienNamThu
+							? intl.formatMessage({ id: localeTrinhDoKqhtHocKy[rec?.sinhVienNamThu as ETrinhDoKqhtHocKy] })
+							: ''}
 					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.khoasinhvien' })}>
-						{rec?.khoaSinhVien?.ten ?? ''}
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.nienkhoa' })}>
+						{rec?.khoaNganh?.namBatDau ?? ''} - {rec?.khoaNganh?.namKetThuc ?? ''}
 					</Descriptions.Item>
-					<Descriptions.Item
-						span={2}
-						label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.chuongtrinhdaotao' })}
-					>
+					<Descriptions.Item span={2} label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.chuongtrinh' })}>
 						{rec?.chuongTrinhDaoTao?.ten ?? '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.nganhdaotao' })}>
-						{rec?.nganhDaoTao?.ten ?? ''}
+
+					{/* <Descriptions.Item label='Khoa'>{'--'}</Descriptions.Item> */}
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.khoanganh' })} span={2}>
+						{rec?.khoaNganh?.ten ?? ''}
 					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.sinhviennamthu' })}>
-						{rec?.sinhVienNamThu ?? ''}
+					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.chuyennganh' })}>
+						{rec?.chuyenNganh?.ten ?? '-'}
 					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.daotautunam' })}>
-						{rec?.khoaSinhVien?.namHocBatDau ?? ''}
-					</Descriptions.Item>
-					<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.sonamdaotao' })}>
-						{rec?.soNamDaoTao ?? '--'} {intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.nam' })}
-					</Descriptions.Item>
+
+					{minorAccessFilter() && (
+						<Descriptions.Item label={intl.formatMessage({ id: 'sinhvien.hoctapsinhvienhientai.minor' })}>
+							{rec?.chuyenNganhPhu?.ten ?? '-'}
+						</Descriptions.Item>
+					)}
 				</Descriptions>
 			</Col>
 		</Row>
