@@ -1,5 +1,6 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
+import { KyTucXa } from '@/services/KyTucXa/typing';
 import { useModel } from '@umijs/max';
 import { Tag } from 'antd';
 import dayjs from 'dayjs';
@@ -7,10 +8,12 @@ import dayjs from 'dayjs';
 const DanhSachSinhVien = () => {
 	const { record: recordDot } = useModel('kytucxa.dotdangkyktx');
 	const { getModel, page, limit } = useModel('kytucxa.dangkykytucxa');
+	const { danhSach: danhSachLoaiPhong, getAllModel: getAllLoaiPhong } = useModel('kytucxa.loaiphong');
 
 	const getData = () => {
 		if (recordDot?._id) {
 			getModel({ maDotId: recordDot._id });
+			getAllLoaiPhong();
 		}
 	};
 
@@ -55,7 +58,7 @@ const DanhSachSinhVien = () => {
 			title: 'Loại phòng',
 			dataIndex: 'phong',
 			width: 120,
-			render: (phong: any) => phong?.maLoaiPhongKtx || '--',
+			render: (phong: any) => danhSachLoaiPhong?.find((item: KyTucXa.IDanhMucChung) => item?.ma === phong?.maLoaiPhongKtx)?.ten || '-',
 		},
 		{
 			title: 'Mã phòng',
