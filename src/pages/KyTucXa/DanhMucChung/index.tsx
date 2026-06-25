@@ -55,6 +55,7 @@ const DanhMucChungPage = (props: { loai: 'TIEN_ICH_PHONG' | 'LOAI_PHONG_KTX' }) 
 				record?.cauHinh?.tienIchChung
 					? intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichchung' })
 					: '',
+			hide: loai === 'LOAI_PHONG_KTX',
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.ghichu' }),
