@@ -19,6 +19,7 @@ export default {
 	'kytucxa.danhmucchung.tienichchung': 'Common amenity',
 	'kytucxa.danhmucchung.tienichrieng': 'Private amenity',
 	'kytucxa.danhmucchung.loaitienich': 'Amenity type',
+	'kytucxa.danhmucchung.status': 'Status',
 	'kytucxa.danhmucchung.nhapghichu': 'Enter note',
 	'kytucxa.danhmucchung.anhicon': 'Icon Image',
 	'kytucxa.danhmucchung.chonicon': 'Choose Icon',

@@ -95,6 +95,7 @@ const PhongKTXPage = (props: { isDanhSach?: boolean }) => {
 					onClick={() => handleEdit(rec)}
 					type='link'
 					icon={<EditOutlined />}
+					disabled={rec.disableUpdate}
 				/>
 			),
 			hide: isDanhSach,

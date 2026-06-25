@@ -19,6 +19,7 @@ export default {
 	'kytucxa.danhmucchung.tienichchung': 'Tiện ích chung',
 	'kytucxa.danhmucchung.tienichrieng': 'Tiện ích riêng',
 	'kytucxa.danhmucchung.loaitienich': 'Loại tiện ích',
+	'kytucxa.danhmucchung.status': 'Trạng thái',
 	'kytucxa.danhmucchung.nhapghichu': 'Nhập ghi chú',
 	'kytucxa.danhmucchung.anhicon': 'Ảnh Icon',
 	'kytucxa.danhmucchung.chonicon': 'Chọn Icon',
