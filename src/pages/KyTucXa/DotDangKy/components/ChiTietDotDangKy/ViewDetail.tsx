@@ -1,11 +1,11 @@
+import { ELoaiDotDangKyKTX, ETrangThaiPhatHanh } from '@/services/KyTucXa/constant';
 import { CalendarOutlined } from '@ant-design/icons';
 import { useIntl, useModel } from '@umijs/max';
 import { Card, Col, Row, Tabs, Tag } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
-import { ELoaiDotDangKyKTX } from '@/services/KyTucXa/constant';
-import ThongKe from './ThongKe';
 import DanhSachSinhVien from './DanhSachSinhVien';
+import ThongKe from './ThongKe';
 
 const getTrangThaiDot = (record: any, t: any) => {
 	const now = dayjs();
@@ -13,12 +13,24 @@ const getTrangThaiDot = (record: any, t: any) => {
 	const thoiGianKetThuc = record?.thoiGianKetThuc ? dayjs(record.thoiGianKetThuc) : undefined;
 
 	if (thoiGianKetThuc && now.isAfter(thoiGianKetThuc))
-		return { label: t('kytucxa.dotdangky.status.ended') || 'Đã kết thúc', color: 'default', textStyle: { color: '#8c8c8c' } };
+		return {
+			label: t('kytucxa.dotdangky.status.ended') || 'Đã kết thúc',
+			color: 'default',
+			textStyle: { color: '#8c8c8c' },
+		};
 	if (thoiGianBatDau && thoiGianKetThuc && !now.isBefore(thoiGianBatDau) && !now.isAfter(thoiGianKetThuc)) {
-		return { label: t('kytucxa.dotdangky.status.ongoing') || 'Đang diễn ra', color: 'success', textStyle: { color: '#52c41a', fontWeight: 'bold' } };
+		return {
+			label: t('kytucxa.dotdangky.status.ongoing') || 'Đang diễn ra',
+			color: 'success',
+			textStyle: { color: '#52c41a', fontWeight: 'bold' },
+		};
 	}
 
-	return { label: t('kytucxa.dotdangky.status.upcoming') || 'Chưa diễn ra', color: 'processing', textStyle: { color: '#1890ff', fontWeight: 'bold' } };
+	return {
+		label: t('kytucxa.dotdangky.status.upcoming') || 'Chưa diễn ra',
+		color: 'processing',
+		textStyle: { color: '#1890ff', fontWeight: 'bold' },
+	};
 };
 
 const ViewDetail = () => {
@@ -33,23 +45,25 @@ const ViewDetail = () => {
 	}, []);
 
 	const trangThai = getTrangThaiDot(record, t);
+	const daBanHanh = record?.trangThaiPhatHanh === ETrangThaiPhatHanh.DA_PHAT_HANH;
 
 	const hocKyDoc = danhSachHocKy?.find((item) => item.ma === record?.maHocKy) || recHocKy;
 	const hocKyLabel = hocKyDoc?.ten || record?.maHocKy || '--';
 
-
 	const listKhoaSv = record?.cauHinhKhoaToa?.map((item: any) => item.maKhoaSinhVien) || record?.maKhoaNganh || [];
 
-	const doiTuongApDung = record?.loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH
-		? t('kytucxa.dotdangky.loaiDot.theoDanhSach') || 'Theo danh sách'
-		: listKhoaSv.map((ma: string) => {
-			const khoaSv = allKhoaSinhVien.find((item) => item.ma === ma);
-			return khoaSv?.ten || ma;
-		}).join(', ') || '--';
+	const doiTuongApDung =
+		record?.loaiDot === ELoaiDotDangKyKTX.THEO_DANH_SACH
+			? t('kytucxa.dotdangky.loaiDot.theoDanhSach') || 'Theo danh sách'
+			: listKhoaSv
+					.map((ma: string) => {
+						const khoaSv = allKhoaSinhVien.find((item) => item.ma === ma);
+						return khoaSv?.ten || ma;
+					})
+					.join(', ') || '--';
 
 	return (
 		<>
-
 			<Card
 				style={{
 					borderRadius: 12,
@@ -59,8 +73,8 @@ const ViewDetail = () => {
 				}}
 				bodyStyle={{ padding: '24px' }}
 			>
-				<Row align="top" gutter={[20, 16]} wrap={false}>
-					<Col flex="none">
+				<Row align='top' gutter={[20, 16]} wrap={false}>
+					<Col flex='none'>
 						<div
 							style={{
 								width: 56,
@@ -75,11 +89,9 @@ const ViewDetail = () => {
 							<CalendarOutlined style={{ fontSize: 24, color: '#1890ff' }} />
 						</div>
 					</Col>
-					<Col flex="auto">
+					<Col flex='auto'>
 						<div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-							<span style={{ fontSize: 18, fontWeight: 600, color: '#1d2129' }}>
-								{record?.tenDot || '--'}
-							</span>
+							<span style={{ fontSize: 18, fontWeight: 600, color: '#1d2129' }}>{record?.tenDot || '--'}</span>
 							<Tag color={trangThai.color} style={{ margin: 0 }}>
 								{trangThai.label}
 							</Tag>
@@ -90,9 +102,7 @@ const ViewDetail = () => {
 								<div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>
 									{t('kytucxa.dotdangky.hocKy') || 'Học kỳ'}
 								</div>
-								<div style={{ fontSize: 14, color: '#262626', fontWeight: 500 }}>
-									{hocKyLabel}
-								</div>
+								<div style={{ fontSize: 14, color: '#262626', fontWeight: 500 }}>{hocKyLabel}</div>
 							</Col>
 							<Col xs={24} sm={12} md={4} style={{ width: '20%', flex: '0 0 20%', maxWidth: '20%' }}>
 								<div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>
@@ -110,9 +120,7 @@ const ViewDetail = () => {
 								<div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>
 									{t('kytucxa.dotdangky.doiTuongApDung') || 'Đối tượng áp dụng'}
 								</div>
-								<div style={{ fontSize: 14, color: '#262626', fontWeight: 500 }}>
-									{doiTuongApDung}
-								</div>
+								<div style={{ fontSize: 14, color: '#262626', fontWeight: 500 }}>{doiTuongApDung}</div>
 							</Col>
 							<Col xs={24} sm={12} md={4} style={{ width: '20%', flex: '0 0 20%', maxWidth: '20%' }}>
 								<div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>
@@ -151,11 +159,13 @@ const ViewDetail = () => {
 							</Col>
 							<Col xs={24} sm={12} md={4} style={{ width: '20%', flex: '0 0 20%', maxWidth: '20%' }}>
 								<div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>
-									{t('kytucxa.dotdangky.trangThaiDot') || 'Trạng thái đợt'}
+									{t('kytucxa.dotdangky.trangThaiPhatHanh') || 'Trạng thái ban hành'}
 								</div>
-								<div style={{ fontSize: 14, ...trangThai.textStyle }}>
-									{trangThai.label}
-								</div>
+								<Tag color={daBanHanh ? 'success' : 'default'} style={{ margin: 0 }}>
+									{daBanHanh
+										? t('kytucxa.dotdangky.trangThaiPhatHanh.phatHanh')
+										: t('kytucxa.dotdangky.trangThaiPhatHanh.chuaPhatHanh')}
+								</Tag>
 							</Col>
 							<Col xs={24} sm={24} md={8} style={{ width: '40%', flex: '0 0 40%', maxWidth: '40%' }}>
 								<div style={{ fontSize: 12, color: '#8c8c8c', marginBottom: 4 }}>
@@ -174,7 +184,7 @@ const ViewDetail = () => {
 				<Tabs.TabPane tab={t('kytucxa.dotdangky.tab.thongKe') || 'Thống kê'} key='1'>
 					<ThongKe />
 				</Tabs.TabPane>
-				<Tabs.TabPane tab={t('kytucxa.dotdangky.tab.danhSachSinhVien') || 'Danh sách sinh viên đăng ký'} key='2'>
+				<Tabs.TabPane tab={'Danh sách sinh viên đăng ký'} key='2'>
 					<DanhSachSinhVien />
 				</Tabs.TabPane>
 			</Tabs>

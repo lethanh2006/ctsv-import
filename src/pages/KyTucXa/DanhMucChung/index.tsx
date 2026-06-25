@@ -7,21 +7,22 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Image, Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
-import SelectLoaiDanhMucChung from './components/Select';
 
-const DanhMucChungPage = () => {
+const DanhMucChungPage = (props: { loai: 'TIEN_ICH_PHONG' | 'LOAI_PHONG_KTX' }) => {
+	const { loai } = props;
 	const intl = useIntl();
 	const { getModel, page, limit, deleteModel, handleEdit } = useModel('kytucxa.danhmucchung');
 
 	const getData = () => {
-		getModel(undefined, [
-			{
-				active: true,
-				field: 'maLoai',
-				values: ['TIEN_ICH_PHONG', 'LOAI_PHONG_KTX'],
-				operator: EOperatorType.INCLUDE,
-			},
-		]);
+		if (loai)
+			getModel(undefined, [
+				{
+					active: true,
+					field: 'maLoai',
+					values: [loai],
+					operator: EOperatorType.INCLUDE,
+				},
+			]);
 	};
 
 	const columns: IColumn<KyTucXa.IDanhMucChung>[] = [
@@ -39,19 +40,12 @@ const DanhMucChungPage = () => {
 			filterType: 'string',
 		},
 		{
-			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.loai' }),
-			dataIndex: 'maLoai',
-			width: 150,
-			render: (val, rec) => rec?.loaiDanhMucChung?.ten ?? val,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectLoaiDanhMucChung selectMa multiple allowClear />,
-		},
-		{
 			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.icon' }),
 			dataIndex: 'anh',
 			width: 150,
 			render: (val: string) =>
 				val ? <Image src={val} width={30} height={30} style={{ objectFit: 'contain' }} /> : null,
+			hide: loai === 'LOAI_PHONG_KTX',
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.loaitienich' }),
@@ -81,7 +75,7 @@ const DanhMucChungPage = () => {
 						icon={<EditOutlined />}
 					/>
 					<Popconfirm
-						onConfirm={() => deleteModel(record._id, getModel)}
+						onConfirm={() => deleteModel(record._id, getData)}
 						title={intl.formatMessage({ id: 'kytucxa.danhmucchung.xacnhanxoa' })}
 						placement='topRight'
 					>
@@ -101,11 +95,11 @@ const DanhMucChungPage = () => {
 		<TableBase
 			getData={getData}
 			columns={columns}
-			dependencies={[page, limit]}
+			dependencies={[page, limit, loai]}
 			modelName='kytucxa.danhmucchung'
-			title={intl.formatMessage({ id: 'kytucxa.danhmucchung.title' })}
+			title={loai === 'LOAI_PHONG_KTX' ? 'Danh sách loại phòng' : 'Danh sách tiện ích'}
 			Form={Form}
-			formProps={{ getData }}
+			formProps={{ getData, loai }}
 			showModalTitle
 		/>
 	);

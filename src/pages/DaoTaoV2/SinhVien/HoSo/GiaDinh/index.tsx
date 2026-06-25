@@ -2,12 +2,9 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { SinhVien } from '@/services/DaoTaoV2/SinhVien/typings';
 import { formatPhoneNumber } from '@/utils/utils';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useIntl } from 'umi';
-import Form from './Form';
 
 const ThongTinGiaDinhFormItem = (props: {
 	value?: SinhVien.TThongTinGiaDinh[];
@@ -88,28 +85,28 @@ const ThongTinGiaDinhFormItem = (props: {
 					.filter((i) => !!i)
 					.join(', '),
 		},
-		{
-			title: intl.formatMessage({ id: 'sinhvien.column.thaotac' }),
-			align: 'center',
-			width: 90,
-			fixed: 'right',
-			render: (val, rec) => (
-				<>
-					<Tooltip title={intl.formatMessage({ id: 'sinhvien.column.chinhsua' })}>
-						<Button onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
-					</Tooltip>
-					<Tooltip title={intl.formatMessage({ id: 'sinhvien.column.xoa' })}>
-						<Popconfirm
-							onConfirm={() => handleDelete(rec)}
-							title={intl.formatMessage({ id: 'sinhvien.column.xacnhanxoa' })}
-							placement='topRight'
-						>
-							<Button danger type='link' icon={<DeleteOutlined />} />
-						</Popconfirm>
-					</Tooltip>
-				</>
-			),
-		},
+		// {
+		// 	title: intl.formatMessage({ id: 'sinhvien.column.thaotac' }),
+		// 	align: 'center',
+		// 	width: 90,
+		// 	fixed: 'right',
+		// 	render: (val, rec) => (
+		// 		<>
+		// 			<Tooltip title={intl.formatMessage({ id: 'sinhvien.column.chinhsua' })}>
+		// 				<Button onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+		// 			</Tooltip>
+		// 			<Tooltip title={intl.formatMessage({ id: 'sinhvien.column.xoa' })}>
+		// 				<Popconfirm
+		// 					onConfirm={() => handleDelete(rec)}
+		// 					title={intl.formatMessage({ id: 'sinhvien.column.xacnhanxoa' })}
+		// 					placement='topRight'
+		// 				>
+		// 					<Button danger type='link' icon={<DeleteOutlined />} />
+		// 				</Popconfirm>
+		// 			</Tooltip>
+		// 		</>
+		// 	),
+		// },
 	];
 
 	return (
@@ -119,8 +116,8 @@ const ThongTinGiaDinhFormItem = (props: {
 				data={value ?? []}
 				addStt
 				size='small'
-				hasCreate
-				Form={Form}
+				// hasCreate
+				// Form={Form}
 				showEdit={visibleForm}
 				setShowEdit={showCreate}
 				formProps={{ visible: visibleForm, record, onOk: handleForm }}

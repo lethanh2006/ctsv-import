@@ -1,13 +1,13 @@
-import type { NamHoc } from '@/services/NamHoc/NamHoc/typings';
-import type { ChungChi } from '../ChungChi/typing';
-import { type HocPhan } from '../HocPhan/typings';
-import type { NganhDaoTao } from '../Nganh/typings';
 import type {
 	ELoaiChuongTrinhDaoTao,
 	ELoaiHocPhanCTDT,
 	ELoaiThaoTacRaSoatCtdt,
 	ETrangThaiCtdt,
 } from '@/services/constant';
+import type { NamHoc } from '@/services/NamHoc/NamHoc/typings';
+import type { ChungChi } from '../ChungChi/typing';
+import { type HocPhan } from '../HocPhan/typings';
+import type { NganhDaoTao } from '../Nganh/typings';
 
 declare module ChuongTrinhDaoTao {
 	export interface IRecord {
@@ -23,25 +23,32 @@ declare module ChuongTrinhDaoTao {
 		trangThai: ETrangThaiCtdt;
 
 		thoiGianDaoTao: number;
+		thoiGianDaoTaoToiDa?: number;
 		tongSoTinChi: number;
 		canCuId: string;
 		canCu?: VanBanQuyDinh.IRecord;
 		namBanHanh: number;
 		// active?: boolean;
 		// maLoaiChungChiList: string[];
-		loaiChungChiList?: LoaiChungChi.IRecord[];
+		// loaiChungChiList?: LoaiChungChi.IRecord[];
 		url?: string | null;
 
 		mucTieuDaoTao: string;
 		chuanDauVao: string;
 		chuanDauRa: string;
 		viTriLamViec: string;
+		thongTinHocPhi?: string;
+		ngonNguDaoTao?: string;
 
 		// Với Chương trình kế hoạch cho Khóa ngành cụ thể
+		maKhoaNganh?: string;
 		maKhoaSinhVien?: string;
 		khoaSinhVien?: KhoaSinhVien.IRecord;
 		maChuongTrinhDaoTaoChuan?: string;
 		chuongTrinhDaoTaoChuan?: IRecord;
+
+		soLuongPlo?: number; // Số lượng chuẩn đầu ra PLO
+		trangThaiPloClo?: ETrangThaiPloClo;
 
 		createdAt?: string;
 		updatedAt?: string;
@@ -142,5 +149,59 @@ declare module ChuongTrinhDaoTao {
 		chuongTrinhRaSoat: Partial<IRecord>;
 		khoiCtHp: IKhoiHocPhanCTDT[]; // Khối gốc
 		listThaoTac: Partial<IThaoTacRaSoat>[]; // Danh sách thao tác
+	};
+
+	export type TThongKePloSinhVien = {
+		ma: string;
+		ssoId: string;
+		ten: string;
+
+		danhSachDiemPlo: TDiemPlo[];
+
+		danhSachChuanDauRaMucTieu: TDiemPi[];
+	};
+
+	export type THocPhanTienTrinhKhung = IKhoiHocPhanCTDT & {
+		// Populate
+		/** Đã được sắp xếp giảm dần mã học kỳ */
+		lichSuDiem?: LopHocPhan.IDiemHpSvHk[];
+	};
+
+	export interface ICdrMucTieuHocPhan {
+		_id?: string;
+		maChuongTrinhDaoTao?: string;
+		maHocPhan?: string;
+		hocPhan?: HocPhan.IRecord;
+		deCuongId?: string;
+
+		/** Chuẩn đầu ra CTĐT (PLO) */
+		maPlo?: string;
+		danhMucChuanDauRa?: IChuanDauRa;
+
+		/** Chuẩn đầu ra học phần (CLO) */
+		maClo?: string;
+		mucTieuHocPhan?: HocPhan.IChuanDauRa;
+
+		/**
+		 * Tỷ lệ ảnh hưởng của CLO này đến PLO
+		 * Với DAU là 1, 2, 3 hoặc I, R, M, với Vinh: Tổng tỷ lệ theo CLO = tỉ lệ phân phối cho Học phần
+		 */
+		tyLeAnhHuong: number;
+		/** Quan trọng (A - Assessment) hay ko? Học phần này sẽ để đánh giá chuẩn đầu ra CTĐT */
+		isQuanTrong?: boolean; // DAU
+		diemToiThieu?: number; // Vinh
+	}
+
+	export type TDiemPi = {
+		/** Điểm trung bình đánh giá PI */
+		trungBinhPi: number;
+		/** Danh sách các điểm thành phần hỗ trợ đánh giá PI này */
+		danhSachHocPhan: TDiemPiHocPhan[];
+
+		maPlo: string;
+
+		diemPloToiThieu?: number;
+		trungBinhPi?: number;
+		ten: string;
 	};
 }

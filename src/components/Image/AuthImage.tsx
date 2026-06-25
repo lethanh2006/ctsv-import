@@ -1,5 +1,4 @@
 import axios from '@/utils/axios';
-import { getFileIdFromValue, getPreviewUrl } from '@/utils/utils';
 import { Image } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -10,7 +9,7 @@ type AuthImageProps = {
 	style?: React.CSSProperties;
 	className?: string;
 	isDetail?: boolean;
-	preview?: any; // <-- Bổ sung prop này
+	preview?: any;
 };
 
 const cache = new Map<string, string>();
@@ -24,11 +23,8 @@ const AuthImage: React.FC<AuthImageProps> = ({ src, fallback = '', alt = '', cla
 			return;
 		}
 
-		const isProxyFileUrl = src.includes('/file/') && /[?&]proxy=1(?:&|$)/.test(src);
-		const shouldResolveFileUrl = !isProxyFileUrl && (!!getFileIdFromValue(src) || src.includes('/file/'));
-
-		if (!shouldResolveFileUrl && (/^(data|blob):/.test(src) || !/^https?:\/\//.test(src))) {
-			setImgSrc(src);
+		if (cache.has(src)) {
+			setImgSrc(cache.get(src)!);
 			return;
 		}
 
@@ -37,20 +33,13 @@ const AuthImage: React.FC<AuthImageProps> = ({ src, fallback = '', alt = '', cla
 
 		const fetchImage = async () => {
 			try {
-				const resolvedSrc = shouldResolveFileUrl ? await getPreviewUrl(src) : src;
-
-				if (cache.has(resolvedSrc)) {
-					if (isMounted) setImgSrc(cache.get(resolvedSrc)!);
-					return;
-				}
-
-				const res = await axios.get(resolvedSrc, {
+				const res = await axios.get(src, {
 					responseType: 'blob',
 					data: { silent: true },
 				});
 
 				objectUrl = URL.createObjectURL(res.data);
-				cache.set(resolvedSrc, objectUrl);
+				cache.set(src, objectUrl);
 
 				if (isMounted) setImgSrc(objectUrl);
 			} catch {
@@ -66,7 +55,6 @@ const AuthImage: React.FC<AuthImageProps> = ({ src, fallback = '', alt = '', cla
 	}, [src, fallback]);
 
 	if (isDetail) {
-		// Ghi đè src của preview bằng ảnh blob đã được fetch qua axios
 		return (
 			<Image
 				src={imgSrc}

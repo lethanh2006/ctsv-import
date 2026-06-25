@@ -211,6 +211,16 @@ export const colorLoaiHocLuc: Record<ELoaiHocLuc, string> = {
 	[ELoaiHocLuc.EMPTY]: '#939393',
 };
 
+export const localeLoaiHocLuc: Record<ELoaiHocLuc, string> = {
+	[ELoaiHocLuc.XUAT_SAC]: 'ketquahoctap.ketquahocky.hocluc.xuatsac',
+	[ELoaiHocLuc.GIOI]: 'ketquahoctap.ketquahocky.hocluc.gioi',
+	[ELoaiHocLuc.KHA]: 'ketquahoctap.ketquahocky.hocluc.kha',
+	[ELoaiHocLuc.TRUNG_BINH]: 'ketquahoctap.ketquahocky.hocluc.trungbinh',
+	[ELoaiHocLuc.YEU]: 'ketquahoctap.ketquahocky.hocluc.yeu',
+	[ELoaiHocLuc.KEM]: 'ketquahoctap.ketquahocky.hocluc.kem',
+	[ELoaiHocLuc.EMPTY]: 'ketquahoctap.ketquahocky.hocluc.chuaxeploai',
+};
+
 // LOG Lớp tín chỉ
 export enum ELoaiLogLopHocPhan {
 	THAY_DOI_HOC_VIEN = 'THAY_DOI_HOC_VIEN',

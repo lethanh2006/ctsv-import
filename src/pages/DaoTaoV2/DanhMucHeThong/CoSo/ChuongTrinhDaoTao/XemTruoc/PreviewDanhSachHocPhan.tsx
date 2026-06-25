@@ -3,8 +3,8 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { PrinterOutlined } from '@ant-design/icons';
 import { Col, Modal, Row, Select, Space } from 'antd';
 import _ from 'lodash';
-import { useCallback, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { useModel } from 'umi';
 import TableKhoiHocPhanCTDT from './TableHocPhan';
 import TitlePrintCTDT from './TitlePrintCTDT';
@@ -19,12 +19,7 @@ const PreviewDanhSachHocPhan = (props: { visble: boolean; setVisible: (vis: bool
 		(item) => item.maChuyenNganh,
 	);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => <ButtonExtend icon={<PrinterOutlined />}>In danh sách</ButtonExtend>,
-		[],
-	);
+	const handlePrint = useReactToPrint({ contentRef: componentRef });
 
 	return (
 		<Modal
@@ -53,12 +48,9 @@ const PreviewDanhSachHocPhan = (props: { visble: boolean; setVisible: (vis: bool
 							allowClear
 						/>
 
-						<ReactToPrint
-							content={reactToPrintContent}
-							documentTitle='Danh sách học phần chi tiết'
-							trigger={reactToPrintTrigger}
-							removeAfterPrint
-						/>
+						<ButtonExtend icon={<PrinterOutlined />} onClick={() => handlePrint()}>
+							In danh sách
+						</ButtonExtend>
 					</Space>
 				</Col>
 

@@ -20,17 +20,20 @@ import type {
 declare module SinhVien {
 	export interface IRecord {
 		_id: string;
-		updatedAt: string;
+		dotNhapHocId: string | null;
+		dotNhapHoc?: DotNhapHoc.IRecord;
 		ssoId: string;
-		trangThaiHoc?: string;
+		trangThaiHoc?: ETrangThaiHocSv; //Trạng thái học tổng
+		trangThaiHocNganh1?: ETrangThaiHocSv;
+		trangThaiHocNganh2?: ETrangThaiHocSv;
 		anhDaiDienUrl?: string | null;
 		ma: string;
 		ten: string;
 		firstName: string;
+		middleName: string;
 		lastName: string;
 		gioiTinh: EGioiTinh;
 
-		choPhepSua: string;
 		quocTich: string;
 		danToc: string;
 		tonGiao: string;
@@ -40,6 +43,10 @@ declare module SinhVien {
 		ngayCapCccd: string;
 		soDienThoai: string;
 		email: string;
+		doiTuong: EDoiTuongLopHanhChinh;
+
+		maCSDT: string;
+		csdt?: CoSoDaoTao.IRecord;
 		// soDienThoai2: string;
 		// email2: string;
 		// nguoiLienLac: string;
@@ -77,59 +84,31 @@ declare module SinhVien {
 		chieuCao: number;
 		soBaoHiemSinhVien: string;
 		maBenhVienKhamChuaBenh: string;
-
-		// tenGiamHo: string;
-		// ngaySinhGiamHo: string;
-		// ngheNghiepGiamHo: string;
-		// soDienThoaiGiamHo: string;
-		// emailGiamHo: string;
-		// noiCongTacGiamHo: string;
-		// nguyenQuanGiamHo: string;
-		// diaChiGiamHo: string;
-		// tenChuHo: string;
-
-		// trangThaiCha: ETrangThaiThanhVienGiaDinh;
-		// tenCha: string;
-		// namSinhCha: number;
-		// soDienThoaiCha: string;
-		// ngheNghiepCha: string;
-		// emailCha: string;
-		// noiCongTacCha: string;
-		// nguyenQuanCha: string;
-		// diaChiCha: string;
-
-		// trangThaiMe: ETrangThaiThanhVienGiaDinh;
-		// tenMe: string;
-		// namSinhMe: number;
-		// soDienThoaiMe: string;
-		// ngheNghiepMe: string;
-		// emailMe: string;
-		// noiCongTacMe: string;
-		// nguyenQuanMe: string;
-		// diaChiMe: string;
-
-		// tenVoChong: string;
-		// ngheNghiepVoChong: string;
-		// diaChiVoChong: string;
-		// soDienThoaiVoChong: string;
-		// emailVoChong: string;
-		// thongTinAnhChiEm: string;
-		// thongTinCacCon: string;
 		thanhVienGiaDinh?: TThongTinGiaDinh[];
-
+		visaList?: TThongTinVisa[];
 		maKhoaNganh?: string;
 		khoaNganh?: KhoaNganh.IRecord;
 		maKhoaSinhVien: string;
 		khoaSinhVien?: KhoaSinhVien.IRecord;
 		maNganh: string;
 		nganh?: NganhDaoTao.IRecordCoSo;
+		maChuyenNganh?: string;
+		chuyenNganh?: NganhDaoTao.IRecordCoSo;
+
+		svKhoaNganhList?: ISvKhoaNganh[]; // Thông tin học vụ của sinh viên tương ứng với từng khóa ngành
 
 		// SONG NGÀNH
 		maKhoaNganh2?: string;
 		maKhoaSinhVien2?: string;
 		maNganh2?: string;
+		khoaNganh2: KhoaNganh.IRecord;
+		khoaSinhVien2: KhoaSinhVien.IRecord;
+		nganh2: NganhDaoTao.IRecordCoSo;
+		maChuyenNganh2?: string;
+		chuyenNganh2?: NganhDaoTao.IRecordCoSo;
 
 		lopHanhChinhList?: LopHanhChinh.IRecord[];
+		tenLopHanhChinhVirtual?: string;
 		maTrinhDo: string;
 		trinhDoDaoTao: TrinhDoDaoTao.IRecordCoSo;
 		maHinhThuc: string;
@@ -140,9 +119,27 @@ declare module SinhVien {
 		soQuyetDinhTrungTuyen: string;
 		ngayKyQuyetDinhTrungTuyen: string;
 		ngayNhapHoc: string;
+		ketQuaTuyenSinh: string;
 
 		//Kết quả học tập tích lũy
-		kqhtTichLuy?: KetQuaHocKy.IKetQuaTichLuy;
+		kqhtTichLuyList?: KetQuaHocKy.IKetQuaTichLuy[];
+		kqhtTichLuyNganh1?: KetQuaHocKy.IKetQuaTichLuy;
+		kqhtTichLuyNganh2?: KetQuaHocKy.IKetQuaTichLuy;
+
+		diemRenLuyen: number;
+		xepLoai: string;
+		soHoatDong: number;
+		gpa: number;
+		congNo: boolean;
+		tienNo: number;
+
+		phanLoaiDanhGia: EPhanLoaiDanhGia;
+
+		tienDoTichLuy: number;
+		soHocPhanChuaDat: number;
+
+		updatedAt: string;
+		choPhepSua: string;
 	}
 
 	export type TThongTinGiaDinh = {
@@ -299,5 +296,53 @@ declare module SinhVien {
 		vaiTro?: EVaiTroSvLhc;
 		trangThaiHoc?: ETrangThaiHocSv;
 		ghiChuHocKy?: string;
+	}
+
+	export interface IChuyenTruong {
+		_id: string;
+		sinhVienSsoId: string;
+		maSinhVien?: string;
+		tenSinhVien?: string;
+		sinhVien?: IRecord;
+
+		loaiChuyenTruong: ELoaiChuyenTruong;
+		tenTruong: string;
+		tenNganh?: string;
+
+		quyetDinhId?: string;
+		quyetDinh?: QuyetDinh.IRecord;
+		trangThai: ETrangThaiSinhVienDot;
+
+		ghiChu?: string;
+		lyDo?: string; // Lý do không duyệt
+		dinhKemUrl?: string[] | null;
+	}
+
+	export type TDuyetQuyetDinhChuyenTruong = {
+		quyetDinh: QuyetDinh.IRecord;
+		ids: string[];
+	};
+
+	export interface IChuyenNganh {
+		_id: string;
+		sinhVienSsoIdCu: string;
+		sinhVienCu?: IRecord;
+		tenLopHanhChinhMoi: string;
+		lopHanhChinhMoi?: LopHanhChinh.IRecord;
+		trangThai: ETrangThaiChuyenNganh;
+
+		ghiChu?: string;
+		tenLopHanhChinhCu: string;
+		lopHanhChinhCu?: LopHanhChinh.IRecord;
+
+		// sinhVienSsoIdMoi?: string;
+		// sinhVienMoi?: IRecord;
+		idQuyetDinh?: string;
+		quyetDinh?: QuyetDinh.IRecord;
+
+		maNguoiDuyet?: string;
+		idNguoiDuyet?: string;
+		tenNguoiDuyet?: string;
+		thoiGianDuyet?: string;
 	}
 }

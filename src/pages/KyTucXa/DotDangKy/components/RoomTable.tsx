@@ -28,6 +28,26 @@ const RoomTable: React.FC<{
 		getAllModel(false, undefined, undefined, filters as any).catch(() => {});
 	}, [JSON.stringify(toaNhaIds)]);
 
+	const getRoomCapacity = (room: any) => Number(room?.soLuongToiDa ?? 0);
+	const getCurrentOccupancy = (room: any) => Number(room?.soLuongHienTai ?? 0);
+	const isRoomFull = (room: any) => {
+		const capacity = getRoomCapacity(room);
+		return capacity <= 0 || getCurrentOccupancy(room) >= capacity;
+	};
+	const selectableSelectedRowKeys = selectedRowKeys.filter((key) => {
+		const room = rooms.find((item: any) => String(item._id) === String(key));
+		return !room || !isRoomFull(room);
+	});
+
+	useEffect(() => {
+		if (selectableSelectedRowKeys.length !== selectedRowKeys.length) {
+			const selectableRooms = rooms.filter((room: any) =>
+				selectableSelectedRowKeys.some((key) => String(key) === String(room._id)),
+			);
+			onChangeSelectedKeys?.(selectableSelectedRowKeys.map(String), selectableRooms);
+		}
+	}, [rooms, JSON.stringify(selectedRowKeys)]);
+
 	const columns: IColumn<any>[] = [
 		{
 			title: t('kytucxa.dotdangky.tenPhong'),
@@ -68,12 +88,38 @@ const RoomTable: React.FC<{
 			sortable: true,
 			render: (val: any) => val ?? '-',
 		},
+		{
+			title: t('kytucxa.phong.dangO'),
+			dataIndex: 'soLuongHienTai',
+			key: 'soLuongHienTai',
+			width: 100,
+			align: 'center',
+			sortable: true,
+			render: (val: any) => val ?? 0,
+			fixed: 'right',
+		},
+		{
+			title: t('kytucxa.dotdangky.conTrong'),
+			key: 'soLuongConTrong',
+			width: 110,
+			align: 'center',
+			sortable: true,
+			render: (_: any, room: any) => Math.max(getRoomCapacity(room) - getCurrentOccupancy(room), 0),
+			fixed: 'right',
+		},
 	];
 
 	const rowSelection = {
-		selectedRowKeys,
-		getCheckboxProps: () => ({ disabled }),
-		onChange: (keys: React.Key[], rows: any[]) => onChangeSelectedKeys?.(keys.map(String), rows),
+		selectedRowKeys: selectableSelectedRowKeys,
+		getCheckboxProps: (room: any) => ({
+			disabled: disabled || isRoomFull(room),
+			title: isRoomFull(room) ? t('kytucxa.dotdangky.phongDaHetCho') : undefined,
+		}),
+		onChange: (keys: React.Key[], rows: any[]) => {
+			const selectableRows = rows.filter((room: any) => !isRoomFull(room));
+			const selectableKeys = keys.filter((key) => selectableRows.some((room: any) => String(room._id) === String(key)));
+			onChangeSelectedKeys?.(selectableKeys.map(String), selectableRows);
+		},
 	};
 
 	return (

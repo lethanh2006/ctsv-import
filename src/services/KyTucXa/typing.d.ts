@@ -1,4 +1,4 @@
-import type { EGioiTinh, ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
+import type { ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
 
 declare module KyTucXa {
 	export interface IToa {

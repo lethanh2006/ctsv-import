@@ -136,6 +136,14 @@ export default {
 	'global.table.index.button.boloc.tooltip': 'Áp dụng bộ lọc tùy chỉnh',
 	'global.table.index.button.tongso': 'Tổng số',
 	'global.table.index.button.tongso.tooltip': 'Tổng số dữ liệu',
+	'global.table.index.search.placeholder': 'Tìm theo: {fields}',
+	'global.table.index.search.placeholder.short': 'Tìm {field}',
+	'global.table.index.search.placeholder.default': 'Tìm kiếm',
+	'global.table.index.search.tooltip': 'Đang tìm kiếm theo: {fields}',
+	'global.table.index.import.titleTemplate': 'Biểu mẫu {title}.xlsx',
+	'global.table.index.export.fileName': 'Danh sách {title}.xlsx',
+	'global.table.index.export.defaultTitle': 'dữ liệu',
+	'global.table.index.search.tooltip.default': 'Tìm kiếm theo các trường dạng chuỗi',
 	'global.table.index.empty': 'Không có dữ liệu',
 	'global.table.index.dachon': 'Đã chọn',
 	'global.table.index.bochon': 'Bỏ chọn tất cả',
@@ -158,7 +166,7 @@ export default {
 	'global.table.customfilter.label.nhomdieukien': 'Nhóm điều kiện:',
 	'global.table.customfilter.placeholder.chondieukien': 'Chọn điều kiện',
 	'global.table.customfilter.placeholder.chongiatri': 'Chọn giá trị',
-	'global.table.customfilter.search': 'Tìm',
+	'global.table.customfilter.tim': 'Tìm',
 	'global.table.import.match.cot': 'Cột {colName}: {title}',
 	'global.table.import.preview.invalidRows':
 		'Có ô chứa dữ liệu không hợp lệ tại các dòng {rows} (đã được đánh dấu trong bảng), vui lòng kiểm tra lại!',
@@ -189,8 +197,8 @@ export default {
 
 	'global.tablestatic.button.themmoi': 'Thêm mới',
 	'global.tablestatic.button.themmoi.tooltip': 'Thêm mới dữ liệu',
-	'global.tablestatic.button.xoa': 'Tải lại',
-	'global.tablestatic.button.xoa.tooltip': 'Tải lại dữ liệu',
+	'global.tablestatic.button.tailai': 'Tải lại',
+	'global.tablestatic.button.tailai.tooltip': 'Tải lại dữ liệu',
 	'global.tablestatic.button.tongso': 'Tổng số',
 	'global.tablestatic.button.tongso.tooltip': 'Tổng số dữ liệu',
 
@@ -213,6 +221,10 @@ export default {
 	'global.uploadfile.button.chontep': 'Chọn tệp',
 
 	'global.placeholder.ngay': 'Chọn ngày',
+	'global.uploadfile.tepdinhkem': 'Tệp đính kèm',
+
+	'app.copyright.produced': 'CopyRight',
+	'app.locale.image': 'vi-VN.svg',
 
 	// PDFViewer
 	'global.pdfviewer.dangtai': 'Đang tải...',
