@@ -27,7 +27,7 @@ declare module KyTucXa {
 		tangThu?: number;
 		soPhongTam?: number;
 		loaiPhongKtx?: IDanhMucChung;
-		disableUpdate?: boolean;
+
 
 		dangKyKyTucXaRule?: {
 			_id?: string;

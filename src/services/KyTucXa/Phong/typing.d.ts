@@ -20,6 +20,7 @@ declare module PhongKTX {
 		maLoaiPhongKtx?: string;
 		loaiPhongKtx?: any;
 		isChoThue?: boolean;
+		disableUpdate?: boolean;
 
 		dangKyKyTucXaRule?: {
 			_id?: string;
