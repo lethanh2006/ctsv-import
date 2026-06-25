@@ -1,26 +1,28 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
+import { ETrangThaiThanhToan } from '@/services/KyTucXa/constant';
 import type { KyTucXa } from '@/services/KyTucXa/typing';
-import axios from '@/utils/axios';
 import dayjs from '@/utils/dayjs';
-import { ipCsvc } from '@/utils/ip';
 import { CheckCircleOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Tag, message } from 'antd';
+import { Button, Popconfirm, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 
 const NhanPhongKTXPage = () => {
 	const intl = useIntl();
 	const { page, limit, selectedIds, setSelectedIds, getModel } = useModel('kytucxa.checkinsinhvien');
+	const { postModel: checkin } = useModel('kytucxa.confirmcheckin')
 	const { danhSach: danhSachPhong, getModel: getPhong } = useModel('kytucxa.phong');
 	const { danhSach: danhSachToa, getAllModel: getAllToa } = useModel('kytucxa.toa');
 	const { danhSach: danhSachDanhMuc, getAllModel: getAllDanhMuc } = useModel('kytucxa.danhmucchung');
+	const { danhSach: danhSachDot, getAllModel: getAllDot } = useModel('kytucxa.dotdangkyktx');
 	const [submitting, setSubmitting] = useState(false);
 
 	useEffect(() => {
 		getPhong();
 		getAllToa();
 		getAllDanhMuc();
+		getAllDot();
 	}, []);
 
 	const getValueByPath = (record: any, paths: string[]) => {
@@ -31,8 +33,6 @@ const NhanPhongKTXPage = () => {
 
 		return undefined;
 	};
-
-	const renderText = (value?: string | number | null) => value ?? '-';
 
 	const renderDate = (value?: string | null, format = 'DD/MM/YYYY') => (value ? dayjs(value).format(format) : '--');
 
@@ -69,28 +69,43 @@ const NhanPhongKTXPage = () => {
 		return tenToaNha || record?.phong?.maToaNha || '-';
 	};
 
+	const getDotInfo = (record: KyTucXa.IThongTinDangKy) =>
+		danhSachDot?.find((item: KyTucXa.IDotDangKyKTX) => item?._id === record?.maDotId);
+
+	const getNgayNhanPhong = (record: KyTucXa.IThongTinDangKy) => {
+		const dot = getDotInfo(record);
+		return renderDate(dot?.ngayChuyenVao);
+	};
+
+	const getNgayTraPhong = (record: KyTucXa.IThongTinDangKy) => {
+		const dot = getDotInfo(record);
+		return renderDate(dot?.ngayChuyenRa);
+	};
+
 	const renderTrangThaiThanhToan = (val?: string) => {
-		const status = val?.toString()?.trim()?.toLowerCase();
-		const statusMap: Record<string, { color: string; label: string }> = {
-			unpaid: { color: 'red', label: 'Unpaid' },
-			underpaid: { color: 'orange', label: 'Underpaid' },
-			paid: { color: 'green', label: 'Paid' },
-		};
-		const config = status ? statusMap[status] : undefined;
+		const status = val?.toString()?.trim();
+		const config = {
+			[ETrangThaiThanhToan.CHO_THANH_TOAN]: { color: 'processing', label: intl.formatMessage({ id: 'kytucxa.nhanphong.paymentStatus.choThanhToan' }) },
+			[ETrangThaiThanhToan.DA_THANH_TOAN]: { color: 'success', label: intl.formatMessage({ id: 'kytucxa.nhanphong.paymentStatus.daThanhToan' }) },
+			[ETrangThaiThanhToan.HUY]: { color: 'error', label: intl.formatMessage({ id: 'kytucxa.nhanphong.paymentStatus.huy' }) },
+		}[status as ETrangThaiThanhToan];
 
 		if (!config) return <Tag>{val || '-'}</Tag>;
 
 		return <Tag color={config.color}>{config.label}</Tag>;
 	};
 
-	const handleBulkCheckin = async () => {
+	const handleCheckin = async () => {
 		if (!selectedIds?.length) return;
 		setSubmitting(true);
 		try {
-			await Promise.all(selectedIds.map((id) => axios.post(`${ipCsvc}/dang-ky-ky-tuc-xa/nhan-phong/${id}`)));
-			message.success(intl.formatMessage({ id: 'kytucxa.nhanphong.checkinSuccess' }));
+			await checkin(
+				{ ids: selectedIds } as any,
+				getModel,
+				false,
+				intl.formatMessage({ id: 'kytucxa.nhanphong.checkinSuccess' })
+			);
 			setSelectedIds(undefined);
-			getModel();
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -176,29 +191,25 @@ const NhanPhongKTXPage = () => {
 			filterType: 'string',
 			render: (_, record) => getTenToaNha(record),
 		},
-		// {
-		// 	title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayNhanPhong' }),
-		// 	dataIndex: 'ngayBatDau',
-		// 	width: 120,
-		// 	align: 'center',
-		// 	sortable: true,
-		// 	render: (value, record) => renderDate(record?.ngayNhanPhong || value),
-		// },
-		// {
-		// 	title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayTraPhong' }),
-		// 	dataIndex: 'ngayKetThuc',
-		// 	width: 120,
-		// 	align: 'center',
-		// 	sortable: true,
-		// 	render: (value, record) => renderDate(record?.ngayTraPhong || value),
-		// },
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayNhanPhong' }),
+			width: 140,
+			align: 'center',
+			render: (_, record) => getNgayNhanPhong(record),
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.nhanphong.ngayTraPhong' }),
+			width: 140,
+			align: 'center',
+			render: (_, record) => getNgayTraPhong(record),
+		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.nhanphong.trangThaiThanhToan' }),
-			dataIndex: 'trangThaiDuyet',
+			dataIndex: 'trangThaiThanhToan',
 			width: 150,
 			align: 'center',
-			filterType: 'select',
-			filterData: ['Unpaid', 'Underpaid', 'Paid'],
+			// filterType: 'select',
+			// filterData: ['Unpaid', 'Underpaid', 'Paid'],
 			render: (val, record) =>
 				renderTrangThaiThanhToan(
 					val ||
@@ -218,6 +229,20 @@ const NhanPhongKTXPage = () => {
 			modelName='kytucxa.checkinsinhvien'
 			title={intl.formatMessage({ id: 'kytucxa.nhanphong.title' })}
 			rowSelection
+			detailRow={{
+				getCheckboxProps: (record: any) => {
+					const trangThai =
+						record?.trangThaiThanhToan ||
+						getValueByPath(record, [
+							'hoaDon.trangThaiThanhToan',
+							'bill.trangThaiThanhToan',
+							'thanhToan.trangThaiThanhToan',
+						]);
+					return {
+						disabled: trangThai !== ETrangThaiThanhToan.DA_THANH_TOAN,
+					};
+				},
+			}}
 			buttons={{ create: false }}
 			scroll={{ x: 2200 }}
 			otherButtons={[
@@ -227,7 +252,7 @@ const NhanPhongKTXPage = () => {
 						{ id: 'kytucxa.nhanphong.confirmCheckinNhieu' },
 						{ count: selectedIds?.length ?? 0 },
 					)}
-					onConfirm={handleBulkCheckin}
+					onConfirm={handleCheckin}
 					okText={intl.formatMessage({ id: 'kytucxa.nhanphong.xacNhan' })}
 					cancelText={intl.formatMessage({ id: 'kytucxa.nhanphong.huy' })}
 					disabled={!selectedIds?.length}

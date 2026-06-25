@@ -99,7 +99,7 @@ const FormThemMoi = (props: any) => {
 					</Form.Item>
 				</Col>
 
-				{maLoai !== 'LOAI_PHONG_KTX' && (
+				{loai !== 'LOAI_PHONG_KTX' && (
 					<Col span={24}>
 						<Form.Item name='anh' label={intl.formatMessage({ id: 'kytucxa.danhmucchung.anhicon' })}>
 							<UploadFile

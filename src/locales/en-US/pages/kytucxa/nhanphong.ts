@@ -25,4 +25,7 @@ export default {
 	'kytucxa.nhanphong.ngayTraPhong': 'Check-out Date',
 	'kytucxa.nhanphong.trangThai': 'Status',
 	'kytucxa.nhanphong.trangThaiThanhToan': 'Payment Status',
+	'kytucxa.nhanphong.paymentStatus.choThanhToan': 'Pending payment',
+	'kytucxa.nhanphong.paymentStatus.daThanhToan': 'Paid',
+	'kytucxa.nhanphong.paymentStatus.huy': 'Cancelled',
 };

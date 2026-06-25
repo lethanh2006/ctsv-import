@@ -1,4 +1,4 @@
-import type { ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
+import type { ETrangThaiCheckIn, ETrangThaiPhatHanh, ETrangThaiThanhToan } from './constant';
 
 declare module KyTucXa {
 	export interface IToa {
@@ -123,7 +123,7 @@ declare module KyTucXa {
         thoiHanThanhToan?: string;
         urlMinhChung?: string;
         trangThaiMinhChung?: ETrangThaiMinhChung;
-        trangThaiDuyet?: ETrangThaiDuyet;
+		trangThaiThanhToan?: ETrangThaiThanhToan;
         createdAt?: string;
         updatedAt?: string;
         formDon?: IFormDangKy;
