@@ -8,6 +8,36 @@ declare module KyTucXa {
 		diaChi: string;
 	}
 
+	export interface IPhong {
+		_id: string;
+		ma: string;
+		ten?: string;
+
+		maLoaiPhongKtx?: string;
+		maGioiTinh?: EGioiTinh | string;
+		soLuongToiDa?: number;
+		soLuongHienTai?: number;
+		cachBoTri?: string;
+		maKhoanThuPhong?: string;
+		maKhoanThuCoc?: string;
+		moTa?: string;
+		danhSachAnh?: string[];
+		danhSachTienIch: ITienIch[];
+		maToaNha?: string;
+		tangThu?: number;
+		soPhongTam?: number;
+		loaiPhongKtx?: IDanhMucChung;
+		disableUpdate?: boolean;
+
+		dangKyKyTucXaRule?: {
+			_id?: string;
+			phongId?: string;
+			gioiTinh?: EGioiTinh | string;
+			maxPerKhoa?: number | null;
+			quocTichPhong?: string | null;
+		};
+	}
+
 	export interface INamHoc {
 		_id: string;
 		ma: string;
@@ -39,6 +69,7 @@ declare module KyTucXa {
 		};
 		anh?: string;
 		ghiChu?: string;
+		active?: boolean
 	}
 
 	export interface ITienIch {

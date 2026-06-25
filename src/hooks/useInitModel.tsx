@@ -10,6 +10,8 @@ import { message } from 'antd';
 import { useState } from 'react';
 import { getIntl } from 'umi';
 import useInitService from './useInitService';
+import { kichHoatDanhMucChung } from '@/services/KyTucXa';
+import { ETrangThaiDanhMucChung } from '@/services/DanhMuc/constants';
 
 const formatIntlMsg = (id: string, values?: Record<string, string | number>) =>
 	getIntl()?.formatMessage({ id }, values) || id;
@@ -557,6 +559,40 @@ const useInitModel = <T extends object>(
 	};
 	//#endregion
 
+	const kichHoatDanhMucChungModel = async (id: string, getData?: () => void) => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const response = await kichHoatDanhMucChung(id, ETrangThaiDanhMucChung.ACTIVE);
+			message.success('Kích hoạt thành công');
+
+			if (getData) getData();
+			return response?.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const tatKichHoatDanhMucChungModel = async (id: string, getData?: () => void) => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const response = await kichHoatDanhMucChung(id, ETrangThaiDanhMucChung.INACTIVE);
+			message.success('Đã hủy kích hoạt');
+
+			if (getData) getData();
+			return response?.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		sort,
 		setSort,
@@ -612,6 +648,8 @@ const useInitModel = <T extends object>(
 		setSelectedIds,
 		initFilter,
 		clearModel,
+		kichHoatDanhMucChungModel,
+		tatKichHoatDanhMucChungModel
 	};
 };
 
