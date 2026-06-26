@@ -4,6 +4,11 @@ export enum LoaiDanhHieuThiDuaKhenThuongGiaiThuong {
 	HTKH = 'Hình thức khen thưởng',
 }
 
+export enum ETrangThaiDanhMucChung {
+	ACTIVE = 'ACTIVE',
+	INACTIVE = 'INACTIVE'
+}
+
 export const DanhHieuThiDuaKhenThuongGiaiThuong = [
 	{
 		loaiDanhHieu: 'Danh hiệu thi đua',
