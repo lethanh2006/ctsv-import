@@ -25,4 +25,7 @@ export default {
 	'kytucxa.nhanphong.ngayTraPhong': 'Ngày trả phòng',
 	'kytucxa.nhanphong.trangThai': 'Trạng thái',
 	'kytucxa.nhanphong.trangThaiThanhToan': 'Trạng thái thanh toán',
+	'kytucxa.nhanphong.paymentStatus.choThanhToan': 'Chờ thanh toán',
+	'kytucxa.nhanphong.paymentStatus.daThanhToan': 'Đã thanh toán',
+	'kytucxa.nhanphong.paymentStatus.huy': 'Hủy',
 };
