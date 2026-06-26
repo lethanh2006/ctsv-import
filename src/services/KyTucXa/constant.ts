@@ -91,3 +91,10 @@ export enum ETrangThaiPhatHanh {
 	CHUA_PHAT_HANH = 'Chưa phát hành',
 	DA_PHAT_HANH = 'Phát hành',
 }
+
+export enum ETrangThaiThanhToan {
+	CHO_THANH_TOAN = 'Chờ thanh toán',
+	DA_THANH_TOAN = 'Đã thanh toán',
+	HUY= 'Hủy'
+}
+

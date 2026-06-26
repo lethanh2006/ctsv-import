@@ -1,10 +1,44 @@
 import useInitModel from '@/hooks/useInitModel';
-import { KyTucXa } from '@/services/KyTucXa/typing';
+import { thongKeDotTongQuanKTX, thongKeDotChiTietKTX } from '@/services/KyTucXa';
+import type { DotDangKyKTX } from '@/services/KyTucXa/DotDangKy/typing';
 import axios from '@/utils/axios';
 import { ipCsvc } from '@/utils/ip';
+import { useState } from 'react';
 
 export default () => {
-	const objInit = useInitModel<KyTucXa.IDotDangKyKTX>('dot-dang-ky-ky-tuc-xa', undefined, undefined, ipCsvc);
+	const objInit = useInitModel<DotDangKyKTX.IRecord>('dot-dang-ky-ky-tuc-xa', undefined, undefined, ipCsvc);
+
+	const [loadingTongQuan, setLoadingTongQuan] = useState<boolean>(false);
+	const [dataTongQuan, setDataTongQuan] = useState<DotDangKyKTX.IThongKeDotTongQuan>();
+
+	const [loadingChiTiet, setLoadingChiTiet] = useState<boolean>(false);
+	const [dataChiTiet, setDataChiTiet] = useState<DotDangKyKTX.IThongKeDotChiTiet>();
+
+	const thongKeDotTongQuanKTXModel = async (condition?: any): Promise<DotDangKyKTX.IThongKeDotTongQuan> => {
+		setLoadingTongQuan(true);
+		try {
+			const res = await thongKeDotTongQuanKTX(condition);
+			setDataTongQuan(res.data?.data);
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingTongQuan(false);
+		}
+	};
+
+	const thongKeDotChiTietKTXModel = async (condition?: any): Promise<any> => {
+		setLoadingChiTiet(true);
+		try {
+			const res = await thongKeDotChiTietKTX(condition);
+			setDataChiTiet(res.data?.data);
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingChiTiet(false);
+		}
+	};
 
 	const postSinhVienDangKy = (
 		dotId: string,
@@ -37,6 +71,12 @@ export default () => {
 		postSinhVienDangKy,
 		getSinhVienDangKy,
 		deleteSinhVienDangKy,
-		postPhatHanhKTX
+		postPhatHanhKTX,
+		thongKeDotTongQuanKTXModel,
+		thongKeDotChiTietKTXModel,
+		loadingTongQuan,
+		dataTongQuan,
+		loadingChiTiet,
+		dataChiTiet
 	};
 };

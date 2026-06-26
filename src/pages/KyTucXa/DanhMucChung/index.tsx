@@ -62,7 +62,7 @@ const DanhMucChungPage = (props: { loai: 'TIEN_ICH_PHONG' | 'LOAI_PHONG_KTX' }) 
 			render: (val, record) =>
 				record?.cauHinh?.tienIchChung
 					? intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichchung' })
-					: intl.formatMessage({ id: 'kytucxa.danhmucchung.tienichrieng' }),
+					: '',
 			hide: loai === 'LOAI_PHONG_KTX',
 		},
 		{

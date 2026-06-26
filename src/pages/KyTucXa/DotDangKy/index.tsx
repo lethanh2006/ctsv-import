@@ -30,30 +30,25 @@ const getTrangThaiDot = (record: KyTucXa.IDotDangKyKTX, t: (id: string) => strin
 const DotDangKy = () => {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
-	const { page, limit, handleEdit, deleteModel, getModel, setRecord, postPhatHanhKTX, putModel } =
-		useModel('kytucxa.dotdangkyktx');
+	const {
+		page,
+		limit,
+		handleEdit,
+		deleteModel,
+		getModel,
+		setRecord,
+		postPhatHanhKTX,
+		thongKeDotTongQuanKTXModel,
+		dataTongQuan,
+		loadingTongQuan,
+	} = useModel('kytucxa.dotdangkyktx');
 	const { record: recHocKy } = useModel('daotaov2.hocky.hocky');
-	const { getThongKeDotTongQuan } = useModel('kytucxa.thongkektx');
 
 	const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
-	const [dataThongKe, setDataThongKe] = useState<any>(null);
-	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
-
-	const fetchThongKe = (maHocKy: string) => {
-		setLoadingThongKe(true);
-		getThongKeDotTongQuan({ maHocKy })
-			.then((res: any) => {
-				setDataThongKe(res?.data?.data || res?.data || res);
-			})
-			.catch((err: any) => {})
-			.finally(() => {
-				setLoadingThongKe(false);
-			});
-	};
 
 	useEffect(() => {
 		if (recHocKy?.ma) {
-			fetchThongKe(recHocKy.ma);
+			thongKeDotTongQuanKTXModel({ maHocKy: recHocKy.ma });
 		}
 	}, [recHocKy?.ma]);
 
@@ -68,7 +63,7 @@ const DotDangKy = () => {
 	const getData = () => {
 		if (recHocKy?.ma) {
 			getModel({ maHocKy: recHocKy?.ma });
-			fetchThongKe(recHocKy.ma);
+			thongKeDotTongQuanKTXModel({ maHocKy: recHocKy.ma });
 		}
 	};
 
@@ -190,30 +185,30 @@ const DotDangKy = () => {
 	const statisticsData: StatisticsItem[] = [
 		{
 			title: 'Tổng số đợt',
-			value: dataThongKe?.tongSoDot ?? 0,
+			value: dataTongQuan?.tongSoDot ?? 0,
 			valueColor: '#1890ff',
 			status: 'info',
 		},
 		{
 			title: 'Đã ban hành',
-			value: dataThongKe?.soLuongDaPhatHanh ?? 0,
+			value: dataTongQuan?.soLuongDaPhatHanh ?? 0,
 			valueColor: '#52c41a',
 			status: 'success',
 		},
 		{
 			title: 'Chưa ban hành',
-			value: dataThongKe?.soLuongChuaPhatHanh ?? 0,
+			value: dataTongQuan?.soLuongChuaPhatHanh ?? 0,
 			valueColor: '#faad14',
 			status: 'warning',
 		},
 		{
 			title: 'Đang diễn ra',
-			value: dataThongKe?.soLuongDangDienRa ?? 0,
+			value: dataTongQuan?.soLuongDangDienRa ?? 0,
 			valueColor: '#13c2c2',
 		},
 		{
 			title: 'Đã kết thúc',
-			value: dataThongKe?.soLuongDaKetThuc ?? 0,
+			value: dataTongQuan?.soLuongDaKetThuc ?? 0,
 			valueColor: '#8c8c8c',
 			status: 'gray',
 		},
@@ -246,7 +241,7 @@ const DotDangKy = () => {
 					statShadow
 					containerStyle={{ marginBottom: 16 }}
 					data={statisticsData}
-					loading={loadingThongKe}
+					loading={loadingTongQuan}
 				/>
 			</TableBase>
 

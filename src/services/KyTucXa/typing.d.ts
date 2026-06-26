@@ -1,4 +1,4 @@
-import type { ETrangThaiCheckIn, ETrangThaiPhatHanh } from './constant';
+import type { ETrangThaiCheckIn, ETrangThaiPhatHanh, ETrangThaiThanhToan } from './constant';
 
 declare module KyTucXa {
 	export interface IToa {
@@ -27,7 +27,7 @@ declare module KyTucXa {
 		tangThu?: number;
 		soPhongTam?: number;
 		loaiPhongKtx?: IDanhMucChung;
-
+		isChoThue?: boolean;
 
 		dangKyKyTucXaRule?: {
 			_id?: string;
@@ -109,62 +109,70 @@ declare module KyTucXa {
 		updatedAt?: string;
 	}
 
-	export interface ICheckInSinhVien {
+	export interface IThongTinDangKy {
+        _id: string;
+        maDotId?: string;
+        maPhong?: string;
+        nguoiTaoMa?: string;
+        nguoiTaoHoTen?: string;
+		khoa?: string;
+		nganh?: string;
+		soDienThoai?: number;
+		email?: string;
+        nguoiTaoSsoId?: string;
+        identityCode?: string;
+        thoiHanThanhToan?: string;
+        urlMinhChung?: string;
+        trangThaiMinhChung?: ETrangThaiMinhChung;
+		trangThaiThanhToan?: ETrangThaiThanhToan;
+        createdAt?: string;
+        updatedAt?: string;
+        formDon?: IFormDangKy;
+		phong?: IPhong;
+    }
+
+	export interface IDanhSachMienKTX {
 		_id: string;
-		ssoId: string;
+		maHocKy: string;
+		tenHocKy: string;
+		hanNopMinhChung: string;
+		ghiChu: string;
+	}
+
+	export interface IDanhSachMienKTXSinhVien {
+		_id: string;
+		danhSachId: string;
 		maSinhVien: string;
+		ssoId: string;
 		hoTen: string;
-		maKhoaSinhVien?: string;
-		khoaSinhVien?: {
-			ma?: string;
-			ten?: string;
-		};
-		maNganh?: string;
-		tenNganh?: string;
-		nganh?: {
-			ma?: string;
-			ten?: string;
-		};
+		khoaSinhVien?: string;
+		khoaNganh?: string | { ma?: string; ten?: string };
+		tenKhoaNganh?: string;
+		maKhoaNganh?: string;
 		soDienThoai?: string;
 		email?: string;
-		thoiGianDangKy?: string;
-		ngayDangKy?: string;
-		createdAt?: string;
-		maPhong: string;
-		tenPhong?: string;
-		phong?: IPhong;
-		maLoaiPhongKtx?: string;
-		loaiPhongKtx?: IDanhMucChung;
-		tangThu?: number;
-		tang?: number;
-		maToaNha: string;
-		tenToaNha?: string;
-		toaNha?: IToa;
-		ngayBatDau: string;
-		ngayKetThuc: string;
-		ngayNhanPhong?: string;
-		ngayTraPhong?: string;
-		trangThai: ETrangThaiCheckIn;
-		trangThaiThanhToan?: 'Unpaid' | 'Underpaid' | 'Paid' | string;
-		dangKyId: string;
-		ghiChu: string;
-		sinhVien?: {
-			ma?: string;
-			maSinhVien?: string;
-			hoTen?: string;
-			maKhoaSinhVien?: string;
-			khoaSinhVien?: {
-				ma?: string;
-				ten?: string;
-			};
-			maNganh?: string;
-			tenNganh?: string;
-			nganh?: {
-				ma?: string;
-				ten?: string;
-			};
-			soDienThoai?: string;
-			email?: string;
+		urlMinhChung: string;
+		trangThaiMinhChung?: ETrangThaiMienDangKyKTX | string;
+		ngayDuyet: string;
+		nguoiDuyet: string;
+		ghiChuDuyet: string;
+	}
+
+	export interface IThongKePhong {
+		maHocKy: string;
+		tongQuan: {
+			soLuongPhongChoThue: number;
+			tongSoPhong: number;
+			tongSucChua: number;
+			soLuongSinhVienDaDangKy: number;
+			soLuongChoConTrong: number;
 		};
+		bieuDoLapDayToaNha: {
+			maToaNha: string;
+			tenToaNha: string;
+			sinhVienDaDangKy: number;
+			tongSucChua: number;
+			tiLeLapDay: number;
+		}[];
 	}
 }
