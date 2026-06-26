@@ -3,73 +3,49 @@ import StatisticsCard from '@/components/StatisticsCard';
 import type { StatisticsItem } from '@/components/StatisticsCard/typing';
 import { useModel } from '@umijs/max';
 import { Card, Col, Row, Spin } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const ThongKe = () => {
-	const { record: recordDot } = useModel('kytucxa.dotdangkyktx');
-	const { getThongKeDotChiTiet } = useModel('kytucxa.thongkektx');
-
-	const [loading, setLoading] = useState<boolean>(false);
-	const [dataThongKe, setDataThongKe] = useState({
-		phongChoThue: 0,
-		tongSucChua: 0,
-		conTrong: 0,
-		daDangKy: 0,
-		chuaDangKy: 0,
-	});
+	const { record: recordDot, thongKeDotChiTietKTXModel, dataChiTiet, loadingChiTiet } = useModel('kytucxa.dotdangkyktx');
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (!recordDot?._id) return;
-			setLoading(true);
-			try {
-				const resChiTiet = await getThongKeDotChiTiet({ maDotId: recordDot._id });
-				if (resChiTiet?.data?.success) {
-					const thongTinPhong = resChiTiet.data.data?.thongTinPhong || {};
-					const thongTinSinhVien = resChiTiet.data.data?.thongTinSinhVien || {};
-					setDataThongKe({
-						phongChoThue: thongTinPhong.soLuongPhongChoThue ?? 0,
-						tongSucChua: thongTinPhong.tongSucChua ?? 0,
-						conTrong: thongTinPhong.soLuongChoConTrong ?? 0,
-						daDangKy: thongTinSinhVien.soLuongSinhVienDaDangKy ?? 0,
-						chuaDangKy: thongTinSinhVien.soLuongSinhVienChuaDangKy ?? 0,
-					});
-				}
-			} catch (e) {
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchData();
+		if (recordDot?._id) {
+			thongKeDotChiTietKTXModel({ maDotId: recordDot._id });
+		}
 	}, [recordDot?._id]);
 
-	const totalDangKy = dataThongKe.daDangKy + dataThongKe.chuaDangKy;
-	const tyLeDangKy = totalDangKy > 0 ? ((dataThongKe.daDangKy / totalDangKy) * 100).toFixed(1) : '0';
+	const phongChoThue = dataChiTiet?.thongTinPhong?.soLuongPhongChoThue ?? 0;
+	const tongSucChua = dataChiTiet?.thongTinPhong?.tongSucChua ?? 0;
+	const conTrong = dataChiTiet?.thongTinPhong?.soLuongChoConTrong ?? 0;
+	const daDangKy = dataChiTiet?.thongTinSinhVien?.soLuongSinhVienDaDangKy ?? 0;
+	const chuaDangKy = dataChiTiet?.thongTinSinhVien?.soLuongSinhVienChuaDangKy ?? 0;
+
+	const totalDangKy = daDangKy + chuaDangKy;
+	const tyLeDangKy = totalDangKy > 0 ? ((daDangKy / totalDangKy) * 100).toFixed(1) : '0';
 
 	const phongStatData: StatisticsItem[] = [
 		{
 			title: 'Phòng cho thuê',
-			value: dataThongKe.phongChoThue,
+			value: phongChoThue,
 			valueColor: '#52c41a',
 			status: 'success',
 		},
 		{
 			title: 'Tổng sức chứa',
-			value: dataThongKe.tongSucChua,
+			value: tongSucChua,
 			valueColor: '#1890ff',
 			status: 'info',
 		},
 		{
 			title: 'Còn trống',
-			value: dataThongKe.conTrong,
+			value: conTrong,
 			valueColor: '#faad14',
 			status: 'warning',
 		},
 	];
 
 	return (
-		<Spin spinning={loading}>
+		<Spin spinning={loadingChiTiet}>
 			<Row gutter={[16, 16]}>
 				<Col xs={24} md={8}>
 					<StatisticsCard
@@ -100,13 +76,13 @@ const ThongKe = () => {
 								<div style={{ marginBottom: 24 }}>
 									<div style={{ fontSize: 14, color: '#1890ff', fontWeight: 500, marginBottom: 8 }}>Đã đăng ký</div>
 									<div style={{ fontSize: 28, color: '#1890ff', fontWeight: 700 }}>
-										{dataThongKe.daDangKy.toLocaleString()}
+										{daDangKy.toLocaleString()}
 									</div>
 								</div>
 								<div>
 									<div style={{ fontSize: 14, color: '#fa8c16', fontWeight: 500, marginBottom: 8 }}>Chưa đăng ký</div>
 									<div style={{ fontSize: 28, color: '#fa8c16', fontWeight: 700 }}>
-										{dataThongKe.chuaDangKy.toLocaleString()}
+										{chuaDangKy.toLocaleString()}
 									</div>
 								</div>
 							</Col>
@@ -115,9 +91,9 @@ const ThongKe = () => {
 									<DonutChart
 										xAxis={['Đã đăng ký', 'Chưa đăng ký']}
 										yAxis={
-											dataThongKe.daDangKy === 0 && dataThongKe.chuaDangKy === 0
+											daDangKy === 0 && chuaDangKy === 0
 												? [[0, 1]]
-												: [[dataThongKe.daDangKy, dataThongKe.chuaDangKy]]
+												: [[daDangKy, chuaDangKy]]
 										}
 										yLabel={['Số lượng']}
 										height={240}
@@ -128,7 +104,7 @@ const ThongKe = () => {
 											tooltip: {
 												y: {
 													formatter: (val: number) => {
-														if (dataThongKe.daDangKy === 0 && dataThongKe.chuaDangKy === 0) {
+														if (daDangKy === 0 && chuaDangKy === 0) {
 															return '0';
 														}
 														return val !== undefined && val !== null ? val.toLocaleString() : '0';
@@ -154,7 +130,7 @@ const ThongKe = () => {
 																color: '#1890ff',
 																offsetY: -10,
 																formatter: (val: any) => {
-																	if (dataThongKe.daDangKy === 0 && dataThongKe.chuaDangKy === 0) {
+																	if (daDangKy === 0 && chuaDangKy === 0) {
 																		return '0';
 																	}
 																	return val !== undefined && val !== null ? String(val.toLocaleString()) : '0';
