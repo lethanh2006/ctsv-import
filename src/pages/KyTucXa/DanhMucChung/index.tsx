@@ -4,14 +4,15 @@ import { EOperatorType } from '@/components/Table/constant';
 import { type IColumn } from '@/components/Table/typing';
 import { KyTucXa } from '@/services/KyTucXa/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Image, Popconfirm } from 'antd';
+import { Image, Popconfirm, Switch, Tooltip } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 
 const DanhMucChungPage = (props: { loai: 'TIEN_ICH_PHONG' | 'LOAI_PHONG_KTX' }) => {
 	const { loai } = props;
 	const intl = useIntl();
-	const { getModel, page, limit, deleteModel, handleEdit } = useModel('kytucxa.danhmucchung');
+	const { getModel, page, limit, deleteModel, handleEdit, kichHoatDanhMucChungModel, tatKichHoatDanhMucChungModel } =
+		useModel('kytucxa.danhmucchung');
 
 	const getData = () => {
 		if (loai)
@@ -23,6 +24,13 @@ const DanhMucChungPage = (props: { loai: 'TIEN_ICH_PHONG' | 'LOAI_PHONG_KTX' }) 
 					operator: EOperatorType.INCLUDE,
 				},
 			]);
+	};
+	const handleKichHoat = (record: any) => {
+		kichHoatDanhMucChungModel(record?._id, getData);
+	};
+
+	const handleTatKichHoat = (record: any) => {
+		tatKichHoatDanhMucChungModel(record?._id, getData);
 	};
 
 	const columns: IColumn<KyTucXa.IDanhMucChung>[] = [
@@ -61,6 +69,24 @@ const DanhMucChungPage = (props: { loai: 'TIEN_ICH_PHONG' | 'LOAI_PHONG_KTX' }) 
 			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 200,
+		},
+		{
+			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.status' }),
+			dataIndex: 'active',
+			width: 100,
+			render: (val: boolean, rec) => {
+				return (
+					<Tooltip title={val ? 'ON' : 'OFF'}>
+						<Popconfirm
+							title={val ? 'Xác nhận dừng kích hoạt?' : 'Xác nhận kích hoạt?'}
+							placement='topLeft'
+							onConfirm={() => (val ? handleTatKichHoat(rec) : handleKichHoat(rec))}
+						>
+							<Switch size='small' checked={val} />
+						</Popconfirm>
+					</Tooltip>
+				);
+			},
 		},
 		{
 			title: intl.formatMessage({ id: 'kytucxa.danhmucchung.actions' }),

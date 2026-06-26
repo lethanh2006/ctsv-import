@@ -69,6 +69,7 @@ declare module KyTucXa {
 		};
 		anh?: string;
 		ghiChu?: string;
+		active?: boolean
 	}
 
 	export interface ITienIch {

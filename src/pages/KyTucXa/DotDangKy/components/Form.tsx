@@ -298,7 +298,6 @@ const FormDotDangKyKTX = (props: any) => {
 				<StepChonDoiTuong
 					form={form}
 					loaiDot={loaiDot}
-					selectedKhoaNganh={selectedKhoaNganh}
 					setSelectedKhoaNganh={setSelectedKhoaNganh}
 					initialKhoaNganh={initialKhoaNganh}
 					selectedKhoaRows={selectedKhoaRows}

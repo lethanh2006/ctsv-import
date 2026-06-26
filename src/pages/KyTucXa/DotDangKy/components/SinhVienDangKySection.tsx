@@ -1,16 +1,11 @@
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import SelectSinhVienDebounce from '@/pages/DaoTaoV2/SinhVien/component/Select';
-import TableSelectUser from '@/pages/ThongBao/components/TableSelect';
 import { EVaiTroKhaoSat } from '@/services/ThongBao/constant';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Modal, message, type FormInstance } from 'antd';
-import fileDownload from 'js-file-download';
+import { Button, Card, Form, message, type FormInstance } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import * as XLSX from 'xlsx';
-
-const TableSelectUserAny = TableSelectUser as any;
 
 type TSinhVienDangKy = {
 	_id?: string;
@@ -29,18 +24,6 @@ const mapUsersToFormValue = (users: TSinhVienDangKy[]) =>
 			khoaSinhVien: u.khoaSinhVien || '',
 		}))
 		.filter((item) => item.maSinhVien);
-
-const normalizeUser = (user: any): TSinhVienDangKy => {
-	const code = user?.code || user?.username || user?.maSinhVien || user?.ma || '';
-	return {
-		...user,
-		code,
-		username: code,
-		fullname: user?.fullname || user?.hoTen || user?.tenSinhVien || '',
-		khoaSinhVien: user?.khoaSinhVien || '',
-		vaiTro: EVaiTroKhaoSat.SINH_VIEN,
-	};
-};
 
 const uniqueUsers = (users: TSinhVienDangKy[]) =>
 	users.filter((item, index, self) => item.code && self.findIndex((t) => t.code === item.code) === index);
@@ -110,7 +93,6 @@ const SinhVienDangKySection = (props: {
 	const intl = useIntl();
 	const t = (id: string) => intl.formatMessage({ id });
 	const { form, visible, dotId, isOngoing, isEnded } = props;
-	const [visibleSelect, setVisibleSelect] = useState(false);
 	const [showAddStudent, setShowAddStudent] = useState(false);
 	const [selectedUsers, setSelectedUsers] = useState<TSinhVienDangKy[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -158,54 +140,6 @@ const SinhVienDangKySection = (props: {
 			form.setFieldsValue({ danhSach: [] });
 		}
 	}, [dotId, visible]);
-
-	const customImportConfig = {
-		onDownloadTemplate: () => {
-			const headers = [
-				['TT', t('kytucxa.dotdangky.maSinhVien'), t('kytucxa.dotdangky.hoTen'), t('kytucxa.dotdangky.khoaSinhVien')],
-			];
-			const worksheet = XLSX.utils.aoa_to_sheet(headers);
-			const workbook = XLSX.utils.book_new();
-			XLSX.utils.book_append_sheet(workbook, worksheet, t('kytucxa.dotdangky.excel.sheetTemplate'));
-			const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-			const blob = new Blob([excelBuffer], {
-				type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			});
-			fileDownload(blob, t('kytucxa.dotdangky.excel.templateFileName'));
-		},
-		onImport: (file: File): Promise<any[]> => {
-			return new Promise((resolve, reject) => {
-				const reader = new FileReader();
-				reader.onload = (e) => {
-					try {
-						const data = e.target?.result;
-						const workbook = XLSX.read(data, { type: 'array' });
-						const ws = workbook.Sheets[workbook.SheetNames[0]];
-						const sheetData: any[] = XLSX.utils.sheet_to_json(ws);
-						const parsed = sheetData
-							.map((row: any) => {
-								const code = row[t('kytucxa.dotdangky.maSinhVien')]?.toString()?.trim() || '';
-								const fullname = row[t('kytucxa.dotdangky.hoTen')]?.toString()?.trim() || '';
-								const khoa = row[t('kytucxa.dotdangky.khoaSinhVien')]?.toString()?.trim() || '';
-								return {
-									code,
-									username: code,
-									fullname,
-									khoaSinhVien: khoa,
-									vaiTro: EVaiTroKhaoSat.SINH_VIEN,
-								};
-							})
-							.filter((item) => item.code);
-						resolve(parsed);
-					} catch (err) {
-						reject(err);
-					}
-				};
-				reader.onerror = (err) => reject(err);
-				reader.readAsArrayBuffer(file);
-			});
-		},
-	};
 
 	const onDelete = async (record: any) => {
 		if (isEnded || (isOngoing && record._id)) {
@@ -331,41 +265,6 @@ const SinhVienDangKySection = (props: {
 				Form={FormThemSinhVien}
 				formProps={{ onSubmit: onAddStudent }}
 			/>
-
-			<Modal
-				open={visibleSelect}
-				onCancel={() => setVisibleSelect(false)}
-				title={t('kytucxa.dotdangky.chonNhapDanhSachSinhVien')}
-				width={900}
-				footer={null}
-				destroyOnClose
-			>
-				<TableSelectUserAny
-					type={EVaiTroKhaoSat.SINH_VIEN}
-					selectedUsers={selectedUsers}
-					setSelectedUsers={(val: any) => {
-						const unique = uniqueUsers((val || []).map(normalizeUser));
-						setSelectedUsers(unique);
-					}}
-					customImport={customImportConfig}
-					customStudentColumn={{
-						title: t('kytucxa.dotdangky.khoaSinhVien'),
-						dataIndex: 'khoaSinhVien',
-					}}
-					singleTable={true}
-				/>
-				<div style={{ textAlign: 'right', marginTop: 12 }}>
-					<Button
-						onClick={() => {
-							form.setFieldsValue({ danhSach: mapUsersToFormValue(selectedUsers) });
-							setVisibleSelect(false);
-						}}
-						type='primary'
-					>
-						{t('kytucxa.dotdangky.chonXong')}
-					</Button>
-				</div>
-			</Modal>
 		</div>
 	);
 };

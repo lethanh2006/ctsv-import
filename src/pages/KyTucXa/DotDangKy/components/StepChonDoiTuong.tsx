@@ -13,7 +13,6 @@ import { useIntl, useModel } from 'umi';
 interface StepChonDoiTuongProps {
 	form: FormInstance;
 	loaiDot: string;
-	selectedKhoaNganh: string[];
 	setSelectedKhoaNganh: (value: string[]) => void;
 	initialKhoaNganh?: string[];
 	selectedKhoaRows: Array<{
@@ -37,7 +36,6 @@ interface StepChonDoiTuongProps {
 const StepChonDoiTuong: React.FC<StepChonDoiTuongProps> = ({
 	form,
 	loaiDot,
-	selectedKhoaNganh,
 	setSelectedKhoaNganh,
 	initialKhoaNganh = [],
 	selectedKhoaRows,
