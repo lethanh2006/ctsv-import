@@ -1,12 +1,13 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
+// import FilterHocKy from '@/pages/DaoTaoV2/HocKy/HocKy/components/FilterHocKy';
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
+import SelectNamHoc from '@/pages/DaoTaoV2/NamHoc/NamHoc/components/Select';
 
 const DanhSachMienKyTucXa = () => {
 	const intl = useIntl();
@@ -178,7 +179,7 @@ const DanhSachMienKyTucXa = () => {
 				showModalTitle
 			>
 				<div style={{ marginBottom: 12 }}>
-					<FilterHocKy isSetHocKy width={300} hideExpand />
+					<SelectNamHoc onChange={() => { }} />
 				</div>
 			</TableBase>
 		</>
